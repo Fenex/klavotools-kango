@@ -11,7 +11,7 @@
         "klavotools/foreground/userjs-exec.js"
     ],
     "homepage_url": "http://klavogonki.ru/", 
-    "version": "2.0.1", 
+    "version": "2.0.2", 
     "browser_button": {
         "caption": "KlavoTools", 
         "icon": "icons/button.png", 
@@ -22,5 +22,6 @@
             "height": 520
         }
     }, 
-    "name": "KlavoTools Kango"
+    "name": "KlavoTools Kango",
+     "options_page": "options.html"
 }
