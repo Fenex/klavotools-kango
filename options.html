@@ -6,6 +6,8 @@
     <script type="text/javascript" src="kango-ui/kango_api.js"></script>
     <script type="text/javascript" src="klavotools/angular.min.js"></script>
     <script type="text/javascript" src="klavotools/options/module.js"></script>
+    <script type="text/javascript" src="klavotools/options/ng-joke.js"></script>
+    
 </head>
 <body>
 	<div id="head" class="minwidth green-back">
@@ -39,64 +41,14 @@
 	</div>
 	</div>
 	</div>
-
-	<div class="bar"></div>
-
-
-
-	<div class="popup-box" id="login-form" style="display:none;">
-		<table>
-			<tbody><tr>
-				<td class="tl"></td>
-				<td class="t"></td>
-				<td class="tr"></td>
-			</tr>
-			<tr>
-				<td class="l"></td>
-				<td class="c">
-					<form method="POST" action="/login">
-						<input type="hidden" name="redirect" value="/forum/">
-						<dl id="r_username">
-							<dt><label for="username">Логин</label></dt>
-							<dd><input name="login" id="username"></dd>
-						</dl>
-						
-						<dl id="r_password">
-							<dt><label for="password">Пароль</label></dt>
-							<dd class="field"><input name="pass" id="password" type="password"></dd>
-						</dl>
-						
-						<dl id="r_login_form_submit">
-							<dt></dt>
-							<dd><input type="submit" name="submit_login" value="Войти" id="login_form_submit"></dd>
-						</dl>
-					
-						<dl>
-							<dt></dt>
-		
-							<dd>
-								<ul class="navigation">
-									<li><a href="/register/">Регистрация</a></li>
-									<li><a href="/remind/">Я ничего не помню</a></li>
-								</ul>
-							</dd>
-						</dl>
-		
-					</form>
-				</td>
-				<td class="r"></td>
-			</tr>
-			<tr>
-				<td class="bl"></td>
-				<td class="b"></td>
-				<td class="br"></td>
-			</tr>
-		</tbody></table>
-		<div class="close"><ins></ins></div>
-	</div>
+    <div id="line"></div>
+	<!--<div class="bar"></div>-->
 
 	<div id="content" class="minwidth">
-
+        
+        <ui:risovalka></ui:risovalka>
+        <ui:bug></ui:bug>
+        
 	</div>
 	<div id="footer" style="padding: 1px 10px;">
 		<div style="clear: both;">&nbsp;</div>
