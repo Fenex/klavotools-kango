@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name           BB-Tools
-// @version        2.6.0 KTS-2
-// @namespace      klavogonki
-// @author         Fenex
 // @description    BB-buttons in the forum and vocs.
+// @namespace      klavogonki
+// @version        2.6.0 KTS-2
+// @author         Fenex
 // @include        http://klavogonki.ru/forum/*
 // @include        http://klavogonki.ru/vocs/*
 // @icon           http://www.gravatar.com/avatar.php?gravatar_id=d9c74d6be48e0163e9e45b54da0b561c&r=PG&s=48&default=identicon
 // ==/UserScript==
 UserJS.addScript(
-    'BBTools',
+    'BB-Tools',
     [
         /klavogonki\.ru\/forum/,
         /klavogonki\.ru\/vocs\//,

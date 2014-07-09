@@ -1,9 +1,9 @@
 ﻿// ==UserScript==
 // @name           klavogonki: PostOptions+
 // @description    Allows to insert poster's nickname or quote selected text with poster's nickname
+// @namespace      klavogonki
 // @version        2.1.4 KTS-2
 // @author         olimo & Fenex
-// @namespace      klavogonki.ru
 // @include        http://klavogonki.ru/forum/*
 // ==/UserScript==
 UserJS.addScript(
