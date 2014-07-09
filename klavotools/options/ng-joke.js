@@ -136,9 +136,6 @@ angular.module('klavotools.joke', [])
                 rotating = false;
             }
             
-        },
-        controller: function($scope) {
-        
         }
     }
 });
