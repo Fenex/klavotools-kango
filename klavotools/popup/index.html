@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <title>KlavoTools - Popup</title>
+        <link href="/klavotools/popup/style.css" type="text/css" rel="stylesheet" />
+        <script src="/kango-ui/kango_api.js"></script>
+        <script src="/lib/angular.min.js"></script>
+        <script src="/klavotools/popup/popup.js"></script>
+    </head>
+<body style="height:100px;">
+<table id="tbl" cellspacing="0" cellpadding="0" style="width:510px;height:220px;"><tr><td>
+
+<div id="cssmenu-new" ui:cssmenu>
+    
+</div>
+
+<div id='cssmenu'>
+<ul>
+   <li class='has-sub'><a path="/u/">Профиль</a>
+      <ul>
+         <li><a path="/u/">Сводка</a></li>
+		 <li><a path="/u/#/__USERID__/stats/">Статистика</a></li>
+		 <li><a path="/u/#/__USERID__/car/">Гараж</a></li>
+		 <li><a path="/u/#/__USERID__/journal/">Бортжурнал</a></li>
+		 <li><a path="/u/#/__USERID__/friends/feed/">Лента друзей</a></li>
+		 <li><a path="/u/#/__USERID__/messages/contacts/">Почта</a></li>
+         <li><a path="/u/#/__USERID__/prefs/">Настройки</a></li>
+      </ul>
+   </li>
+   <li class='has-sub'><a path="/gamelist/">Игра</a>
+      <ul>
+         <li><a path="/">Главная</a></li>
+		 <li><a path="/create/">Создать заезд</a></li>
+		 <li><a path="/gamelist/">Выбрать заезд</a></li>
+		 <li><a path="/go/">Случайный заезд</a></li>
+      </ul>
+   </li>
+   <li class='has-sub'><a path="/top/">Рекорды</a>
+      <ul>
+         <li><a path="/top/">Рейтинг</a></li>
+		 <li><a path="/top/day/normal/">Рекорды за день</a></li>
+		 <li><a path="/top/week/normal/">Рекорды за неделю</a></li>
+		 <li><a path="/top/success/">Успехи</a></li>
+      </ul>
+   </li>
+   <li class='has-sub'><a path="/vocs/top/">Словари</a>
+      <ul>
+         <li><a path="/vocs/top/">Все</a></li>
+		 <li><a path="/vocs/search?section=favs&type=&order=&changed=section&searchtext='">Используемые</a></li>
+		 <li><a path="/vocs/search?section=my&type=all&order=&changed=section&searchtext=">Мои</a></li>
+		 <li><a path="/vocs/add/">Добавить словарь</a></li>
+      </ul>
+   </li>
+   <li class='has-sub'><a path="/forum/">Форум</a>
+      <ul>
+         <li><a path="/forum/new/">Новости</a></li>
+		 <li><a path="/forum/general/">Общий</a></li>
+		 <li><a path="/forum/events/">События</a></li>
+		 <li><a path="/forum/academy/">Академия</a></li>
+		 <li><a path="/forum/problems/">Техцентр</a></li>
+		 <li><a path="/forum/flood/">Пит-Стоп</a></li>
+		 <li><a path="/forum/feed/">Лента сообщений</a></li>
+      </ul>
+   </li>
+   <li class='has-sub'><a path="__FALSE__">Ссылки</a>
+      <ul id="user_fast_links">
+         <li><a path="__USER_LINKS__">Добавить</a></li>
+      </ul>
+   </li>
+   <li><a path="__EXTENSION__/opt.html" style="color:green;">Настройки</a></li>
+   <li><a path="__EXTENSION__/KG/help.html" style="color:green;">F1</a></li>
+</ul>
+</div>
+</td></tr><tr><td>
+<div id="userline">
+	<input type="text" id="username" tabindex="1" /><input type="button" id="btn_search" value=">" tabindex="2" /><span id="id_out"></span>
+</div>
+</td></tr><tr><td style="height:100%;vertical-align:top;" id="mail"></td></tr>
+<tr><td id="setTD" style="display:none;">
+	<hr /><textarea id="settings" style="width:100%;height:100px;"></textarea><br /><div style="margin-top:3px;font:10pt normal tahoma; color:#777777;">* "<b>__USERID__"</b> будет заменяться на ID активного аккаунта</div>
+	<table style="width:100%;">
+		<tr>
+			<td>Текст: </td>
+			<td style="text-align:left;width:100%;"><input tabindex='1' style="width:100%;" type="text" id="title" /></td>
+			<td style="text-align:right;"><input tabindex='3' type="button" value="Добавить" id="btn_addLink" /></td>
+		</tr>
+		<tr>
+			<td>Ссылка: </td>
+			<td style="text-align:left;"><input tabindex='2' style="width:100%;" type="text" id="url" /></td>
+			<td style="text-align:right;"><input tabindex='4' type="button" id="btn_save" value="Сохранить" /></td>
+		</tr>
+	</table>
+</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+    "description": "KlavoTools Kango", 
+    "creator": "Busko Vitaliy", 
+    "background_scripts": [
+        "klavotools/background/UserJS.js",
+        "klavotools/background/engine.js"
+    ],
+    "content_scripts": [
+        "klavotools/foreground/execute.js"
+    ],
+    "homepage_url": "http://klavogonki.ru/", 
+    "version": "0.9.1", 
+    "browser_button": {
+        "caption": "KlavoTools", 
+        "icon": "icons/button.png", 
+        "tooltipText": "KlavoTools",
+        "popup": {
+            "url": "klavotools/popup/index.html",
+            "width": 600,
+            "height": 520
+        }
+    }, 
+    "name": "KlavoTools Kango"
+}
