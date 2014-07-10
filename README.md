@@ -20,5 +20,4 @@ build.cmd
 
     @echo off
     set kts=%~d0%~p0
-    echo %kts%
     call "%kts%\..\framework\kango.py" build .\
