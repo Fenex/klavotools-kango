@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name execute
+// @name executeScript
 // @namespace userjs
 // @include http://klavogonki.ru/*
 // @require klavotools/foreground/debug.js
