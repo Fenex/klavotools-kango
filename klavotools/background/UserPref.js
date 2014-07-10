@@ -48,13 +48,14 @@ var Skin = function(list) {
     this.list = list;
     //object {skin-name: isEnable}
     this.skins = {};
-    //load (equal "init" for first exec)
-    this.load();
     //active skin
     this.active = null;
-    
+
     //localstorage key's name for memory
     this.key = 'skin1';
+
+    //load (equal "init" for first exec)
+    this.load();
 };
 
 Skin.prototype = {
@@ -71,8 +72,5 @@ Skin.prototype = {
         this.active = skin;
         kango.storage.setItem(this.skins, skin);
         this.load();
-    },
-    getActive: function() {
-        return this.active;
     }
 };

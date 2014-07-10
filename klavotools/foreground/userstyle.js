@@ -1,14 +1,21 @@
 // ==UserScript==
-// @name executeStyle
-// @namespace userstyle
+// @name executeSkin
+// @namespace skin
 // @run-at document-start
 // @include http://klavogonki.ru/*
 // @require klavotools/foreground/debug.js
 // ==/UserScript==
-kango.invokeAsync('KlavoTools.userstyle.getActive', function(skin) {
-    var s = document.createElement('link');
-    s.setAttribute('type', 'text/css');
-    s.setAttribute('rel', 'stylesheet');
-    s.setAttribute('href', kango.io.getResourceUrl('res/skins/'+skin+'.css'));
-    document.head.appendChild(s);
+kango.invokeAsync('KlavoTools.Skin.getActive', true, function(answer) {
+    kango.xhr.send({
+        method: 'GET',
+        url: 'res/skins/'+answer.skin+'.css',
+        async: true,
+        contentType: 'text'
+    }, function(res) {
+        res = res.response.replace(/%FOLDER_([a-zA-Z0-9]+?)%/gm, answer.io);
+        
+        var s = document.createElement('style');
+        s.innerHTML = res;
+        document.head.appendChild(s);
+    });
 });

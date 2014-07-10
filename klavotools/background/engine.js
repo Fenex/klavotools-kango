@@ -8,10 +8,19 @@ KlavoTools.version = function() {
     return kango.getExtensionInfo().version;
 };
 
-KlavoTools.getSkin = function() {
-    return KlavoTools.userstyle.skins;
-};
-
-KlavoTools.setSkin = function(skin) {
-    KlavoTools.userstyle.save(skin);
+KlavoTools.Skin = {
+    getActive: function(content) {
+        if(!content)
+            return KlavoTools.userstyle.active;
+        return {
+            skin: KlavoTools.userstyle.active,
+            io: kango.io.getResourceUrl('res/skins/$1')
+        };
+    },
+    setActive: function(skin) {
+        return KlavoTools.userstyle.save(skin);
+    },
+    getAll: function() {
+        return KlavoTools.userstyle.skins;
+    }
 };

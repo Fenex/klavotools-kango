@@ -6,7 +6,7 @@ angular.module('klavotools', ['klavotools.joke'])
     });
 })
 .controller('StyleCtrl', function($scope, $log, $interval) {
-    kango.invokeAsync('KlavoTools.getSkin', function(res) {
+    kango.invokeAsync('KlavoTools.Skin.getAll', function(res) {
         $scope.skins = res;
         for(var name in res) {
             if(res[name])
@@ -18,7 +18,7 @@ angular.module('klavotools', ['klavotools.joke'])
         for(var name in $scope.skins) {
             $scope.skins[name] = (a == name) ? true : false;
         }
-        kango.invokeAsync('KlavoTools.setSkin', a);
+        kango.invokeAsync('KlavoTools.Skin.setActive', a);
     });
 })
 .filter('skin', function() {
