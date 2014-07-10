@@ -1,10 +1,27 @@
 var UserPref = function(key, names) {
+    var self = this;
     this.key = key;
     
-    /* set default settings "true" */
     this.prefs = {};
-    for(var i=0; i<names.length; i++) {
-        this.prefs[names[i]] = true;
+    /**
+    * @prefs is hash-array of @pref.
+    *
+    * (structure in the class)
+    *  @pref
+    *    |-- @enable => (bool)
+    *    *-- @description => (string)
+    *
+    * (structure in the storage)
+    * @pref => (bool)
+    *
+    */
+    
+    /* set default settings "true" */
+    for(var name in names) {
+        this.prefs[name] = {
+            enable: true,
+            description: names[name]
+        }
     }
             
     /* replace default settings on user's prefs */
@@ -16,7 +33,7 @@ UserPref.prototype.load = function() {
     if(prefs) {
         for(name in prefs) {
             if(typeof this.prefs[name] != 'undefined')
-                this.prefs[name] = prefs[name];
+                this.prefs[name].enable = prefs[name];
         }
     }
     
@@ -25,11 +42,17 @@ UserPref.prototype.load = function() {
 };
 
 UserPref.prototype.isEnabled = function(id) {
-    return this.prefs[id];
-}
+    return this.prefs[id].enable;
+};
 
 UserPref.prototype.save = function() {
-    kango.storage.setItem(this.key, this.prefs);
+    /** convert structure of @prefs **/
+    var save = {};
+    for(var name in this.prefs)
+        save[name] = this.prefs[name].enable;
+    
+    /** save converted @prefs **/
+    kango.storage.setItem(this.key, save);
 };
 
 UserPref.prototype.getEnable = function() {
@@ -37,6 +60,17 @@ UserPref.prototype.getEnable = function() {
         if(this.prefs[name])
             return name;
     return null;
+};
+
+
+UserPref.prototype.merge = function(data) {
+    for(var script in data) {
+        if(typeof this.prefs[script] != 'undefined')
+            continue;
+        this.prefs[script].enable = data[script];
+    }
+    
+    this.save();
 };
 
 UserPref.prototype.toString = function() {
@@ -52,7 +86,7 @@ var Skin = function(list) {
     this.active = null;
 
     //localstorage key's name for memory
-    this.key = 'skin1';
+    this.key = 'skin';
 
     //load (equal "init" for first exec)
     this.load();
@@ -61,7 +95,7 @@ var Skin = function(list) {
 Skin.prototype = {
     load: function() {
         this.skins = {};
-        this.active = kango.storage.getItem(this.skins) || 'beige';
+        this.active = kango.storage.getItem(this.key) || 'beige';
         
         for(var i=0; i<this.list.length; i++) {
             var name = this.list[i];
@@ -70,7 +104,10 @@ Skin.prototype = {
     },
     save: function(skin) {
         this.active = skin;
-        kango.storage.setItem(this.skins, skin);
+        kango.storage.setItem(this.key, skin);
         this.load();
+    },
+    toString: function() {
+        return '[object Skin]';
     }
 };

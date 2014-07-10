@@ -53,11 +53,29 @@
         
         <b>Стили:</b>
 		<form id="KTS_style" ng:controller="StyleCtrl">
-			<div ng-repeat="(skin, value) in skins">
+			<div ng:repeat="(skin, value) in skins">
 				<input type="radio" id="KTS_style_radio_{{skin}}" ng:model="$parent.active" name="KTS_style_radio" value="{{skin}}" />
                 <label for="KTS_style_radio_{{skin}}">{{skin | skin}}</label>
 			</div>
 			<input type="radio" id="KTS_style_radio_user" name="KTS_style_radio" disabled value="user" />	<label for="KTS_style_radio_user"><i>[Здесь мог бы быть ваш стиль]</i></label><br />
+		</form>
+        
+        <b>Скрипты:</b>
+		<form id="KTS_scripts" ng:controller="ScriptCtrl">
+		<table border><tbody>
+			<tr ng:repeat="(script, data) in scripts">
+				<td>
+					<input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enable" class="user_set" ng:change="save('{{script}}')" />
+				</td>
+				<td>
+					<label for="{{script}}">{{script}}</label>
+				</td>
+				<td>
+					<div>{{data.description}}</div>
+				</td>
+			</tr>
+		</tbody></table>
+		
 		</form>
         
 	</div>

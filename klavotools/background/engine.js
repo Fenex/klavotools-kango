@@ -8,6 +8,15 @@ KlavoTools.version = function() {
     return kango.getExtensionInfo().version;
 };
 
+KlavoTools.Script = {
+    get: function() {
+        return KlavoTools.userjs.prefs;
+    },
+    set: function(data) {
+        KlavoTools.userjs.merge(data);
+    }
+};
+
 KlavoTools.Skin = {
     getActive: function(content) {
         if(!content)
