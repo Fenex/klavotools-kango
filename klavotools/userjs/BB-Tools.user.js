@@ -345,48 +345,40 @@ function move_smileTable() {
     }
 }
 
-if(!document.getElementById('KTS_BB_Tools')) {
-	var post_elems = document.getElementsByClassName('post-container');
-	for (i=0; i<post_elems.length; i++) {
-		if(!(post_elems[i].id)){continue;}
-		var index_post = post_elems[i].id.substring(5);
-		innerButtonsCode('text-'+index_post);
-	}
-	if(document.getElementById('fast-reply_textarea'))
-		innerButtonsCode('fast-reply');
-	if(document.getElementById('text_textarea'))
-		innerButtonsCode('text');
-	if(document.getElementById('message_textarea'))
-		innerButtonsCode('message');
-	if(document.getElementById('bio_textarea'))
-		innerButtonsCode('bio');
-	if(document.getElementById('voc_textarea'))
-		innerButtonsCode('voc');
-		
-	var st = document.createElement('style');
-	st.innerHTML = 'div.bb_tools img{cursor:pointer;}#table_smiles{font-size:12px;margin:0 0 2em;position:fixed;z-index:7;}.popup-box table{border-collapse:collapse;border-bottom:0px;}div#table_smiles table tr td.c img{cursor:pointer;}.popup-box .move {-moz-background-clip:border;-moz-background-inline-policy:continuous;-moz-background-origin:padding;background:#ffffff none repeat scroll 0 0;cursor:move;height:10px;position:absolute;left:12px;top:12px;width:10px;z-index:2;}.popup-box .move ins {-moz-background-clip:border;-moz-background-inline-policy:continuous;-moz-background-origin:padding;background:transparent url(http://klavogonki.ru/img/chat/dragdrop.gif) no-repeat scroll 0 0;height:10px;position:absolute;width:10px;}';
-	document.body.appendChild(st);
-
-	var s1 = document.createElement('script');
-	s1.textContent = "var DragObj = null;var tab_smiles;\n"+sendBBTag+"\n"+sendBBTag_prompt+"\n"+insertTag+"\n"+getCursorPos+"\n"+returnCursor+"\n"+generateButtonsCode+"\n"+innerButtonsCode+"\n"+sendBBTag_list+"\n"+insertSmileInPost+"\n"+smileTab_func+"\n"+move_smileTable+"\n"+Obj+"\n";
-	document.body.appendChild(s1);
-
-	var sm = document.createElement('div');
-	var smilies = new Array("smile", "biggrin", "angry", "angry2", "blink", "blush", "cool", "dry", "excl", "happy", "huh", "laugh", "mellow", "ohmy", "ph34r", "rolleyes", "sad", "sleep", "tongue", "unsure", "wacko", "wink", "wub", "power", "spiteful", "sorry", "first", "second", "third", "badcomp", "complaugh", "girlnotebook", "crazy", "boredom", "cry", "bye", "dance", "gamer", "rofl", "beer", "kidtruck", "boykiss", "girlkiss", "kissed", "yes", "no", "hi", "ok");
-	
-	var inner_tmp =  '<div style="display:none; width:300px; top:' + ( localStorage['smileTab_Ypos'] || '100px' ) + '; left:' + ( localStorage['smileTab_Xpos'] || '100px' ) + ';" id="table_smiles" class="popup-box"><table><tbody><tr><td class="tl"></td><td class="t"></td><td class="tr"></td></tr><tr><td class="l"></td><td class="c">';
-	for(i=0; i<smilies.length; i++) {
-		inner_tmp += '<img alt="'+smilies[i]+'" onclick="insertSmileInPost(\''+smilies[i]+'\');" src="/img/smilies/'+smilies[i]+'.gif" />';
-	}
-	sm.innerHTML = inner_tmp + '</td><td class="r"></td></tr><tr><td class="bl"></td><td class="b"></td><td class="br"></td></tr></tbody></table><div class="close"><ins onclick="tab_smiles = 0;$(\'table_smiles\').hide();"></ins></div><div class="move"><ins onmousedown="Obj(true);" onmouseup="Obj(false);"></ins></div></div>';
-
-	var tmp = document.getElementById('head');
-	tmp.parentNode.insertBefore(sm, tmp);
-
-	var tmp_elem = document.createElement('div');
-	tmp_elem.id = 'KTS_BB_Tools';
-	tmp_elem.style.display = 'none';
-	document.body.appendChild(tmp_elem);	
+var post_elems = document.getElementsByClassName('post-container');
+for (i=0; i<post_elems.length; i++) {
+    if(!(post_elems[i].id)){continue;}
+    var index_post = post_elems[i].id.substring(5);
+    innerButtonsCode('text-'+index_post);
 }
+if(document.getElementById('fast-reply_textarea'))
+    innerButtonsCode('fast-reply');
+if(document.getElementById('text_textarea'))
+    innerButtonsCode('text');
+if(document.getElementById('message_textarea'))
+    innerButtonsCode('message');
+if(document.getElementById('bio_textarea'))
+    innerButtonsCode('bio');
+if(document.getElementById('voc_textarea'))
+    innerButtonsCode('voc');
+    
+var st = document.createElement('style');
+st.innerHTML = 'div.bb_tools img{cursor:pointer;}#table_smiles{font-size:12px;margin:0 0 2em;position:fixed;z-index:7;}.popup-box table{border-collapse:collapse;border-bottom:0px;}div#table_smiles table tr td.c img{cursor:pointer;}.popup-box .move {-moz-background-clip:border;-moz-background-inline-policy:continuous;-moz-background-origin:padding;background:#ffffff none repeat scroll 0 0;cursor:move;height:10px;position:absolute;left:12px;top:12px;width:10px;z-index:2;}.popup-box .move ins {-moz-background-clip:border;-moz-background-inline-policy:continuous;-moz-background-origin:padding;background:transparent url(http://klavogonki.ru/img/chat/dragdrop.gif) no-repeat scroll 0 0;height:10px;position:absolute;width:10px;}';
+document.body.appendChild(st);
 
+var s1 = document.createElement('script');
+s1.textContent = "var DragObj = null;var tab_smiles;\n"+sendBBTag+"\n"+sendBBTag_prompt+"\n"+insertTag+"\n"+getCursorPos+"\n"+returnCursor+"\n"+generateButtonsCode+"\n"+innerButtonsCode+"\n"+sendBBTag_list+"\n"+insertSmileInPost+"\n"+smileTab_func+"\n"+move_smileTable+"\n"+Obj+"\n";
+document.body.appendChild(s1);
+
+var sm = document.createElement('div');
+var smilies = new Array("smile", "biggrin", "angry", "angry2", "blink", "blush", "cool", "dry", "excl", "happy", "huh", "laugh", "mellow", "ohmy", "ph34r", "rolleyes", "sad", "sleep", "tongue", "unsure", "wacko", "wink", "wub", "power", "spiteful", "sorry", "first", "second", "third", "badcomp", "complaugh", "girlnotebook", "crazy", "boredom", "cry", "bye", "dance", "gamer", "rofl", "beer", "kidtruck", "boykiss", "girlkiss", "kissed", "yes", "no", "hi", "ok");
+
+var inner_tmp =  '<div style="display:none; width:300px; top:' + ( localStorage['smileTab_Ypos'] || '100px' ) + '; left:' + ( localStorage['smileTab_Xpos'] || '100px' ) + ';" id="table_smiles" class="popup-box"><table><tbody><tr><td class="tl"></td><td class="t"></td><td class="tr"></td></tr><tr><td class="l"></td><td class="c">';
+for(i=0; i<smilies.length; i++) {
+    inner_tmp += '<img alt="'+smilies[i]+'" onclick="insertSmileInPost(\''+smilies[i]+'\');" src="/img/smilies/'+smilies[i]+'.gif" />';
+}
+sm.innerHTML = inner_tmp + '</td><td class="r"></td></tr><tr><td class="bl"></td><td class="b"></td><td class="br"></td></tr></tbody></table><div class="close"><ins onclick="tab_smiles = 0;$(\'table_smiles\').hide();"></ins></div><div class="move"><ins onmousedown="Obj(true);" onmouseup="Obj(false);"></ins></div></div>';
+
+var tmp = document.getElementById('head');
+tmp.parentNode.insertBefore(sm, tmp);
 });
