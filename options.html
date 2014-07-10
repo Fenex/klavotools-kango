@@ -1,8 +1,8 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Настройки KlavoTools</title>
-    <link type="text/css" rel="stylesheet" href="klavotools/options/style.css">
+    <link type="text/css" rel="stylesheet" href="klavotools/options/style.css" />
     <script type="text/javascript" src="kango-ui/kango_api.js"></script>
     <script type="text/javascript" src="klavotools/angular.min.js"></script>
     <script type="text/javascript" src="klavotools/options/module.js"></script>
@@ -16,7 +16,7 @@
 
 
 	<div id="logo">
-		<img src="icons/klavotools_logo.png" alt="KlavoTools Logo" title="KlavoTools">
+		<img src="icons/klavotools_logo.png" alt="KlavoTools Logo" title="KlavoTools" />
         <span style="position:relative;right:150px;bottom:10px;font-size:10px;">Версия: <span ng:controller="KTSVersion">{{version}}</span></span>
 	</div>
 
@@ -24,7 +24,7 @@
 
 		<div class="login-block">
 			&nbsp;
-				</div>
+        </div>
 
 		<div class="menu">
 			<a href="http://klavogonki.ru/forum/">Форум</a>
@@ -48,6 +48,17 @@
         
         <ui:risovalka></ui:risovalka>
         <ui:bug></ui:bug>
+        
+        <h4>Настройки KlavoTools</h4>
+        
+        <b>Стили:</b>
+		<form id="KTS_style" ng:controller="StyleCtrl">
+			<div ng-repeat="(skin, value) in skins">
+				<input type="radio" id="KTS_style_radio_{{skin}}" ng:model="$parent.active" name="KTS_style_radio" value="{{skin}}" />
+                <label for="KTS_style_radio_{{skin}}">{{skin | skin}}</label>
+			</div>
+			<input type="radio" id="KTS_style_radio_user" name="KTS_style_radio" disabled value="user" />	<label for="KTS_style_radio_user"><i>[Здесь мог бы быть ваш стиль]</i></label><br />
+		</form>
         
 	</div>
 	<div id="footer" style="padding: 1px 10px;">
