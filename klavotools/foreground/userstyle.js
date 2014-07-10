@@ -5,7 +5,11 @@
 // @include http://klavogonki.ru/*
 // @require klavotools/foreground/debug.js
 // ==/UserScript==
+
 kango.invokeAsync('KlavoTools.Skin.getActive', true, function(answer) {
+    /**
+    * TODO: write cache. perhaps, background-side (?)
+    */
     kango.xhr.send({
         method: 'GET',
         url: 'res/skins/'+answer.skin+'.css',
