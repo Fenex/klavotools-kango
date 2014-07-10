@@ -71,5 +71,8 @@ Skin.prototype = {
         this.active = skin;
         kango.storage.setItem(this.skins, skin);
         this.load();
+    },
+    getActive: function() {
+        return this.active;
     }
 };

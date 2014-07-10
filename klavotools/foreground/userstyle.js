@@ -5,10 +5,10 @@
 // @include http://klavogonki.ru/*
 // @require klavotools/foreground/debug.js
 // ==/UserScript==
-(function() {
+kango.invokeAsync('KlavoTools.userstyle.getActive', function(skin) {
     var s = document.createElement('link');
     s.setAttribute('type', 'text/css');
     s.setAttribute('rel', 'stylesheet');
-    s.setAttribute('href', kango.io.getResourceUrl('res/skins/beige.css'));
+    s.setAttribute('href', kango.io.getResourceUrl('res/skins/'+skin+'.css'));
     document.head.appendChild(s);
-})();
+});
