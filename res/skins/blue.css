@@ -105,61 +105,61 @@ ul.trimenu .write a {
 #chat-title table .active.mostleft.l {
 	background: transparent url(%FOLDER_blue%/chat_left_active_0.gif) no-repeat scroll 0 0 !important;
 }
-#chat-title table .mostright: hover {
+#chat-title table .mostright:hover {
 	background-position: -18px 0 !important;
 }
-#chat-title table .pin: hover {
+#chat-title table .pin:hover {
 	background-position: -18px -34px !important;
 }
 #chat-title table .mostleft.l {
 	background: transparent url(%FOLDER_blue%/chat_left.gif) no-repeat 0 0 !important;
 }
-div#gamelist .name .rang1: hover {
+div#gamelist .name .rang1:hover {
 	color: #8d8d8d !important;
 }
-div#gamelist .name .rang2: hover {
+div#gamelist .name .rang2:hover {
 	color: #4f9a97 !important;
 }
-div#gamelist .name .rang3: hover {
+div#gamelist .name .rang3:hover {
 	color: #187818 !important;
 }
-div#gamelist .name .rang4: hover {
+div#gamelist .name .rang4:hover {
 	color: #8c8100 !important;
 }
-div#gamelist .name .rang5: hover {
+div#gamelist .name .rang5:hover {
 	color: #ba5800 !important;
 }
-div#gamelist .name .rang6: hover {
+div#gamelist .name .rang6:hover {
 	color: #bc0143 !important;
 }
-div#gamelist .name .rang7: hover {
+div#gamelist .name .rang7:hover {
 	color: #5e0b9e !important;
 }
-div#gamelist .name .rang8: hover {
+div#gamelist .name .rang8:hover {
 	color: #00037c !important;
 }
-div#players .player .rang1: hover {
+div#players .player .rang1:hover {
 	color: #8d8d8d !important;
 }
-div#players .player .rang2: hover {
+div#players .player .rang2:hover {
 	color: #4f9a97 !important;
 }
-div#players .player .rang3: hover {
+div#players .player .rang3:hover {
 	color: #187818 !important;
 }
-div#players .player .rang4: hover {
+div#players .player .rang4:hover {
 	color: #8c8100 !important;
 }
-div#players .player .rang5: hover {
+div#players .player .rang5:hover {
 	color: #ba5800 !important;
 }
-div#players .player .rang6: hover {
+div#players .player .rang6:hover {
 	color: #bc0143 !important;
 }
-div#players .player .rang7: hover {
+div#players .player .rang7:hover {
 	color: #5e0b9e !important;
 }
-div#players .player .rang8: hover {
+div#players .player .rang8:hover {
 	color: #00037c !important;
 }
 #errors_text p {
@@ -174,7 +174,7 @@ div.hidemain, #hidetop, #hidecont {
 .quotemain {
 	 background: #F7F7FF none repeat scroll 0 0 !important;
 }
-#params a.n: hover {
+#params a.n:hover {
 	color: #777777 !important;
 }
 #head .right .menu a.active {
@@ -195,13 +195,13 @@ div#counter-panel {
 #profile-block #rating-history {
 	background-color: #f0f0ff !important;
 }
-#profile-block #bonuses-dl a#rating-history-link: hover {
+#profile-block #bonuses-dl a#rating-history-link:hover {
 	color: #22aa00 !important;
 }
 #profile-block .comments .delete {
 	color: #EE3939 !important;
 }
-#profile-block .user-content .comments .title .post_subject: hover {
+#profile-block .user-content .comments .title .post_subject:hover {
 	color: #ee3939 !important;
 }
 #profile-block #buy-scores-link.active, #profile-block #give-scores-link.active, #profile-block #activate-premium-link.active, #profile-block #rating-history-link.active, #profile-block #auth-pass-link.active, #profile-block #auth-login-link.active {
@@ -222,24 +222,24 @@ div#counter-panel {
 #profile-block .user-content .blog .filter s {
 	background-color: #ccddff !important;
 }
-#content .content-col a: hover, #content .about a: hover, #posts-list table.foot td.pages a: hover, #posts-list table.list a: hover,#topics-list table.foot td.pages a: hover, #topics-list table.list a: hover, #forums-list a: hover, #profile-block .right-col .comments .comment .info .author a: hover, #footer #links a: hover, #profile-block dl.menu a: hover, #play-right a: hover, #profile-block div.user-content a: hover, #chat-content td.userlist div.userlist-content ins a: hover {
+#content .content-col a:hover, #content .about a:hover, #posts-list table.foot td.pages a:hover, #posts-list table.list a:hover,#topics-list table.foot td.pages a:hover, #topics-list table.list a:hover, #forums-list a:hover, #profile-block .right-col .comments .comment .info .author a:hover, #footer #links a:hover, #profile-block dl.menu a:hover, #play-right a:hover, #profile-block div.user-content a:hover, #chat-content td.userlist div.userlist-content ins a:hover {
 	color: #d4620e !important;
 }
-#profile-block .user-content .userinfo-block a.buy: hover {
+#profile-block .user-content .userinfo-block a.buy:hover {
 	color: #22AA00 !important;
 }
-#profile-block .user-content .userinfo-block a.bonuses: hover {
+#profile-block .user-content .userinfo-block a.bonuses:hover {
 	color: #008cc7 !important;
 }
-#profile-block .user-content .userinfo-block a.note: hover {
+#profile-block .user-content .userinfo-block a.note:hover {
 	color: #777777 !important;
 }
-#profile-block .user-content .comments .title a.post_subject: hover, #profile-block .right-col .comments .comment .info .author a.post_subject: hover {
+#profile-block .user-content .comments .title a.post_subject:hover, #profile-block .right-col .comments .comment .info .author a.post_subject:hover {
 	color: #000000 !important;
 }
-#profile-block .user-content .mail .title .delete span: hover {
+#profile-block .user-content .mail .title .delete span:hover {
 	color: #bb2200 !important;
 }
-#content .content-col .add a: hover {
+#content .content-col .add a:hover {
 	color: #22aa00 !important;
 }
