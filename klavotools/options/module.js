@@ -39,7 +39,8 @@ angular.module('klavotools', ['klavotools.joke'])
             case 'green': return 'Зелёный';
             case 'pink': return 'Розовый';
             case 'blue': return 'Синий';
-            return input;
+            case 'gray': return 'Серый';
+            default: return input;
         }
     }
 });

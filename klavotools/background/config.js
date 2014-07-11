@@ -6,6 +6,7 @@ var DefaultConfig = {
         'beige',
         'pink',
         'green',
-        'blue'
+        'blue',
+        'gray'
     ]
 };
