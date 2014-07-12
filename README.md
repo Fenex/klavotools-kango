@@ -9,8 +9,8 @@ klavotools-kango
 ###Инструкция
 1. Устанавливаем Python 2.7 (http://www.python.org/download/).
 2. Создаём где-нибудь папку `kango`, в ней папки `framework` и `klavotools`.
-3. Загружаем [отсюда](http://kangoextensions.com/kango/kango-framework-latest.zip) архив и распаковываем его в созданную папку `framework`. В папке `framework` должен находиться файл `kango.py`.
-4. Отркываем шелл, переходим в созданную на шаге 2 папку `klavotools`.
+3. Загружаем [отсюда](http://kangoextensions.com/kango/kango-1.3.9-public.zip) архив и распаковываем его в созданную папку `framework`. В папке `framework` должен находиться файл `kango.py`.
+4. Открываем шелл, переходим в созданную на шаге 2 папку `klavotools`.
 5. Создаём проект: `call "../framework/kango.py" create`. Называем его `klavotools`. Если всё прошло успешно, в папке `klavotools` должны быть две папки: `src` и `certificates`.
 6. Клонируем репозиторий `klavotools-kango` в директорию: `%kangodir%/klavotools/src/common/`.
 7. Создаём пакетный файл `build.cmd` в директории `%kangodir%/klavotools/` со содержимым, описанным разделом ниже.
