@@ -11,8 +11,8 @@
 #mail .preview_text {color: #888;font-weight: normal;}
 #mail .title .delete span {border-bottom: 1px dotted #B20;}
 
-#userline {padding-left:18px;}
-#userline a.getID_links{cursor:pointer;}
+.userline {padding-left:18px;}
+.userline .get-id-links > a{cursor:pointer;}
 
 #cssmenu {height:20px; display:block; padding:0; margin:0px;  border-top:1px solid; border-bottom:1px solid; border-color:#3A6CBD;background-color:#F2F4FF;}
 #cssmenu > ul {list-style:inside none; padding:0; margin:0;} 
@@ -30,3 +30,6 @@
 #cssmenu > ul > li > a{color:#000000;}
 #cssmenu > ul > li > a:hover{background:#e8e8ff;}
 #cssmenu li{cursor:pointer;}
+#cssmenu li.green > a {
+    color: green;
+}
