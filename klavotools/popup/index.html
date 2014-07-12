@@ -1,12 +1,13 @@
 <html>
 <head>
     <title>KlavoTools - Popup</title>
-    <link href="/klavotools/popup/style.css" type="text/css" rel="stylesheet" />
-    <script src="/kango-ui/kango_api.js"></script>
-    <script src="/klavotools/angular.min.js"></script>
-    <script src="/klavotools/popup/popup.js"></script>
-    <script src="/klavotools/popup/popup.menutree.js"></script>
-    <script src="/klavotools/popup/popup.redirect.js"></script>
+    <link href="style.css" type="text/css" rel="stylesheet" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../kango-ui/kango_api.js"></script>
+    <script src="../angular.min.js"></script>
+    <script src="popup.js"></script>
+    <script src="popup.menutree.js"></script>
+    <script src="popup.redirect.js"></script>
 </head>
 <body style="height:130px;width: 520px;">
     <div id="cssmenu" ui:css:menu>
@@ -35,13 +36,13 @@
         <span ng:if="id!=0" class="get-id-links">
             ID: {{id}} |
             <a title="Профиль">
-                <img ng:path ng:path:str="/u/#/{{id}}/" src="/icons/profile.png" />
+                <img ng:path ng:path:str="/u/#/{{id}}/" src="../../icons/profile.png" />
             </a>
             <a title="Статистика">
-                <img ng:path ng:path:str="/u/#/{{id}}/stats/" src="/icons/sprint.png" />
+                <img ng:path ng:path:str="/u/#/{{id}}/stats/" src="../../icons/sprint.png" />
             </a>
             <a title="Бортжурнал">
-                <img ng:path ng:path:str="/u/#/{{id}}/journal/" src="/icons/usefuladdons.png" />
+                <img ng:path ng:path:str="/u/#/{{id}}/journal/" src="../../icons/usefuladdons.png" />
             </a>
             <!--
                 TODO: add links to achievements and friends.         

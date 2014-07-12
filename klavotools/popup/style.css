@@ -1,15 +1,4 @@
 ﻿body, #tbl{margin:0px;font-family:tahoma;font-size:10pt;}
-#mail dl.message {margin-bottom: 30px;}
-#mail dt {float: left;text-align: right;font-weight: normal;color: #777;font-size: 10pt;vertical-align: baseline;margin-bottom: 1em;}
-#mail img {border: 0;max-width: 98%;}
-#mail dd {margin: 0 0 1px 67px;vertical-align: baseline;}
-#mail .title {color: #777;margin-bottom: 5px;padding-top: 7px;height: 16px;}
-#mail a {color: #144E9D;}
-#mail .title .date {margin-left: 15px;margin-right: 15px;font-size: 10px;}
-#mail .unread {font-weight: bold;}
-#mail .subject a {color: black;}
-#mail .preview_text {color: #888;font-weight: normal;}
-#mail .title .delete span {border-bottom: 1px dotted #B20;}
 
 .userline {padding-left:18px;}
 .userline .get-id-links > a{cursor:pointer;}
@@ -32,4 +21,8 @@
 #cssmenu li{cursor:pointer;}
 #cssmenu li.green > a {
     color: green;
+}
+form {
+    margin: 5px;
+    padding: 5px;
 }
