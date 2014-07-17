@@ -82,7 +82,7 @@ NotificationBox.prototype = {
                     </td>-->\
                     <td class="kts-notification-header-caption">KlavoTools</td>\
                     <td class="kts-notification-header-close">\
-                        <img class="kts-notification-close-button" data-id="'+this.id+'" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAALRJREFUOE+l0DEOhCAQhWFvJr02noCTaSnGxsYObaws5EyzPDZjFmcKyRZfGH5MRCsi+osaS6ixhBpLqNF7H5e8XdclGoiwbRsZY6jv+7j9Nsx1XVMI4W4s2zDnHLVtS8MwJE3T0DiO8Ug+KwKb55m6rkswP8+ZGmGaJrLWJpif50yNuDbevCxLghnt+RyIsK5r+v7fa2PGfziO424s27B93+OSt/M8RQMRSqmxhBpLqPE9qj6dqPGU0auHvQAAAABJRU5ErkJggg=="/>\
+                        <img class="kts-notification-close-button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAALRJREFUOE+l0DEOhCAQhWFvJr02noCTaSnGxsYObaws5EyzPDZjFmcKyRZfGH5MRCsi+osaS6ixhBpLqNF7H5e8XdclGoiwbRsZY6jv+7j9Nsx1XVMI4W4s2zDnHLVtS8MwJE3T0DiO8Ug+KwKb55m6rkswP8+ZGmGaJrLWJpif50yNuDbevCxLghnt+RyIsK5r+v7fa2PGfziO424s27B93+OSt/M8RQMRSqmxhBpLqPE9qj6dqPGU0auHvQAAAABJRU5ErkJggg=="/>\
                     </td>\
                 </tr>\
             </table>\
@@ -96,8 +96,7 @@ NotificationBox.prototype = {
         ';
         
         /* add listener on close button */
-        div.getElementsByClassName('kts-notification-close-button')[0].addEventListener('click', function(e) {
-            var id = e.target.getAttribute('data-id');
+        div.getElementsByClassName('kts-notification-close-button')[0].addEventListener('click', function() {
             self.hide();
         });
 
