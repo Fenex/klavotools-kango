@@ -1,6 +1,6 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Настройки KlavoTools</title>
     <link type="text/css" rel="stylesheet" href="klavotools/options/style.css" />
     <script type="text/javascript" src="kango-ui/kango_api.js"></script>
@@ -10,41 +10,41 @@
     
 </head>
 <body>
-	<div id="head" class="minwidth green-back">
-	<div class="minwidth_holyhack">
-	<div class="minwidth_container">
+    <div id="head" class="minwidth green-back">
+    <div class="minwidth_holyhack">
+    <div class="minwidth_container">
 
 
-	<div id="logo">
-		<img src="icons/klavotools_logo.png" alt="KlavoTools Logo" title="KlavoTools" />
+    <div id="logo">
+        <img src="icons/klavotools_logo.png" alt="KlavoTools Logo" title="KlavoTools" />
         <span style="position:relative;right:150px;bottom:10px;font-size:10px;">Версия: <span ng:controller="KTSVersion">{{version}}</span></span>
-	</div>
+    </div>
 
-	<div class="right">
+    <div class="right">
 
-		<div class="login-block">
-			&nbsp;
+        <div class="login-block">
+            &nbsp;
         </div>
 
-		<div class="menu">
-			<a href="http://klavogonki.ru/forum/">Форум</a>
-			<a href="http://klavogonki.ru/about/">Об игре</a>
-			<a href="http://klavogonki.ru/vocs/">Словари</a>
-			<a href="http://klavogonki.ru/top/">Рекорды</a>
-			<a href="http://klavogonki.ru/gamelist/">Игра</a>
-		</div>
-	</div>
+        <div class="menu">
+            <a href="http://klavogonki.ru/forum/">Форум</a>
+            <a href="http://klavogonki.ru/about/">Об игре</a>
+            <a href="http://klavogonki.ru/vocs/">Словари</a>
+            <a href="http://klavogonki.ru/top/">Рекорды</a>
+            <a href="http://klavogonki.ru/gamelist/">Игра</a>
+        </div>
+    </div>
 
-	<div style="clear: both;"></div>
+    <div style="clear: both;"></div>
 
 
-	</div>
-	</div>
-	</div>
+    </div>
+    </div>
+    </div>
     <div id="line"></div>
-	<!--<div class="bar"></div>-->
+    <!--<div class="bar"></div>-->
 
-	<div id="content" class="minwidth">
+    <div id="content" class="minwidth">
         
         <ui:risovalka></ui:risovalka>
         <ui:bug></ui:bug>
@@ -52,176 +52,176 @@
         <h4>Настройки KlavoTools</h4>
         
         <b>Стили:</b>
-		<form id="KTS_style" ng:controller="StyleCtrl">
-			<div ng:repeat="(skin, value) in skins">
-				<input type="radio" id="KTS_style_radio_{{skin}}" ng:model="$parent.active" name="KTS_style_radio" value="{{skin}}" />
+        <form id="KTS_style" ng:controller="StyleCtrl">
+            <div ng:repeat="(skin, value) in skins">
+                <input type="radio" id="KTS_style_radio_{{skin}}" ng:model="$parent.active" name="KTS_style_radio" value="{{skin}}" />
                 <label for="KTS_style_radio_{{skin}}">{{skin | skin}}</label>
-			</div>
-			<input type="radio" id="KTS_style_radio_user" name="KTS_style_radio" disabled value="user" />	<label for="KTS_style_radio_user"><i>[Здесь мог бы быть ваш стиль]</i></label><br />
-		</form>
+            </div>
+            <input type="radio" id="KTS_style_radio_user" name="KTS_style_radio" disabled value="user" />    <label for="KTS_style_radio_user"><i>[Здесь мог бы быть ваш стиль]</i></label><br />
+        </form>
         
         <b>Скрипты:</b>
-		<form id="KTS_scripts" ng:controller="ScriptCtrl">
-		<table border><tbody>
-			<tr ng:repeat="(script, data) in scripts">
-				<td>
-					<input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enable" class="user_set" ng:change="save('{{script}}')" />
-				</td>
-				<td>
-					<label for="{{script}}">{{script}}</label>
-				</td>
-				<td>
-					<div>{{data.description}}</div>
-				</td>
-			</tr>
-		</tbody></table>
-		
-		</form>
+        <form id="KTS_scripts" ng:controller="ScriptCtrl">
+        <table border><tbody>
+            <tr ng:repeat="(script, data) in scripts">
+                <td>
+                    <input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enable" class="user_set" ng:change="save('{{script}}')" />
+                </td>
+                <td>
+                    <label for="{{script}}">{{script}}</label>
+                </td>
+                <td>
+                    <div>{{data.description}}</div>
+                </td>
+            </tr>
+        </tbody></table>
         
-	</div>
-	<div id="footer" style="padding: 1px 10px;">
-		<div style="clear: both;">&nbsp;</div>
-		<div class="bar"></div>
-		<table width="100%"><tbody><tr>
-			<td align="left" style="width: 185px;">
-				<span class="KTS_bottom">KlavoTools. © Vitaliy Busko, 2011 - 2014.</span>
-			</td>
-			<td align="right">
-				<span id="copyright">© 2008–2011. Авторский проект Артёма Чивчалова.</span>
-				<span id="links">
-					<a href="http://klavogonki.ru/about/">Правила</a> •
-					<a href="http://klavogonki.ru/about/learning/">Обучение</a> •
-					<a href="http://klavogonki.ru/about/stats/">Статистика</a> •
-					<a href="http://klavogonki.ru/contact/">Обратная связь</a>
-				</span>
-			</td>
-		</tr></tbody></table>
-	</div>
+        </form>
+        
+    </div>
+    <div id="footer" style="padding: 1px 10px;">
+        <div style="clear: both;">&nbsp;</div>
+        <div class="bar"></div>
+        <table width="100%"><tbody><tr>
+            <td align="left" style="width: 185px;">
+                <span class="KTS_bottom">KlavoTools. © Vitaliy Busko, 2011 - 2014.</span>
+            </td>
+            <td align="right">
+                <span id="copyright">© 2008–2011. Авторский проект Артёма Чивчалова.</span>
+                <span id="links">
+                    <a href="http://klavogonki.ru/about/">Правила</a> •
+                    <a href="http://klavogonki.ru/about/learning/">Обучение</a> •
+                    <a href="http://klavogonki.ru/about/stats/">Статистика</a> •
+                    <a href="http://klavogonki.ru/contact/">Обратная связь</a>
+                </span>
+            </td>
+        </tr></tbody></table>
+    </div>
 
 
 
 
-	<div class="popup-box" id="popup" style="position: absolute; display: none;">
-		<table>
-			<tbody><tr>
-				<td class="tl"></td>
-				<td class="t"></td>
-				<td class="tr"></td>
-			</tr>
-			<tr>
-				<td class="l"></td>
-				<td class="c" id="popup_content">			
-				</td>
-				<td class="r"></td>
-			</tr>
-			<tr>
-				<td class="bl"></td>
-				<td class="b"></td>
-				<td class="br"></td>
-			</tr>
-		</tbody></table>
-	</div>			
+    <div class="popup-box" id="popup" style="position: absolute; display: none;">
+        <table>
+            <tbody><tr>
+                <td class="tl"></td>
+                <td class="t"></td>
+                <td class="tr"></td>
+            </tr>
+            <tr>
+                <td class="l"></td>
+                <td class="c" id="popup_content">            
+                </td>
+                <td class="r"></td>
+            </tr>
+            <tr>
+                <td class="bl"></td>
+                <td class="b"></td>
+                <td class="br"></td>
+            </tr>
+        </tbody></table>
+    </div>            
 
-	<div id="popalert" class="stdpopup popup_message" style="display: none;">
-	<div class="back">&nbsp;</div>
-	<div class="content1">
-	<div class="content2 popup-box">
+    <div id="popalert" class="stdpopup popup_message" style="display: none;">
+    <div class="back">&nbsp;</div>
+    <div class="content1">
+    <div class="content2 popup-box">
 
-		<table width="100%">
-			<tbody><tr>
-				<td class="tl"></td>
-				<td class="t"></td>
-				<td class="tr"></td>
-			</tr>
-			<tr>
-				<td class="l"></td>
-				<td class="c">
-					<div class="a1"><div class="a2 stdpopup-content" id="popalert-content"></div></div>
-					<p align="center">
-					<input type="button" class="btn" value="Закрыть" onclick="if(_popalert_callback == null || !_popalert_callback()) $('popalert').hide();">
-					</p> 
-				</td>
-				<td class="r"></td>
-			</tr>
-			<tr>
-				<td class="bl"></td>
-				<td class="b"></td>
-				<td class="br"></td>
-			</tr>
-		</tbody></table>
-	</div>
-	</div>
-	</div>
+        <table width="100%">
+            <tbody><tr>
+                <td class="tl"></td>
+                <td class="t"></td>
+                <td class="tr"></td>
+            </tr>
+            <tr>
+                <td class="l"></td>
+                <td class="c">
+                    <div class="a1"><div class="a2 stdpopup-content" id="popalert-content"></div></div>
+                    <p align="center">
+                    <input type="button" class="btn" value="Закрыть" onclick="if(_popalert_callback == null || !_popalert_callback()) $('popalert').hide();">
+                    </p> 
+                </td>
+                <td class="r"></td>
+            </tr>
+            <tr>
+                <td class="bl"></td>
+                <td class="b"></td>
+                <td class="br"></td>
+            </tr>
+        </tbody></table>
+    </div>
+    </div>
+    </div>
 
-	<div id="popconfirm" class="stdpopup popup_message" style="display: none;">
-	<div class="back">&nbsp;</div>
-	<div class="content1">
-	<div class="content2 popup-box">
+    <div id="popconfirm" class="stdpopup popup_message" style="display: none;">
+    <div class="back">&nbsp;</div>
+    <div class="content1">
+    <div class="content2 popup-box">
 
-		<table width="100%">
-			<tbody><tr>
-				<td class="tl"></td>
-				<td class="t"></td>
-				<td class="tr"></td>
-			</tr>
-			<tr>
-				<td class="l"></td>
-				<td class="c">
-					<div class="a1"><div class="a2 stdpopup-content" id="popconfirm-content"></div></div>
-					<p align="center">
-					<input type="button" class="btn" id="popconfirm-btn-ok" value="OK"> 
-					<input type="button" class="btn" value="Отмена" onclick="$('popconfirm').hide();">
-					</p> 
-				</td>
-				<td class="r"></td>
-			</tr>
-			<tr>
-				<td class="bl"></td>
-				<td class="b"></td>
-				<td class="br"></td>
-			</tr>
-		</tbody></table>				
-	</div>
-	</div>
-	</div>
+        <table width="100%">
+            <tbody><tr>
+                <td class="tl"></td>
+                <td class="t"></td>
+                <td class="tr"></td>
+            </tr>
+            <tr>
+                <td class="l"></td>
+                <td class="c">
+                    <div class="a1"><div class="a2 stdpopup-content" id="popconfirm-content"></div></div>
+                    <p align="center">
+                    <input type="button" class="btn" id="popconfirm-btn-ok" value="OK"> 
+                    <input type="button" class="btn" value="Отмена" onclick="$('popconfirm').hide();">
+                    </p> 
+                </td>
+                <td class="r"></td>
+            </tr>
+            <tr>
+                <td class="bl"></td>
+                <td class="b"></td>
+                <td class="br"></td>
+            </tr>
+        </tbody></table>                
+    </div>
+    </div>
+    </div>
 
-	<div id="top-popup" style="display: none">
-	<div class="right">
-	<input type="button" value="" onclick="if(typeof _top_popup_btn_callback == 'function') _top_popup_btn_callback();">
-	<a onclick="close_top_popup();"><img src="/img/yellow_cross.gif" alt="X"></a>
-	</div>
-	<div class="content">
+    <div id="top-popup" style="display: none">
+    <div class="right">
+    <input type="button" value="" onclick="if(typeof _top_popup_btn_callback == 'function') _top_popup_btn_callback();">
+    <a onclick="close_top_popup();"><img src="/img/yellow_cross.gif" alt="X"></a>
+    </div>
+    <div class="content">
 
-	</div>
-	</div>
+    </div>
+    </div>
 
-	<div id="drop_message" style="display:none">
-		
-		<div class="content1">
-		<div class="content2 popup-box">
-		<table>
-			<tbody><tr>
-				<td class="tl"></td>
-				<td class="t"></td>
-				<td class="tr"></td>
-			</tr>
-			<tr>
-				<td class="l"></td>
-				<td class="c">
-					
-				</td>
-				<td class="r"></td>
-			</tr>
-			<tr>
-				<td class="bl"></td>
-				<td class="b"></td>
-				<td class="br"></td>
-			</tr>
-		</tbody></table>
-		<div class="close"><ins></ins></div>
-	</div>
-	</div>
-	</div>
+    <div id="drop_message" style="display:none">
+        
+        <div class="content1">
+        <div class="content2 popup-box">
+        <table>
+            <tbody><tr>
+                <td class="tl"></td>
+                <td class="t"></td>
+                <td class="tr"></td>
+            </tr>
+            <tr>
+                <td class="l"></td>
+                <td class="c">
+                    
+                </td>
+                <td class="r"></td>
+            </tr>
+            <tr>
+                <td class="bl"></td>
+                <td class="b"></td>
+                <td class="br"></td>
+            </tr>
+        </tbody></table>
+        <div class="close"><ins></ins></div>
+    </div>
+    </div>
+    </div>
 </body>
 
 </html>

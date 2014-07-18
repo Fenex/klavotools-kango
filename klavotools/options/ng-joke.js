@@ -1,40 +1,40 @@
 angular.module('klavotools.joke', [])
 .directive('uiRisovalka', function() {
-	return {
-		restrict: 'E',
-		replace: true,
-		template:
-			'<div id="risovalka" ng:if="loaded">'+
-				'<div class="title">Наши потоки подсознания:</div>'+
-				'<div ng:repeat="img in imgs">'+
-					'<a ng:href="http://risovalka.zzzae.biz/gallery/{{img.id}}"><img ng:src="{{img.url}}" /></a>'+
-					'<div class="author" title="{{img.author}}">{{img.author}}</div>'+
-				'</div>'+
-			'</div>',
-		link: function (scope, element, attrs) {
-		},
-		controller: function($scope, $http) {
-			var COUNT = 3;
-			$scope.imgs = [];
-			$scope.loaded = false;
+    return {
+        restrict: 'E',
+        replace: true,
+        template:
+            '<div id="risovalka" ng:if="loaded">'+
+                '<div class="title">Наши потоки подсознания:</div>'+
+                '<div ng:repeat="img in imgs">'+
+                    '<a ng:href="http://risovalka.zzzae.biz/gallery/{{img.id}}"><img ng:src="{{img.url}}" /></a>'+
+                    '<div class="author" title="{{img.author}}">{{img.author}}</div>'+
+                '</div>'+
+            '</div>',
+        link: function (scope, element, attrs) {
+        },
+        controller: function($scope, $http) {
+            var COUNT = 3;
+            $scope.imgs = [];
+            $scope.loaded = false;
             
-			function getImgStruct(data) {
-				var e = data;
-				e.author = e.author ? 'Автор: ' + e.author : '';
-				var l_id = e.id.toLocaleLowerCase();
-				e.url = 'http://risovalka.zzzae.biz/g/'+l_id[0]+'/'+l_id[1]+'/'+l_id[2]+'/'+e.id+'_th.png';
-				return e;
-			}
+            function getImgStruct(data) {
+                var e = data;
+                e.author = e.author ? 'Автор: ' + e.author : '';
+                var l_id = e.id.toLocaleLowerCase();
+                e.url = 'http://risovalka.zzzae.biz/g/'+l_id[0]+'/'+l_id[1]+'/'+l_id[2]+'/'+e.id+'_th.png';
+                return e;
+            }
 
-			$http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).success(function(data) {
-				if(typeof data != 'object') { return; }
+            $http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).success(function(data) {
+                if(typeof data != 'object') { return; }
                 for(var i=0; i<data.length; i++) { 
-					$scope.imgs.push(getImgStruct(data[i]));
-				}
+                    $scope.imgs.push(getImgStruct(data[i]));
+                }
                 $scope.loaded = true;
-			});
-		}
-	};
+            });
+        }
+    };
 })
 .directive('uiBug', function() {
     return {
@@ -113,7 +113,7 @@ angular.module('klavotools.joke', [])
                             this.randomRotate(2);
                             this.finish = 40;
                             return;
-                        }						
+                        }                        
                         
                         this.randomRotate();
                         return;
