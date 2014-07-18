@@ -1,7 +1,7 @@
 /**
  *   Notification module (background)
  *   
- *   example:
+ *   sample code to use:
  *   
  *   var notifications = new NotificationList;
  *   var notif = notifications.create({
@@ -14,7 +14,12 @@
 */
 
 var NotificationList = function() {
+    var self = this;
     this.list = {};
+    
+    kango.addMessageListener('Notification', function(event) {
+        self.action(event);
+    });
 };
 
 NotificationList.prototype = {
@@ -25,6 +30,15 @@ NotificationList.prototype = {
     },
     getId: function() {
         return new Date().getTime().toString(36);
+    },
+    action: function(event) {
+        var data = event.data;
+        if(data.action == 'closed') {
+            dispatchToAllTabs({
+                id: data.id,
+                action: 'hide',
+            });
+        }
     },
     count: function() {
         var i=0;

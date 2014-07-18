@@ -4,6 +4,10 @@
 // @include http://*/*
 // ==/UserScript==
 
+/**
+ * FIXME: notifications overlap each other
+*/
+
 /*function createElement(tag, attrs, html) {
     var elem = document.createElement(tag);
     for(var attr in attrs)
@@ -73,12 +77,12 @@ NotificationBox.prototype = {
         div.className = 'kts-notification';
         div.id = this.prefix + this.id;
         div.style.bottom = '-200px';
-        div.style.transition = 'bottom 1s';
+        div.style.transition = 'bottom 0.5s';
         div.innerHTML = '\
             <table class="kts-notification-header">\
                 <tr>\
                     <!--<td class="kts-notification-header-pic">\
-                        <img src="'+this.iconUrl+'"/>\
+                        <img src=""/>\
                     </td>-->\
                     <td class="kts-notification-header-caption">KlavoTools</td>\
                     <td class="kts-notification-header-close">\
@@ -87,7 +91,7 @@ NotificationBox.prototype = {
                 </tr>\
             </table>\
             <div class="kts-notification-content">\
-                <img src="{mainImageUrl}" class="kts-notification-content-logo"/>\
+                <img src="'+this.iconUrl+'" class="kts-notification-content-logo"/>\
                 <div class="kts-notification-content-main">\
                     <h1 class="kts-notification-content-header">'+this.title+'</h1>\
                     '+this.message+'\
@@ -98,7 +102,7 @@ NotificationBox.prototype = {
         /* add listener on close button */
         div.getElementsByClassName('kts-notification-close-button')[0].addEventListener('click', function() {
             self.hide();
-            kango.dispatchMessage('Notification', {action: 'close', id: self.id});
+            kango.dispatchMessage('Notification', {action: 'closed', id: self.id});
         });
 
         document.body.appendChild(div);
