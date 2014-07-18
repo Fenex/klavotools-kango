@@ -112,7 +112,7 @@ NotificationBox.prototype = {
     },
     hide: function() {
         this.changeVisible('-200px');
-    }
+    },
     changeVisible: function(value) {
         var self = this;
         
@@ -189,7 +189,6 @@ var cssRules = {
     '.kts-notification-content-main': {
         'width': '248px'
     }
-    
 };
 
 function json2css(obj) {
