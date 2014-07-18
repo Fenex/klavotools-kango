@@ -1,5 +1,16 @@
 /**
-    Notification module (background)
+ *   Notification module (background)
+ *   
+ *   example:
+ *   
+ *   var notifications = new NotificationList;
+ *   var notif = notifications.create({
+ *       title: 'title',
+ *       message: 'message',
+ *       iconUrl: "http://example.com/img.png"
+ *   });
+ *   notif.show();
+ *   setTeimtout(notif.hide, 1000 * 10);
 */
 
 var NotificationList = function() {
