@@ -27,7 +27,8 @@ angular.module('klavotools.joke', [])
 			}
 
 			$http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).success(function(data) {
-				for(var i=0; i<data.length; i++) { 
+				if(typeof data != 'object') { return; }
+                for(var i=0; i<data.length; i++) { 
 					$scope.imgs.push(getImgStruct(data[i]));
 				}
                 $scope.loaded = true;
