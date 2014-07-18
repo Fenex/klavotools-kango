@@ -9,9 +9,7 @@ var NotificationList = function() {
 NotificationList.prototype = {
     create: function(data) {
         var id = this.getId();
-        this.list[id] = new Notification(
-            
-        );
+        this.list[id] = new Notification(id, data);
         return this.list[id];
     },
     getId: function() {

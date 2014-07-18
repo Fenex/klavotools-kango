@@ -53,7 +53,7 @@ var NotificationBox = function(data) {
     
     /* arguments */
     this.title = data.title;
-    this.text = data.text;
+    this.message = data.message;
     this.id = data.id;
     this.iconUrl = data.iconUrl;
 
@@ -90,7 +90,7 @@ NotificationBox.prototype = {
                 <img src="{mainImageUrl}" class="kts-notification-content-logo"/>\
                 <div class="kts-notification-content-main">\
                     <h1 class="kts-notification-content-header">'+this.title+'</h1>\
-                    '+this.text+'\
+                    '+this.message+'\
                 </div>\
             </div>\
         ';
@@ -98,6 +98,7 @@ NotificationBox.prototype = {
         /* add listener on close button */
         div.getElementsByClassName('kts-notification-close-button')[0].addEventListener('click', function() {
             self.hide();
+            kango.dispatchMessage('Notification', {action: 'close', id: self.id});
         });
 
         document.body.appendChild(div);
@@ -142,7 +143,7 @@ kango.addMessageListener('Notification', function(event) {
     *   *-- @params
     *         |
     *         +-- @title
-    *         +-- @text
+    *         +-- @message
     *         *-- @iconUrl
     */
     notifications.query(event.data);
@@ -152,7 +153,7 @@ kango.addMessageListener('Notification', function(event) {
 /** adding styles for our notifications */
 
 var cssRules = {
-    '.kts-notification': {
+    ' ': {
         'position': 'fixed',
         'right': '10px',
         'width': '330px',
@@ -163,7 +164,8 @@ var cssRules = {
         'width': '100%'
     },
     '.kts-notification-header-caption': {
-        'width': '99%'
+        'width': '99%',
+        'padding-left': '3px'
     },
     '.kts-notification-header td': {
         'background-color': '#eee',
@@ -188,13 +190,28 @@ var cssRules = {
     },
     '.kts-notification-content-main': {
         'width': '248px'
+    },
+    '*': {
+        'color': 'black',
+        'padding': '0px',
+        'margin': '0px',
+        'border': '0px',
+        'background-color': 'white'
+    },
+    '.kts-notification-close-button': {
+        'cursor': 'pointer',
+        'background-color': '#eee'
+    },
+    'table': {
+        'border-collapse': 'collapse',
+        'border-spacing': '0'
     }
 };
 
 function json2css(obj) {
     var out = '';
     for(var selector in obj) {
-        out += selector + '{';
+        out += '.kts-notification ' + selector + '{';
         for(var css in obj[selector]) {
             out += css + ':' + obj[selector][css] + ' !important;';
         }
