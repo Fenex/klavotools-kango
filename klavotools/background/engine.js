@@ -46,7 +46,6 @@ KlavoTools.tabs = {
 };
 
 KlavoTools.const = {
-    //PATH_TO_ICON: kango.io.getResourceUrl('res/skins/$1'),
     ICON_DEFAULT: 'icons/digits.png',
     ICON_AUTH: 'icons/normal.png',
     ICON_UNREAD: 'icons/dic.png'
@@ -62,12 +61,10 @@ KlavoTools.Auth = {
         return KlavoTools.Auth.user;
     },
     init: function() {
-        var url = 'http://klavogonki.ru/api/profile/get-messages-contacts';
-        var url_send = 'http://klavogonki.ru/api/profile/send-message';
+        var url = 'http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST';
+        var url_send = 'http://klavogonki.ru/api/profile/send-message?KTS_REQUEST';
         
         function set(id, login, unread) {
-            console.log(id);
-            
             KlavoTools.Auth.user.id = id;
             KlavoTools.Auth.user.login = login;
             KlavoTools.Auth.user.unread = unread;
@@ -127,7 +124,6 @@ KlavoTools.Button = {
     setBadgeValue: function(num) {
         if(num == 0)
             num = '';
-        
     },
     update: function() {
         var icon = 'ICON_DEFAULT';
@@ -150,10 +146,6 @@ KlavoTools.Button = {
     init: function() {
         kango.ui.browserButton.setBadgeBackgroundColor([255, 0, 0, 255]);
     }
-};
-
-KlavoTools.Mail = {
-    
 };
 
 KlavoTools.Auth.init();
