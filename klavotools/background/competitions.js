@@ -61,7 +61,6 @@ Competitions.prototype.check = function() {
         
         if(!res.gamelist[0].params.competition) {
             self.timer = setTimeout(function() { self.check() }, 10 * 1000);
-            console.log('competition game not found. try to get again in 2 min');
             return false;
         }
             
@@ -72,15 +71,12 @@ Competitions.prototype.check = function() {
         
         if(begintime - server_time <= 0) {
             self.timer = setTimeout(function() { self.check() }, 120 * 1000);
-            console.log('bigintime < server_time: ' + begintime + ' ' + server_time);
             return false;
         }
         
-        console.log('set to execute check func in (start + 2 minutes)');
         /** next check in (start + 2) minutes **/
         self.timer = setTimeout(function() { self.check() }, (begintime - server_time + 120) * 1000);
         
-        console.log('detected game with rate: ' + rate);
         if(!~self.rates.indexOf(rate)) {
             return false;
         }
@@ -92,13 +88,11 @@ Competitions.prototype.check = function() {
         var notif = self.notifications.create({
             title: 'Соревнование',
             message: 'Соревнование х'+rate+' начинается',
-            iconUrl: kango.io.getResourceUrl('res/comp_btn.png')
+            iconUrl: kango.io.getResourceUrl('res/comp_btn.png'),
+            onclick: 'http://klavogonki.ru/g/?gmid='+gmid
         });
         
-        console.log(timer * 1000);
-        console.log((begintime - server_time) * 1000);
-        
-        setTimeout(function() {notif.show()}, timer * 1000);
-        setTimeout(function() {notif.hide()}, (begintime - server_time) * 1000);
+        notif.show(timer * 1000);
+        notif.hide((begintime - server_time) * 1000);
     });
 };
