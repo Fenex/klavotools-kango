@@ -15,6 +15,9 @@ var Competitions = function(notifications) {
     /** default values **/
     this.delay = kango.storage.getItem('competition_delay') || 60; //1 min
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
+    
+    if(this.delay * this.rates.length > 0)
+        this.activate();
 };
 
 Competitions.prototype.getParams = function() {
@@ -25,16 +28,21 @@ Competitions.prototype.getParams = function() {
 };
 
 Competitions.prototype.setParams = function(param) {
-    this.delay = param.delay || this.delay;
     this.rates = param.rates || this.rates;
+    if(param.delay >= 0) {
+        this.delay = param.delay;
+    }
     
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
     
+    if(this.rates.length * this.rates.length === 0)
+        return this.deactivate();
+    
     if(param.delay) {
         this.deactivate();
         this.activate();
-    }
+    }    
 };
 
 Competitions.prototype.activate = function() {
