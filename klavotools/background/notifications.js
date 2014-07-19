@@ -3,14 +3,14 @@
  *   
  *   sample code to use:
  *   
- *   var notifications = new NotificationList;
- *   var notif = notifications.create({
- *       title: 'title',
- *       message: 'message',
- *       iconUrl: "http://example.com/img.png"
- *   });
- *   notif.show();
- *   setTeimtout(notif.hide, 1000 * 10);
+    var notifications = new NotificationList;
+    var notif = notifications.create({
+        title: 'title',
+        message: 'message',
+        iconUrl: "http://example.com/img.png"
+    });
+    notif.show(); //show right now
+    notif.hide(1000 * 10); //hide after 10 sec
 */
 
 var NotificationList = function() {
@@ -39,6 +39,9 @@ NotificationList.prototype = {
                 action: 'hide',
             });
         }
+        if(data.action == 'clicked') {
+            this.list[data.id].onclick();
+        }
     },
     count: function() {
         var i=0;
@@ -58,18 +61,52 @@ var Notification = function(id, data) {
     this.message = data.message;
     this.title = data.title;
     this.iconUrl = data.iconUrl;
+    this.onclick_href = data.onclick || null;
+
+    this.visible = false;
+    
+    this.timers = {
+        show: null,
+        hide: null
+    };
 };
 
 Notification.prototype = {
-    show: function() {
-        var data = this.getBlank();
-        data.action = 'show';
-        dispatchToAllTabs(data);
+    onclick: function() {
+        if(this.onclick_href) {
+            this.hide();
+            kango.browser.tabs.create({
+                url: this.onclick_href,
+                focused: true
+            });
+        }
     },
-    hide: function() {
-        var data = this.getBlank();
-        data.action = 'hide';
-        dispatchToAllTabs(data);
+    show: function(delay) {
+        var self = this;
+        delay = this.checkDelay(delay);
+        
+        this.timers.show = setTimeout(function() {
+            self.visible = true;
+            var data = self.getBlank();
+            data.action = 'show';
+            dispatchToAllTabs(data);
+        }, delay);
+    },
+    hide: function(delay) {
+        var self = this;
+        delay = this.checkDelay(delay);
+        
+        this.timers.hide = setTimeout(function() {
+            self.visible = false;
+            var data = self.getBlank();
+            data.action = 'hide';
+            dispatchToAllTabs(data);
+        }, delay);
+    },
+    checkDelay: function(delay) {
+        if(typeof delay != 'number' || delay < 1)
+            return 1;
+        return delay;
     },
     getBlank: function() {
         return {

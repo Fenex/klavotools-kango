@@ -104,6 +104,10 @@ NotificationBox.prototype = {
             self.hide();
             kango.dispatchMessage('Notification', {action: 'closed', id: self.id});
         });
+        /* add listener on content body */
+        div.getElementsByClassName('kts-notification-content')[0].addEventListener('click', function() {
+            kango.dispatchMessage('Notification', {action: 'clicked', id: self.id});
+        });
 
         document.body.appendChild(div);
         
