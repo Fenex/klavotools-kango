@@ -13,16 +13,28 @@ var Competitions = function(notifications) {
     this.timer = false;
     
     /** default values **/
-    this.delay = 60; //1 min
-    this.rates = [1, 2, 3, 5];
+    this.delay = kango.storage.getItem('competition_delay') || 60; //1 min
+    this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
+};
+
+Competitions.prototype.getParams = function() {
+    return {
+        rates: this.rates,
+        delay: this.delay
+    };
 };
 
 Competitions.prototype.setParams = function(param) {
     this.delay = param.delay || this.delay;
     this.rates = param.rates || this.rates;
     
-    this.deactivate();
-    this.activate();
+    kango.storage.setItem('competition_delay', this.delay);
+    kango.storage.setItem('competition_rates', this.rates);
+    
+    if(param.delay) {
+        this.deactivate();
+        this.activate();
+    }
 };
 
 Competitions.prototype.activate = function() {
@@ -56,8 +68,13 @@ Competitions.prototype.check = function() {
     };
     
     kango.xhr.send(details, function(res) {
+        /**
+        * FIXME: if @status isn't equal to 200, @check will not performed anymore
+        */        
         if(res.status != 200) { return; }
         res = res.response;
+        
+        clearTimeout(self.timer);
         
         if(!res.gamelist[0].params.competition) {
             self.timer = setTimeout(function() { self.check() }, 10 * 1000);
@@ -77,6 +94,7 @@ Competitions.prototype.check = function() {
         /** next check in (start + 2) minutes **/
         self.timer = setTimeout(function() { self.check() }, (begintime - server_time + 120) * 1000);
         
+        /** does user want to see competition with this rate? **/
         if(!~self.rates.indexOf(rate)) {
             return false;
         }
