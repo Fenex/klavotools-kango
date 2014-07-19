@@ -13,7 +13,7 @@ angular.module('klavotools.joke', [])
             '</div>',
         link: function (scope, element, attrs) {
         },
-        controller: function($scope, $http) {
+        controller: function($scope, $http, $timeout) {
             var COUNT = 3;
             $scope.imgs = [];
             $scope.loaded = false;
@@ -26,13 +26,15 @@ angular.module('klavotools.joke', [])
                 return e;
             }
 
-            $http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).success(function(data) {
-                if(typeof data != 'object') { return; }
-                for(var i=0; i<data.length; i++) { 
-                    $scope.imgs.push(getImgStruct(data[i]));
-                }
-                $scope.loaded = true;
-            });
+            $timeout(function() {
+                $http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).success(function(data) {
+                    if(typeof data != 'object') { return; }
+                    for(var i=0; i<data.length; i++) { 
+                        $scope.imgs.push(getImgStruct(data[i]));
+                    }
+                    $scope.loaded = true;
+                });
+            }, 500);
         }
     };
 })

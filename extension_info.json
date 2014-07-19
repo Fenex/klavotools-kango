@@ -2,13 +2,16 @@
     "description": "KlavoTools Kango", 
     "creator": "Busko Vitaliy", 
     "background_scripts": [
+        "klavotools/background/notifications.js",
         "klavotools/background/config.js",
         "klavotools/background/UserPref.js",
+        "klavotools/background/competitions.js",
         "klavotools/background/engine.js"
     ],
     "content_scripts": [
         "klavotools/foreground/userstyle.js",
-        "klavotools/foreground/userjs-exec.js"
+        "klavotools/foreground/userjs-exec.js",
+        "klavotools/foreground/notifications.js"
     ],
     "homepage_url": "http://klavogonki.ru/", 
     "version": "2.0.6", 
@@ -23,5 +26,8 @@
         }
     }, 
     "name": "KlavoTools Kango",
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "permissions": {
+        "notifications": true
+    }
 }
