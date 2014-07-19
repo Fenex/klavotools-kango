@@ -66,7 +66,7 @@ angular.module('klavotools', ['klavotools.joke'])
     }
     
     $scope.$watch('delay', function(a, b) {
-        if(typeof b == 'string')
+        if(typeof b != 'object')
             sendPrefs({delay: parseInt(a)});
     });
 })
