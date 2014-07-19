@@ -1,8 +1,8 @@
 var KlavoTools = {};
 
-//KlavoTools.prefs = {};
 KlavoTools.userjs = new UserPref('userjs', DefaultConfig.userjs);
 KlavoTools.userstyle = new Skin(DefaultConfig.userstyles);
+KlavoTools.Notifications = new NotificationList;
 
 KlavoTools.version = function() {
     return kango.getExtensionInfo().version;
@@ -150,10 +150,6 @@ KlavoTools.Button = {
     init: function() {
         kango.ui.browserButton.setBadgeBackgroundColor([255, 0, 0, 255]);
     }
-};
-
-KlavoTools.Mail = {
-    
 };
 
 KlavoTools.Auth.init();
