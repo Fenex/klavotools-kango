@@ -5,6 +5,7 @@
         "klavotools/background/notifications.js",
         "klavotools/background/config.js",
         "klavotools/background/UserPref.js",
+        "klavotools/background/competitions.js",
         "klavotools/background/engine.js"
     ],
     "content_scripts": [

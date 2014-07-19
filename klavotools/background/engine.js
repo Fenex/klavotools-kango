@@ -3,6 +3,8 @@ var KlavoTools = {};
 KlavoTools.userjs = new UserPref('userjs', DefaultConfig.userjs);
 KlavoTools.userstyle = new Skin(DefaultConfig.userstyles);
 KlavoTools.Notifications = new NotificationList;
+KlavoTools.Competitions = new Competitions(KlavoTools.Notifications);
+KlavoTools.Competitions.setParams(kango.storage.getItem('competitions') || {});
 
 KlavoTools.version = function() {
     return kango.getExtensionInfo().version;

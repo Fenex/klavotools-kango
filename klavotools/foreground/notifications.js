@@ -162,7 +162,8 @@ var cssRules = {
         'right': '10px',
         'width': '330px',
         'background-color': 'white',
-        'border': '1px solid black'
+        'border': '1px solid black',
+        'z-index': '10000000'
     },
     '.kts-notification-header': {
         'width': '100%'

@@ -5,11 +5,24 @@
 */
 
 var Competitions = function(notifications) {
+    //point to notification module
     this.notifications = notifications;
+    //active status of the module
     this.active = false;
+    //point to timeout of this.check
     this.timer = false;
-    this.delay = 10 * 1000; //10 sec
+    
+    /** default values **/
+    this.delay = 60; //1 min
     this.rates = [1, 2, 3, 5];
+};
+
+Competitions.prototype.setParams = function(param) {
+    this.delay = param.delay || this.delay;
+    this.rates = param.rates || this.rates;
+    
+    this.deactivate();
+    this.activate();
 };
 
 Competitions.prototype.activate = function() {
@@ -22,16 +35,14 @@ Competitions.prototype.activate = function() {
 
 Competitions.prototype.deactivate = function() {
     if(!this.active)
-        return console.log('deactive already') && false;
+        return console.log('deactive already');
     
     clearTimeout(this.timer);
     this.active = false;
-    
-    return true;
 };
 
 Competitions.prototype.check = function() {
-    if(!this.deactivate()) { return; }
+    if(!this.active) { return; }
     var self = this;
     
     var details = {
@@ -49,7 +60,8 @@ Competitions.prototype.check = function() {
         res = res.response;
         
         if(!res.gamelist[0].params.competition) {
-            self.timer = setTimeout(self.check, 120 * 1000);
+            self.timer = setTimeout(function() { self.check() }, 10 * 1000);
+            console.log('competition game not found. try to get again in 2 min');
             return false;
         }
             
@@ -59,17 +71,34 @@ Competitions.prototype.check = function() {
         var gmid = res.gamelist[0].id;
         
         if(begintime - server_time <= 0) {
-            self.timer = setTimeout(self.check, 120 * 1000);
+            self.timer = setTimeout(function() { self.check() }, 120 * 1000);
+            console.log('bigintime < server_time: ' + begintime + ' ' + server_time);
             return false;
         }
         
+        console.log('set to execute check func in (start + 2 minutes)');
         /** next check in (start + 2) minutes **/
-        self.timer = setTimeout(self.check, (begintime - server_time + 120) * 1000);
+        self.timer = setTimeout(function() { self.check() }, (begintime - server_time + 120) * 1000);
         
+        console.log('detected game with rate: ' + rate);
         if(!~self.rates.indexOf(rate)) {
             return false;
         }
+
+        var timer = begintime - server_time - self.delay;
+        if(timer < 1)
+            timer = 1;
         
-        //var a = self.notifications.create()
+        var notif = self.notifications.create({
+            title: 'Соревнование',
+            message: 'Соревнование х'+rate+' начинается',
+            iconUrl: kango.io.getResourceUrl('res/comp_btn.png')
+        });
+        
+        console.log(timer * 1000);
+        console.log((begintime - server_time) * 1000);
+        
+        setTimeout(function() {notif.show()}, timer * 1000);
+        setTimeout(function() {notif.hide()}, (begintime - server_time) * 1000);
     });
 };
