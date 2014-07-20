@@ -137,7 +137,7 @@ angular.module('popup.menutree', [])
         },
         {
             title: 'Настройки',
-            path: '__EXTENSION__options.html',
+            path: '__EXTENSION_OPTIONS__',
             color: 'green'
         },
         {

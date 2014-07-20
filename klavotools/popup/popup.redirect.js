@@ -34,7 +34,10 @@ angular.module('popup.redirect', [])
                 return false;
             url = url.replace(/__USERID__/, Auth.id);
         }
-        if(/__EXTENSION__/.test(url)) {
+        if(/^__EXTENSION_OPTIONS__$/.test(url)) {
+            kango.invokeAsync('kango.ui.optionsPage.open');
+            return null;
+        } else if(/__EXTENSION__/.test(url)) {
             url = url.replace(/__EXTENSION__/, extensionURI);
         }
         else if(!(/^https?:\/\//.test(url)))

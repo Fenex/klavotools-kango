@@ -73,7 +73,7 @@ angular.module('klavotools.joke', [])
                     rotating = true;
                     setTimeout(active, 1500);
                     this.rotate = this.values[random];
-                    this.elem.setAttribute('style', 'position:absolute;-webkit-transform: rotate('+(this.rotate.r+45)+'deg);-webkit-transition: -webkit-transform 1300ms;');
+                    this.elem.setAttribute('style', 'position:absolute;transform: rotate('+(this.rotate.r+45)+'deg);transition: transform 1300ms;');
                     this.setPos();
                 },
 
