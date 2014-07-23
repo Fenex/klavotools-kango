@@ -20,6 +20,12 @@ var NotificationList = function() {
     kango.addMessageListener('Notification', function(event) {
         self.action(event);
     });
+    
+    kango.addMessageListener('NotificationList', function(event) {
+        // event.data - point to data attached
+        // event.target - point to the KangoBrowseTab object that sent the message
+        self.getVisible(event);
+    });
 };
 
 NotificationList.prototype = {
@@ -49,6 +55,15 @@ NotificationList.prototype = {
             i++;
         
         return i;
+    },
+    getVisible: function(event) {
+        var notifs = [];
+        
+        for(var name in this.list)
+            if(this.list[name].visible)
+                notifs.push(this.list[name].getBlank('show'));
+                
+        event.target.dispatchMessage('NotificationList', notifs);
     },
     toString: function() {
         return '[object NotificationList]';
@@ -87,8 +102,7 @@ Notification.prototype = {
         
         this.timers.show = setTimeout(function() {
             self.visible = true;
-            var data = self.getBlank();
-            data.action = 'show';
+            var data = self.getBlank('show');
             dispatchToAllTabs(data);
         }, delay);
     },
@@ -98,8 +112,7 @@ Notification.prototype = {
         
         this.timers.hide = setTimeout(function() {
             self.visible = false;
-            var data = self.getBlank();
-            data.action = 'hide';
+            var data = self.getBlank('hide');
             dispatchToAllTabs(data);
         }, delay);
     },
@@ -108,8 +121,8 @@ Notification.prototype = {
             return 1;
         return delay;
     },
-    getBlank: function() {
-        return {
+    getBlank: function(action) {
+        var blank = {
             id: this.id,
             params: {
                 title: this.title,
@@ -117,6 +130,11 @@ Notification.prototype = {
                 iconUrl: this.iconUrl
             }
         };
+        
+        if(action)
+            blank.action = action;
+            
+        return blank;
     },
     toString: function() {
         return '[object Notification]';

@@ -154,8 +154,18 @@ kango.addMessageListener('Notification', function(event) {
     *         +-- @message
     *         *-- @iconUrl
     */
+    
     notifications.query(event.data);
 });
+
+kango.addMessageListener('NotificationList', function(event) {
+    console.log(event.data);
+    for(var i=0; i<event.data.length; i++) {
+        notifications.query(event.data[i]);
+    }
+});
+
+kango.dispatchMessage('NotificationList', 'get');
 
 (function() {
 /** adding styles for our notifications */
