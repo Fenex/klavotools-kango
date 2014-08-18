@@ -14,7 +14,7 @@
         "klavotools/foreground/notifications.js"
     ],
     "homepage_url": "http://klavogonki.ru/", 
-    "version": "2.0.7", 
+    "version": "2.0.8", 
     "browser_button": {
         "caption": "KlavoTools", 
         "icon": "icons/button.png", 
