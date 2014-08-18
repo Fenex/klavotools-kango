@@ -2,6 +2,7 @@
 // @name notificationsModule
 // @namespace notifications
 // @include http://*/*
+// @include https://*/*
 // ==/UserScript==
 
 /**
