@@ -3,10 +3,9 @@
 // @namespace skin
 // @run-at document-start
 // @include http://klavogonki.ru/*
-// @require klavotools/foreground/debug.js
 // @require klavotools/foreground/userstyle-default.js
 // ==/UserScript==
-kango.invokeAsync('KlavoTools.Skin.getActive', true, function(answer) {
+kango.invokeAsync('KlavoTools.Skin.getActive', true, function(answer) {console.log(answer);
     /**
     * TODO: write cache. perhaps, background-side (?)
     */

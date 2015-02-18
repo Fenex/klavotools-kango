@@ -18,18 +18,29 @@ angular.module('klavotools', ['klavotools.joke'])
         for(var name in $scope.skins) {
             $scope.skins[name] = (a == name) ? true : false;
         }
-        kango.invokeAsync('KlavoTools.Skin.setActive', a);
+        
+        kango.invokeAsync('KlavoTools.Skin.save', a);
     });
 })
 .controller('ScriptCtrl', function($scope) {
-    kango.invokeAsync('KlavoTools.Script.get', function(res) {
-        $scope.scripts = res;
+    kango.invokeAsync('KlavoTools.UserJS.getAll', function(scripts) {
+        var tmp = {};
+        for(var i=0; i<scripts.length; i++) {
+            var name = scripts[i].name.match(/^(.+)\.user\.js/)[1];
+            tmp[name] = {
+                enabled: scripts[i].enabled,
+                description: scripts[i].desc
+            }
+        }
+        
+        $scope.scripts = tmp;
     });
     
     $scope.save = function(script) {
-        var data = {};
-        data[script] = $scope.scripts[script].enable;
-        kango.invokeAsync('KlavoTools.Script.set', data);
+        kango.invokeAsync('KlavoTools.UserJS.set', {
+            id: script+'.user.js',
+            enabled: $scope.scripts[script].enabled
+        });
     };
 })
 .controller('CompetitionCtrl', function($scope) {

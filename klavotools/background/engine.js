@@ -1,38 +1,38 @@
-var KlavoTools = {};
+function xhr(detail) {
+    var deferred = Q.defer();    
+    
+    var details = {
+        method: 'GET',
+        url: detail,
+        async: true
+        //params: {'param1': '1', 'param2': '2'},
+        //headers: {'If-Modified-Since': 'Sat, 1 Jan 2000 00:00:00 GMT', 'Cache-Control': 'max-age=0'},
+        //contentType: 'text'
+    };
+    
+    kango.xhr.send(details, function(data) {
+        if (data.status == 200 && data.response != null) {
+            var text = data.response;
+            deferred.resolve(text);    
+        }
+        else { // something went wrong
+            kango.console.log('something went wrong');
+        }
+    });
+    
+    return deferred.promise;
+}
 
-KlavoTools.userjs = new UserPref('userjs', DefaultConfig.userjs);
-KlavoTools.userstyle = new Skin(DefaultConfig.userstyles);
-KlavoTools.Notifications = new NotificationList;
+
+var KlavoTools = {
+    UserJS: new UserJS,
+    Skin: new Skin,
+    Notifications: new NotificationList
+};
 KlavoTools.Competitions = new Competitions(KlavoTools.Notifications);
 
 KlavoTools.version = function() {
     return kango.getExtensionInfo().version;
-};
-
-KlavoTools.Script = {
-    get: function() {
-        return KlavoTools.userjs.prefs;
-    },
-    set: function(data) {
-        KlavoTools.userjs.merge(data);
-    }
-};
-
-KlavoTools.Skin = {
-    getActive: function(content) {
-        if(!content)
-            return KlavoTools.userstyle.active;
-        return {
-            skin: KlavoTools.userstyle.active,
-            io: kango.io.getResourceUrl('res/skins/$1')
-        };
-    },
-    setActive: function(skin) {
-        return KlavoTools.userstyle.save(skin);
-    },
-    getAll: function() {
-        return KlavoTools.userstyle.skins;
-    }
 };
 
 KlavoTools.tabs = {

@@ -37,7 +37,6 @@
 
     <div style="clear: both;"></div>
 
-
     </div>
     </div>
     </div>
@@ -105,7 +104,7 @@
         <table border><tbody>
             <tr ng:repeat="(script, data) in scripts">
                 <td>
-                    <input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enable" class="user_set" ng:change="save('{{script}}')" />
+                    <input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enabled" class="user_set" ng:change="save('{{script}}')" />
                 </td>
                 <td>
                     <label for="{{script}}">{{script}}</label>
@@ -123,17 +122,12 @@
         <div style="clear: both;">&nbsp;</div>
         <div class="bar"></div>
         <table width="100%"><tbody><tr>
-            <td align="left" style="width: 185px;">
-                <span class="KTS_bottom">KlavoTools. © Vitaliy Busko, 2011 - 2014.</span>
+            <td align="left">
+                <span class="KTS_bottom">KlavoTools. © Vitaliy Busko, 2011 - 2015.</span>
             </td>
             <td align="right">
-                <span id="copyright">© 2008–2011. Авторский проект Артёма Чивчалова.</span>
-                <span id="links">
-                    <a href="http://klavogonki.ru/about/">Правила</a> •
-                    <a href="http://klavogonki.ru/about/learning/">Обучение</a> •
-                    <a href="http://klavogonki.ru/about/stats/">Статистика</a> •
-                    <a href="http://klavogonki.ru/contact/">Обратная связь</a>
-                </span>
+                <span id="copyright"></span>
+                <span id="links"></span>
             </td>
         </tr></tbody></table>
     </div>

@@ -2,27 +2,24 @@
 // @name executeScript
 // @namespace userjs
 // @include http://klavogonki.ru/*
-// @require klavotools/foreground/debug.js
-// @require klavotools/foreground/userjs-config.js
-// @require klavotools/userjs/BB-Tools.user.js
-// @require klavotools/userjs/PostOptionsPlus.user.js
-// @require klavotools/userjs/DailyScores.user.js
-// @require klavotools/userjs/BigTextarea.user.js
-// @require klavotools/userjs/DelGameButton.user.js
-// @require klavotools/userjs/KlavoEvents.user.js
-// @require klavotools/userjs/QuickVocsStart.user.js
-// @require klavotools/userjs/KG_DisableTab.user.js
-// @require klavotools/userjs/sortresults.user.js
-// @require klavotools/userjs/ECM.user.js
-// @require klavotools/userjs/NEC.user.js
 // ==/UserScript==
 
-for (var userjs in UserJS.scripts) {
-    (function() {
-        var id = userjs;
-        kango.invokeAsync('KlavoTools.userjs.isEnabled', id, function(value) {
-        if(value)
-            UserJS.scripts[id].func();
-        });
-    })();
-}
+kango.invokeAsync('KlavoTools.UserJS.getScripts', location.href, function(res) {
+    if(document.getElementById('KTS-AUTO')) { return false; }
+    
+    for(var i=0; i<res.length; i++) {
+        (function(i) {
+            try {
+                console.log(i+1, 'of', res.length, res[i].name);
+                eval(res[i].code);
+            } catch (e) {
+                console.log('KlavoTools: error in script #', i, e);
+                console.log('code script', res[i]);
+            }
+        })(i);
+    }
+    
+    var link = document.createElement('link');
+    link.setAttribute('id', 'KTS-AUTO');
+    document.head.appendChild(link);
+});
