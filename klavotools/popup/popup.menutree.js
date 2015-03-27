@@ -138,7 +138,8 @@ angular.module('popup.menutree', [])
         {
             title: 'Настройки',
             path: '__EXTENSION_OPTIONS__',
-            color: 'green'
+            color: 'green',
+            hidden: true
         },
         {
             title: 'F1',

@@ -1,6 +1,7 @@
 angular.module('popup', [
     'popup.menutree',
-    'popup.redirect'
+    'popup.redirect',
+    'popup.fl-editor'
 ])
 .directive('ngPath', function(Redirect, RedirectMode, $timeout) {
     return {
@@ -30,7 +31,7 @@ angular.module('popup', [
         }
     }
 })
-.directive('uiCssMenu', function(MenuTree) {
+.directive('uiCssMenu', function() {
     return {
         restrict: 'A',
         template: '\
@@ -43,10 +44,35 @@ angular.module('popup', [
                         </li>\
                     </ul>\
                 </li>\
+                <li class="has-sub">\
+                    <a>Ссылки</a>\
+                    <ul>\
+                        <li>\
+                            <a ng:click="openEditor()"><i>{{links.length?"Изменить":"Добавить"}}</i></a>\
+                        </li>\
+                        <li ng:repeat="fl in links">\
+                            <a ng:path="fl.url">{{fl.title}}</a>\
+                        </li>\
+                    </ul>\
+                </li>\
+                <li>\
+                    <a style="color:green;" ng:path ng:path:str="__EXTENSION_OPTIONS__">Настройки</a>\
+                </li>\
             </ul>',
         replace: false,
-        link: function(scope, element, attrs) {
-            scope.menu = MenuTree;
+        controller: function($scope, MenuTree) {
+            $scope.menu = MenuTree;
+            
+            $scope.openEditor = function() {
+                $scope.$broadcast('open-editor');
+            };
+            
+            $scope.$on('save-links', loadFL);
+            
+            function loadFL() {
+                $scope.links = kango.storage.getItem('fast-links') || [];
+            }
+            loadFL();
         }
     }
 })

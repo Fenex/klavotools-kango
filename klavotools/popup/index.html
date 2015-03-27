@@ -8,11 +8,13 @@
     <script src="popup.js"></script>
     <script src="popup.menutree.js"></script>
     <script src="popup.redirect.js"></script>
+    <script src="popup.fl-editor.js"></script>
 </head>
 <body style="height:130px;width: 520px;">
     <div id="cssmenu" ui:css:menu>
         Menu loading...
     </div>
+    <!-- Search user form -->
     <form
         class="userline"
         ng:submit="search()"
@@ -49,5 +51,31 @@
             -->
         </span>
     </form>
+    
+    <!-- Fast links editor -->
+    <div class="editor" ng:controller="EditorCtrl" ng:show="visible">
+        <textarea ng:model="txtlinks"></textarea>
+        <div class="note">* <b>"__USERID__"</b> будет заменяться на ID активного аккаунта</div>
+        <table>
+            <tr>
+                <td>Текст:</td>
+                <td class="td-center">
+                    <input tabindex='3' type="text" ng:model="title" />
+                </td>
+                <td class="td-right">
+                    <input tabindex='5' type="button" value="Добавить" ng:click="add()" />
+                </td>
+            </tr>
+            <tr>
+                <td>Ссылка:</td>
+                <td class="td-center">
+                    <input tabindex='4' type="text" ng:model="url" />
+                </td>
+                <td class="td-right">
+                    <input tabindex='6' type="button" value="Сохранить" ng:click="save()" />
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>

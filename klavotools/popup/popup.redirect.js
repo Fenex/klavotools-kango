@@ -40,8 +40,11 @@ angular.module('popup.redirect', [])
         } else if(/__EXTENSION__/.test(url)) {
             url = url.replace(/__EXTENSION__/, extensionURI);
         }
-        else if(!(/^https?:\/\//.test(url)))
+        else if(!(/^https?:\/\//.test(url))) {
+            if(url[0] != '/')
+                url = '/' + url;
             url = 'http://klavogonki.ru' + url;
+        }
             
         return url;
     }
