@@ -13,8 +13,10 @@ var Competitions = function(notifications) {
     this.timer = false;
     
     /** default values **/
-    this.delay = kango.storage.getItem('competition_delay') || 60; //1 min
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
+    this.delay = kango.storage.getItem('competition_delay');
+    if(typeof this.delay != 'number')
+        this.delay = 60; //1 min
     
     if(this.delay * this.rates.length > 0)
         this.activate();
@@ -32,7 +34,7 @@ Competitions.prototype.setParams = function(param) {
     if(param.delay >= 0) {
         this.delay = param.delay;
     }
-    
+
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
     
