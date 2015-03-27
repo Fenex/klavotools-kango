@@ -13,7 +13,7 @@ kango.invokeAsync('KlavoTools.UserJS.getScripts', location.href, function(res) {
                 console.log(i+1, 'of', res.length, res[i].name);
                 eval(res[i].code);
             } catch (e) {
-                console.log('KlavoTools: error in script #', i, e);
+                console.log('KlavoTools: error in script #', i+1, e);
                 console.log('code script', res[i]);
             }
         })(i);
