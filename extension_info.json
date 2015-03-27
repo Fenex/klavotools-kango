@@ -10,8 +10,8 @@
         "klavotools/background/engine.js"
     ],
     "content_scripts": [
-        "klavotools/foreground/userjs-exec.js",
         "klavotools/foreground/userstyle.js",
+        "klavotools/foreground/userjs-exec.js",
         "klavotools/foreground/notifications.js"
     ],
     "homepage_url": "http://klavogonki.ru/", 

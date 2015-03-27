@@ -6,9 +6,11 @@
 // @require klavotools/foreground/userstyle-default.js
 // ==/UserScript==
 kango.invokeAsync('KlavoTools.Skin.getActive', true, function(answer) {console.log(answer);
-    /**
-    * TODO: write cache. perhaps, background-side (?)
-    */
+    var skin_cache = kango.storage.getItem('skin-cache');
+    var skin_pref = kango.storage.getItem('skin-pref');
+    if(answer.skin == skin_pref)
+        return applySkin(skin_cache);
+    
     kango.xhr.send({
         method: 'GET',
         url: 'res/skins/'+answer.skin+'.css',
@@ -16,9 +18,15 @@ kango.invokeAsync('KlavoTools.Skin.getActive', true, function(answer) {console.l
         contentType: 'text'
     }, function(res) {
         res = res.response.replace(/%FOLDER_([a-zA-Z0-9]+?)%/gm, answer.io);
-        
-        var s = document.createElement('style');
-        s.innerHTML = res + json2css(default_style) + css_txt;
-        document.head.appendChild(s);
+        var css = res + json2css(default_style) + css_txt;
+        kango.storage.setItem('skin-cache', css);
+        kango.storage.setItem('skin-pref', answer.skin);
+        applySkin(css);
     });
+    
+    function applySkin(css) {
+        var s = document.createElement('style');
+        s.innerHTML = css;        
+        document.head.appendChild(s);
+    }
 });
