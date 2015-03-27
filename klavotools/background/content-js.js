@@ -28,6 +28,7 @@ Script.prototype.getIncludes = function() {
                     include[1]
                         .replace(/\./g, '\\.')
                         .replace(/\*/g, '.*')
+                        .replace(/\?/g, '\\?')
                 );
             }
         } else if (metadata.start.test(lines[i])) {
