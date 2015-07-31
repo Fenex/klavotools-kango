@@ -31,7 +31,7 @@ Userstyles
     
 `%FOLDER_pink%` [заменится](https://github.com/Fenex/klavotools-kango/blob/v3.1.0/klavotools/foreground/userstyle.js#L20) на валидный URI, по которому будет находиться изображение. Концовка `pink` - указание из какой папки брать файл.
 
-При добавлении нового стиля необходимо так же прописать его название в конфигурационном файле: `/klavotools/background/config.js`
+При добавлении нового стиля необходимо так же прописать его название в подключаемом файле: `/klavotools/background/content-style.js`
 
 Userscripts
 -----------
