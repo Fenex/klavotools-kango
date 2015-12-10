@@ -7,8 +7,9 @@
 var Competitions = function() {
     //active status of the module
     this.active = false;
-    //point to timeout of this.check
+    //points to timeouts of this.check
     this.timer = false;
+    this.notification_timer = false;
     
     /** default values **/
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
@@ -58,6 +59,7 @@ Competitions.prototype.deactivate = function() {
         return console.log('deactive already');
     
     clearTimeout(this.timer);
+    clearTimeout(this.notification_timer);
     this.active = false;
 };
 
@@ -74,7 +76,7 @@ Competitions.prototype.check = function() {
         },
         contentType: 'json'
     };
-    
+
     kango.xhr.send(details, function(res) {
         /**
         * FIXME: if @status isn't equal to 200, @check will not performed anymore
@@ -83,6 +85,7 @@ Competitions.prototype.check = function() {
         res = res.response;
         
         clearTimeout(self.timer);
+        clearTimeout(self.notification_timer);
         
         if(!res.gamelist[0].params.competition) {
             self.timer = setTimeout(function() { self.check() }, 10 * 1000);
@@ -115,7 +118,7 @@ Competitions.prototype.check = function() {
         var body = 'Соревнование x'+rate+' начинается';
         var icon = kango.io.getResourceUrl('res/kg_logo.svg');
 
-        window.setTimeout(function(){
+        self.notification_timer = setTimeout(function(){
             kango.ui.notifications.show(title, body, icon, function(){
                 kango.browser.tabs.create({
                     url: 'http://klavogonki.ru/g/?gmid='+gmid,
