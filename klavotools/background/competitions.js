@@ -115,11 +115,13 @@ Competitions.prototype.check = function() {
         var body = 'Соревнование x'+rate+' начинается';
         var icon = kango.io.getResourceUrl('res/kg_logo.svg');
 
-        kango.ui.notifications.show(title, body, icon, function(){
-            kango.browser.tabs.create({
-                url: 'http://klavogonki.ru/g/?gmid='+gmid,
-                focused: true,
+        window.setTimeout(function(){
+            kango.ui.notifications.show(title, body, icon, function(){
+                kango.browser.tabs.create({
+                    url: 'http://klavogonki.ru/g/?gmid='+gmid,
+                    focused: true,
+                });
             });
-        });
+        }, timer * 1000 );
     });
 };
