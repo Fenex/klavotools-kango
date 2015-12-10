@@ -129,7 +129,7 @@ UserJS.prototype.update = function() {
         var rows = res.split(/\n/);
         
         for(var i=0; i<rows.length; i++) {
-            var m = rows[i].match(/docs\/(.+?).md.+_(.+?)_/);
+            var m = rows[i].match(/docs\/(.+?).md.+?\|\s*(.+?)\s*\|/);
             if(!m)
                 continue;
         
