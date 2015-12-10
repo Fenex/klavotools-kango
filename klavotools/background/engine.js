@@ -27,9 +27,8 @@ function xhr(detail) {
 var KlavoTools = {
     UserJS: new UserJS,
     Skin: new Skin,
-    Notifications: new NotificationList
 };
-KlavoTools.Competitions = new Competitions(KlavoTools.Notifications);
+KlavoTools.Competitions = new Competitions();
 
 KlavoTools.version = function() {
     return kango.getExtensionInfo().version;

@@ -4,9 +4,7 @@
  *  The module checks for new open competitions and shows notifications.
 */
 
-var Competitions = function(notifications) {
-    //point to notification module
-    this.notifications = notifications;
+var Competitions = function() {
     //active status of the module
     this.active = false;
     //point to timeout of this.check
@@ -112,15 +110,16 @@ Competitions.prototype.check = function() {
         var timer = begintime - server_time - self.delay;
         if(timer < 1)
             timer = 1;
-        
-        var notif = self.notifications.create({
-            title: 'Соревнование',
-            message: 'Соревнование х'+rate+' начинается',
-            iconUrl: kango.io.getResourceUrl('res/comp_btn.png'),
-            onclick: 'http://klavogonki.ru/g/?gmid='+gmid
+
+        var title = 'Соревнование';
+        var body = 'Соревнование x'+rate+' начинается';
+        var icon = kango.io.getResourceUrl('res/kg_logo.svg');
+
+        kango.ui.notifications.show(title, body, icon, function(){
+            kango.browser.tabs.create({
+                url: 'http://klavogonki.ru/g/?gmid='+gmid,
+                focused: true,
+            });
         });
-        
-        notif.show(timer * 1000);
-        notif.hide((begintime - server_time) * 1000);
     });
 };
