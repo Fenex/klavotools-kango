@@ -1,27 +1,29 @@
 angular.module('popup.fl-editor', [])
-.controller("EditorCtrl", function($scope, $rootScope) {
-    $scope.txtlinks = '';
-    $scope.title = '';
-    $scope.url = '';
+
+.controller("popup:FastLinks", function($scope, $rootScope) {
+    var ctrl = this;
+    
+    ctrl.txtlinks = '';
+    ctrl.title = '';
+    ctrl.url = '';
     
     $scope.$on('open-editor', function() {
-        $scope.visible = true;
+        ctrl.visible = true;
     });
     
-    $scope.add = function() {
-        $scope.txtlinks +=
+    ctrl.add = function() {
+        ctrl.txtlinks +=
             '[link]' + 
-                '[title]' + $scope.title + '[/title]' +
-                '[url]' + $scope.url + '[/url]' +
+                '[title]' + ctrl.title + '[/title]' +
+                '[url]' + ctrl.url + '[/url]' +
             '[/link]\r\n';
         
-        $scope.title = '';
-        $scope.url = '';
+        ctrl.url = ctrl.title = '';
     };
     
-    $scope.save = function() {
+    ctrl.save = function() {
         var json = [];
-        var arr = $scope.txtlinks.split('[link]');
+        var arr = ctrl.txtlinks.split('[link]');
         
         for(i=1; i<arr.length; i++) {
             json.push({
@@ -32,7 +34,7 @@ angular.module('popup.fl-editor', [])
         
         kango.storage.setItem('fast-links', json);
         
-        $scope.visible = false;
+        ctrl.visible = false;
         $scope.$emit('save-links');
         
         load();
@@ -49,7 +51,7 @@ angular.module('popup.fl-editor', [])
                 '[/link]\r\n';
         }
         
-        $scope.txtlinks = txt;
+        ctrl.txtlinks = txt;
     }
     
     load();

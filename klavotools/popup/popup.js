@@ -3,6 +3,7 @@ angular.module('popup', [
     'popup.redirect',
     'popup.fl-editor'
 ])
+
 .directive('ngPath', function(Redirect, RedirectMode, $timeout) {
     return {
         restrict: 'A',
@@ -31,6 +32,7 @@ angular.module('popup', [
         }
     }
 })
+
 .directive('uiCssMenu', function() {
     return {
         restrict: 'A',
@@ -76,28 +78,32 @@ angular.module('popup', [
         }
     }
 })
-.controller('searchUser', function($scope) {
-    $scope.login = '';
-    $scope.id = 0;
-    $scope.loading = false;
+
+.controller('popup:SearchUser', function($scope) {
+    var ctrl = this;
     
-    $scope.search = function() {
-        $scope.loading = true;
-        $scope.id = 0;
+    ctrl.login = '';
+    ctrl.id = 0;
+    ctrl.loading = false;
+    
+    ctrl.search = function() {
+        ctrl.loading = true;
+        ctrl.id = 0;
         kango.xhr.send({
                 method: 'POST',
                 url: 'http://klavogonki.ru/.fetchuser',
                 params: {
-                    login: $scope.login
+                    login: ctrl.login
                 }
             },
             function(data) {
                 if (data.status == 200 && data.response != null) {
-                    $scope.id = JSON.parse(data.response).id;
+                    ctrl.id = JSON.parse(data.response).id;
                 } else {
                     //kango.console.log('something went wrong');
                 }
-                $scope.loading = false;
+                ctrl.loading = false;
+                
                 $scope.$apply();
             }
         );

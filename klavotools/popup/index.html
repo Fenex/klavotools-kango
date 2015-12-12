@@ -17,34 +17,34 @@
     <!-- Search user form -->
     <form
         class="userline"
-        ng:submit="search()"
-        ng:controller="searchUser">
+        ng:controller="popup:SearchUser as SearchUser"
+        ng:submit="SearchUser.search()">
         
-        <img ng:if="loading" src="http://klavogonki.ru/img/small_loading.gif" />
-        <img ng:if="id!==0" src="http://klavogonki.ru/img/ok.gif" />
+        <img ng:if="SearchUser.loading" src="http://klavogonki.ru/img/small_loading.gif" />
+        <img ng:if="SearchUser.id!==0" src="http://klavogonki.ru/img/ok.gif" />
         
         <input
             type="text"
             tabindex="1"
-            ng:model="login" />
+            ng:model="SearchUser.login" />
             
         <input
             type="button"
             value="→"
             tabindex="2"
-            ng:click="search()" />
+            ng:click="SearchUser.search()" />
         
-        <span ng:if="id===false">не найден</span>
-        <span ng:if="id!=0" class="get-id-links">
-            ID: {{id}} |
+        <span ng:if="SearchUser.id===false">не найден</span>
+        <span ng:if="SearchUser.id!=0" class="get-id-links">
+            ID: {{SearchUser.id}} |
             <a title="Профиль">
-                <img ng:path ng:path:str="/u/#/{{id}}/" src="../../icons/profile.png" />
+                <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/" src="../../icons/profile.png" />
             </a>
             <a title="Статистика">
-                <img ng:path ng:path:str="/u/#/{{id}}/stats/" src="../../icons/sprint.png" />
+                <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/stats/" src="../../icons/sprint.png" />
             </a>
             <a title="Бортжурнал">
-                <img ng:path ng:path:str="/u/#/{{id}}/journal/" src="../../icons/usefuladdons.png" />
+                <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/journal/" src="../../icons/usefuladdons.png" />
             </a>
             <!--
                 TODO: add links to achievements and friends.         
@@ -53,26 +53,26 @@
     </form>
     
     <!-- Fast links editor -->
-    <div class="editor" ng:controller="EditorCtrl" ng:show="visible">
-        <textarea ng:model="txtlinks"></textarea>
+    <div class="editor" ng:controller="popup:FastLinks as FastLinks" ng:show="FastLinks.visible">
+        <textarea ng:model="FastLinks.txtlinks"></textarea>
         <div class="note">* <b>"__USERID__"</b> будет заменяться на ID активного аккаунта</div>
         <table>
             <tr>
                 <td>Текст:</td>
                 <td class="td-center">
-                    <input tabindex='3' type="text" ng:model="title" />
+                    <input tabindex='3' type="text" ng:model="FastLinks.title" />
                 </td>
                 <td class="td-right">
-                    <input tabindex='5' type="button" value="Добавить" ng:click="add()" />
+                    <input tabindex='5' type="button" value="Добавить" ng:click="FastLinks.add()" />
                 </td>
             </tr>
             <tr>
                 <td>Ссылка:</td>
                 <td class="td-center">
-                    <input tabindex='4' type="text" ng:model="url" />
+                    <input tabindex='4' type="text" ng:model="FastLinks.url" />
                 </td>
                 <td class="td-right">
-                    <input tabindex='6' type="button" value="Сохранить" ng:click="save()" />
+                    <input tabindex='6' type="button" value="Сохранить" ng:click="FastLinks.save()" />
                 </td>
             </tr>
         </table>
