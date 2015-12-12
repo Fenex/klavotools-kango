@@ -12,32 +12,18 @@ var Script = function(name, desc) {
 
 Script.prototype.getIncludes = function() {
     if(!this.code) return false;
-    
-    var metadata = {
-        start: /^\s*\/\/ +==UserScript==\s*$/,
-        end: /^\s*\/\/ +==\/UserScript==\s*$/,
-        block: false
-    };
-    
-    var lines = this.code.split(/\n/);
-    for(var i=0; i<lines.length; i++) {
-        if(metadata.block) {
-            var include = lines[i].match(/^\s*\/\/\s+@include\s+([\S]+)/);
-            if(include){
-                this.includes.push(
-                    include[1]
-                        .replace(/\./g, '\\.')
-                        .replace(/\*/g, '.*')
-                        .replace(/\?/g, '\\?')
-                );
-            }
-        } else if (metadata.start.test(lines[i])) {
-            metadata.block = true;
-        } else if (metadata.end.test(lines[i])) {
-            break;
-        }
+
+    var metadata = this.code.substring(0, this.code.indexOf('==/UserScript=='));
+    var rx = /@(?:include|match)\s+(\S*)/g;
+    while ((url = rx.exec(metadata)) !== null) {
+        this.includes.push(
+            url[1]
+                .replace(/\./g, '\\.')
+                .replace(/\*/g, '.*')
+                .replace(/\?/g, '\\?')
+        );
     }
-    
+
     return this;
 }
 
