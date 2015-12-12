@@ -3,14 +3,7 @@ angular.module('klavotools.joke', [])
     return {
         restrict: 'E',
         replace: true,
-        template:
-            '<div id="risovalka" ng:if="loaded">'+
-                '<div class="title">Наши потоки подсознания:</div>'+
-                '<div ng:repeat="img in imgs">'+
-                    '<a ng:href="http://risovalka.zzzae.biz/gallery/{{img.id}}"><img ng:src="{{img.url}}" /></a>'+
-                    '<div class="author" title="{{img.author}}">{{img.author}}</div>'+
-                '</div>'+
-            '</div>',
+        templateUrl: 'uiRisovalka_Template',
         link: function (scope, element, attrs) {
         },
         controller: function($scope, $http, $timeout) {

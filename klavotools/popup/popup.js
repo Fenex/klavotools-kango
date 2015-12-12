@@ -36,31 +36,7 @@ angular.module('popup', [
 .directive('uiCssMenu', function() {
     return {
         restrict: 'A',
-        template: '\
-            <ul>\
-                <li ng:repeat="m in menu" ng:class="{\'has-sub\': m.sub}" ng:hide="m.hidden">\
-                    <a ng:style="{color: m.color}" ng:path="m.path">{{m.title}}</a>\
-                    <ul>\
-                        <li ng:repeat="sub in m.sub">\
-                            <a ng:path="sub.path">{{sub.title}}</a>\
-                        </li>\
-                    </ul>\
-                </li>\
-                <li class="has-sub">\
-                    <a>Ссылки</a>\
-                    <ul>\
-                        <li>\
-                            <a ng:click="openEditor()"><i>{{links.length?"Изменить":"Добавить"}}</i></a>\
-                        </li>\
-                        <li ng:repeat="fl in links">\
-                            <a ng:path="fl.url">{{fl.title}}</a>\
-                        </li>\
-                    </ul>\
-                </li>\
-                <li>\
-                    <a style="color:green;" ng:path ng:path:str="__EXTENSION_OPTIONS__">Настройки</a>\
-                </li>\
-            </ul>',
+        templateUrl: 'uiCssMenu_Template',
         replace: false,
         controller: function($scope, MenuTree) {
             $scope.menu = MenuTree;

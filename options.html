@@ -43,6 +43,16 @@
     <div id="line"></div>
     <!--<div class="bar"></div>-->
 
+    <script type="text/ng-template" id="uiRisovalka_Template">
+        <div id="risovalka" ng:if="loaded">
+            <div class="title">Наши потоки подсознания:</div>
+            <div ng:repeat="img in imgs">
+                <a ng:href="http://risovalka.zzzae.biz/gallery/{{img.id}}"><img ng:src="{{img.url}}" /></a>
+                <div class="author" title="{{img.author}}">{{img.author}}</div>
+            </div>
+        </div>
+    </script>
+    
     <div id="content" class="minwidth">
         
         <ui:risovalka></ui:risovalka>
