@@ -119,18 +119,15 @@ angular.module('popup', [
     };
 })
 
-.controller('popup:Mail', function($scope, KangoQ, $http) {
+.controller('popup:Mail', function($http) {
     var ctrl = this;
     
     ctrl.data = {};
     
     $http.get('http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
     .then(function(res) {
-        if(res.status != 200)
-            return;
-        
-        ctrl.data = res.data;
-        console.log(ctrl.data);
+        if(res.status == 200)
+            ctrl.data = res.data;
     });
 });
 
