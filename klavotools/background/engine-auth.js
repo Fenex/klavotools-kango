@@ -1,7 +1,7 @@
 var Auth = function() {
     this.status = {};
     
-    //this.check();
+    this.check();
     this.Timer = new AuthTimer(this.check);
 };
 
