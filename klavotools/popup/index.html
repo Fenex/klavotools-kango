@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="../../kango-ui/kango_api.js"></script>
     <script src="../angular.min.js"></script>
+    <script src="../background/lib/kango-q.js"></script>
     <script src="popup.js"></script>
     <script src="popup.menutree.js"></script>
     <script src="popup.redirect.js"></script>
@@ -14,6 +15,7 @@
     <div id="cssmenu" ui:css:menu>
         Menu loading...
     </div>
+    
     <!-- Search user form -->
     <form
         class="userline"
@@ -51,6 +53,26 @@
             -->
         </span>
     </form>
+    
+    <!-- Mail -->
+    <div class="mail" ng:controller="popup:Mail as Mail">
+        <div>
+            <input type="checkbox" title="Скрыть прочитанные" ng:init="Mail.HideReadMsg = true" ng:model="Mail.HideReadMsg" ng:click="Mail.HideReadMsg = !Mail.HideReadMsg" /> Сообщения:
+        </div>
+        <div
+            ng:repeat="message in Mail.data.messages"
+            ng:if="message.unread || !Mail.HideReadMsg"
+            class="message"
+            style="background: transparent url(http://img.klavogonki.ru/avatars/{{message.respondent_id}}_big.gif) no-repeat">
+            
+            <div>
+                <a class="login" ng:path ng:path:str="/u/#/{{message.respondent_id}}/" ng:bind="Mail.data.users[message.respondent_id].login"></a>
+                <span class="date" ng:bind="message.date.sec * 1000 | date"></span>
+                <a class="read" href="#" ng:path ng:path:str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">Диалог >></a>
+            </div>
+            <div class="text" ng:bind="message.text"></div>
+        </div>
+    </div>
     
     <!-- Fast links editor -->
     <div class="editor" ng:controller="popup:FastLinks as FastLinks" ng:show="FastLinks.visible">

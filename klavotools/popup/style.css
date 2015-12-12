@@ -48,3 +48,27 @@ form {
 .editor .td-right {
     text-align: right;
 }
+
+.mail .message {
+    margin: 5px;
+    padding-left: 65px;
+    min-height: 60px;
+}
+
+.mail .login {
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.mail .date {
+    font-size: 10px;
+    margin-left: 10px;
+    color: grey;
+}
+.mail .read {
+    font-size: 10px;
+    margin-left: 10px;
+}
+.mail .read:hover, .mail .login:hover {
+    color: #bb2200;
+}

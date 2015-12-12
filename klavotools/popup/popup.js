@@ -1,8 +1,53 @@
 angular.module('popup', [
     'popup.menutree',
     'popup.redirect',
-    'popup.fl-editor'
+    'popup.fl-editor',
+    'fnx.kango-q'
 ])
+.config(function($httpProvider) {
+    // Use x-www-form-urlencoded Content-Type
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+
+    /**
+     * The workhorse; converts an object to x-www-form-urlencoded serialization.
+     * @param {Object} obj
+     * @return {String}
+     */
+    var param = function(obj) {
+        var query = '',
+            name, value, fullSubName, subName, subValue, innerObj, i;
+
+        for (name in obj) {
+            value = obj[name];
+
+            if (value instanceof Array) {
+                for (i = 0; i < value.length; ++i) {
+                    subValue = value[i];
+                    fullSubName = name + '[' + i + ']';
+                    innerObj = {};
+                    innerObj[fullSubName] = subValue;
+                    query += param(innerObj) + '&';
+                }
+            } else if (value instanceof Object) {
+                for (subName in value) {
+                    subValue = value[subName];
+                    fullSubName = name + '[' + subName + ']';
+                    innerObj = {};
+                    innerObj[fullSubName] = subValue;
+                    query += param(innerObj) + '&';
+                }
+            } else if (value !== undefined && value !== null)
+                query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+        }
+
+        return query.length ? query.substr(0, query.length - 1) : query;
+    };
+
+    // Override $http service's default transformRequest
+    $httpProvider.defaults.transformRequest = [function(data) {
+        return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+    }];
+})
 
 .directive('ngPath', function(Redirect, RedirectMode, $timeout) {
     return {
@@ -55,7 +100,7 @@ angular.module('popup', [
     }
 })
 
-.controller('popup:SearchUser', function($scope) {
+.controller('popup:SearchUser', function($scope, $http) {
     var ctrl = this;
     
     ctrl.login = '';
@@ -65,25 +110,28 @@ angular.module('popup', [
     ctrl.search = function() {
         ctrl.loading = true;
         ctrl.id = 0;
-        kango.xhr.send({
-                method: 'POST',
-                url: 'http://klavogonki.ru/.fetchuser',
-                params: {
-                    login: ctrl.login
-                }
-            },
-            function(data) {
-                if (data.status == 200 && data.response != null) {
-                    ctrl.id = JSON.parse(data.response).id;
-                } else {
-                    //kango.console.log('something went wrong');
-                }
-                ctrl.loading = false;
-                
-                $scope.$apply();
-            }
-        );
+        
+        $http.post('http://klavogonki.ru/.fetchuser?KTS_REQUEST', {login: ctrl.login})
+        .then(function(res) {
+            ctrl.id = res.data.id;
+            ctrl.loading = false;
+        });
     };
+})
+
+.controller('popup:Mail', function($scope, KangoQ, $http) {
+    var ctrl = this;
+    
+    ctrl.data = {};
+    
+    $http.get('http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
+    .then(function(res) {
+        if(res.status != 200)
+            return;
+        
+        ctrl.data = res.data;
+        console.log(ctrl.data);
+    });
 });
 
 KangoAPI.onReady(function() {
