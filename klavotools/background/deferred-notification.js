@@ -1,5 +1,5 @@
 /**
- * DeferredNotification module. Depends on the Q promises library.
+ * DeferredNotification module.
  *
  * Example of usage:
  *
@@ -39,42 +39,49 @@ function DeferredNotification (title, options) {
     return this;
 }
 
+/**
+ * Revokes the delayed notification or closes the active.
+ */
+DeferredNotification.prototype.revoke = function () {
+    clearTimeout(this._timeout);
+    console.info(this._notification !== 'undefined' && this.options.displayTime > 0)
+    if (typeof this._notification !== 'undefined' && this.options.displayTime > 0) {
+        this.options.displayTime = 0;
+        this._notification.close();
+    }
+};
 
 /**
- * Create the Notification after the certain delay
+ * Create the Notification after the certain delay.
  *
  * @param {Number} [delay=0] Delay in seconds
  * @return {Object} A promise resolving to the Notification instance object
  */
 DeferredNotification.prototype.show = function (delay) {
     delay = delay || 0;
-    var deferred = Q.defer();
     var timeShown = 0;
     function _show () {
-        kango.console.log((new Date).toString());
-        var notify = new Notification(this.title, this.options);
+        var notification = new Notification(this.title, this.options);
+        this._notification = notification;
+
+        // Proxing methods to the Notification instance object:
+        for (var prop in this) {
+            if (typeof this[prop] === 'function' && Notification.prototype.hasOwnProperty(prop)) {
+                notification[prop] = this[prop];
+            }
+        }
 
         if (this.options.displayTime) {
             var diff = this.options.displayTime - timeShown;
             if (diff > 3) {
                 // Show again after the 3 seconds:
                 timeShown += 3;
-                setTimeout(_show.bind(this), 3 * 1000);
+                this._timeout = setTimeout(_show.bind(this), 3 * 1000);
             } else {
-                setTimeout(notify.close.bind(notify), diff * 1000);
+                this._timeout = setTimeout(notification.close.bind(notification), diff * 1000);
             }
         }
-
-        // Proxing methods to the Notification instance object:
-        for (var prop in this) {
-            if (typeof this[prop] === 'function' && Notification.prototype.hasOwnProperty(prop)) {
-                notify[prop] = this[prop];
-            }
-        }
-
-        if (timeShown) return;
-        deferred.resolve(notify);
     }
 
-    setTimeout(_show.bind(this), delay * 1000);
+    this._timeout = setTimeout(_show.bind(this), delay * 1000);
 };
