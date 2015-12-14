@@ -55,7 +55,6 @@ DeferredNotification.prototype.revoke = function () {
  * Create the Notification after the certain delay.
  *
  * @param {Number} [delay=0] Delay in seconds
- * @return {Object} A promise resolving to the Notification instance object
  */
 DeferredNotification.prototype.show = function (delay) {
     delay = delay || 0;
