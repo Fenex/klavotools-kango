@@ -45,37 +45,43 @@ angular.module('klavotools', ['klavotools.joke'])
 })
 .controller('CompetitionCtrl', function($scope) {
     $scope.delay = null;
-    
+    $scope.displayTime = null;
+
     $scope.rates = {
         x1: false,
         x2: false,
         x3: false,
         x5: false
     };
-    
+
     kango.invokeAsync('KlavoTools.Competitions.getParams', function(res) {
         $scope.delay = res.delay;
+        $scope.displayTime = res.displayTime;
         for(var i=0; i<res.rates.length; i++) {
             if(typeof $scope.rates['x'+res.rates[i]] == 'boolean') {
                 $scope.rates['x'+res.rates[i]] = true;
             }
         }
     });
-    
+
     function sendPrefs(data) {
         kango.invokeAsync('KlavoTools.Competitions.setParams', data);
     };
-    
+
     $scope.change = function() {
         var arr = [];
         for(var rate in $scope.rates) {
             if($scope.rates[rate])
                 arr.push(parseInt(rate.match(/\d+/)[0]));
         }
-        
+
         sendPrefs({rates: arr});
     }
-    
+
+    $scope.setDisplayTime = function () {
+        sendPrefs({ displayTime: $scope.displayTime });
+    };
+
     $scope.$watch('delay', function(a, b) {
         if(typeof b != 'object')
             sendPrefs({delay: parseInt(a)});

@@ -102,6 +102,17 @@
                             <option value="999">Как можно раньше</option>
                         </select>
                     </td>
+                    <td>
+                        <label for="KTS_notification_display_time">Показывать уведомление:</label>
+                        <select id="KTS_notification_display_time"
+                            ng-model="displayTime"
+                            ng-change="setDisplayTime()"
+                            ng-disabled="delay == 0">
+                                <option value="5">5 сек</option>
+                                <option value="10">10 сек</option>
+                                <option value="999">До начала соревнования</option>
+                        </select>
+                    </td>
                 </tr>
             </table>
         </form>
