@@ -44,7 +44,7 @@ function DeferredNotification (title, options) {
  */
 DeferredNotification.prototype.revoke = function () {
     clearTimeout(this._timeout);
-    if (typeof this._notification !== 'undefined' && this.options.displayTime > 0) {
+    if (typeof this._notification !== 'undefined') {
         this.options.displayTime = 0;
         this._notification.close();
     }

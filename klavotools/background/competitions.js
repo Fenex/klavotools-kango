@@ -21,8 +21,8 @@ var Competitions = function() {
         this.delay = 60;
     }
     if (typeof this.displayTime != 'number') {
-        // 10 seconds:
-        this.displayTime = 10;
+        // Default time:
+        this.displayTime = 0;
     }
 
     if (this.delay * this.rates.length > 0) {
@@ -140,14 +140,16 @@ Competitions.prototype.check = function() {
         self.notification = new DeferredNotification(title, {
             body: body,
             icon: icon,
-            displayTime: displayTime,
+            displayTime: displayTime > 0 ? displayTime : undefined,
         });
+
         self.notification.onclick = function () {
             kango.browser.tabs.create({
                 url: 'http://klavogonki.ru/g/?gmid='+gmid,
                 focused: true,
             });
         };
+
         self.notification.show(timer);
     });
 };
