@@ -71,8 +71,9 @@ Competitions.prototype.deactivate = function() {
         return console.log('deactive already');
     
     clearTimeout(this.timer);
-    if (typeof this.notification === 'object') {
+    if (this.notification !== null) {
         this.notification.revoke();
+        this.notification = null;
     }
     this.active = false;
 };

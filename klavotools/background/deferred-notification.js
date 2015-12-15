@@ -59,6 +59,9 @@ DeferredNotification.prototype.show = function (delay) {
     delay = delay || 0;
     var timeShown = 0;
     function _show () {
+        // Close event triggers whenever the replacement of a notification occurs. So, in order to
+        // check whether the close event was triggered by user — saving the current timestamp:
+        var timestamp = Date.now();
         var notification = new Notification(this.title, this.options);
         this._notification = notification;
 
@@ -70,7 +73,12 @@ DeferredNotification.prototype.show = function (delay) {
         }
 
         // Preventing the rerun of the notification:
-        notification.addEventListener('close', this.revoke.bind(this));
+        notification.addEventListener('close', function () {
+            if (((Date.now() - timestamp) / 1000 | 0) < 3) {
+                // Close event was triggered by user — revoke the notification:
+                this.revoke();
+            }
+        }.bind(this));
 
         if (this.options.displayTime) {
             var diff = this.options.displayTime - timeShown;
