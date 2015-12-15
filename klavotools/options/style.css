@@ -8,6 +8,19 @@ body{padding:0;margin:0;background-color:#fff;}body,input,select,textarea{font:n
 #KTS_style{margin-left: 20px;}
 #KTS_scripts{margin-left: 20px;}
 #KTS_notifications{margin-left: 20px;}
+#KTS_notifications > table td{
+    padding: 0 5px;
+    border-right: 1px solid gray;
+}
+#KTS_notifications > table td:first-child{
+    padding-left: 0;
+}
+#KTS_notifications > table td:last-child{
+    border-right: none;
+}
+#KTS_notifications > table td > label{
+    display: block;
+}
 #KTS_scripts label, #KTS_scripts  div, #KTS_notifications div, #KTS_notifications label{font:normal 10pt tahoma;}
 .saved{color: #000000;}
 
