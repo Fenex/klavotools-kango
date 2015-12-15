@@ -130,7 +130,7 @@ Competitions.prototype.check = function() {
 
         var title = 'Соревнование';
         var body = 'Соревнование x'+rate+' начинается';
-        var icon = kango.io.getResourceUrl('res/kg_logo.svg');
+        var icon = kango.io.getResourceUrl('res/kg_logo.png');
 
         var displayTime = self.displayTime;
         if (displayTime > remainingTime) {
