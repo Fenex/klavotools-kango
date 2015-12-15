@@ -79,7 +79,7 @@ angular.module('klavotools', ['klavotools.joke'])
     }
 
     $scope.setDisplayTime = function () {
-        sendPrefs({ displayTime: $scope.displayTime });
+        sendPrefs({ displayTime: parseInt($scope.displayTime) });
     };
 
     $scope.$watch('delay', function(a, b) {
