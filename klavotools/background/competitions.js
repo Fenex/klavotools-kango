@@ -40,7 +40,10 @@ Competitions.prototype.getParams = function() {
 
 Competitions.prototype.setParams = function(param) {
     this.rates = param.rates || this.rates;
-    this.displayTime = param.displayTime || this.displayTime;
+    if (param.displayTime >= 0) {
+        this.displayTime = param.displayTime;
+    }
+
     if (param.delay >= 0) {
         this.delay = param.delay;
     }
@@ -52,7 +55,7 @@ Competitions.prototype.setParams = function(param) {
 
     if (this.delay * this.rates.length === 0) return this.deactivate();
 
-    if (param.delay || param.displayTime) {
+    if (param.delay || param.displayTime >= 0) {
         this.deactivate();
         this.activate();
     }
