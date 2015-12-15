@@ -44,7 +44,6 @@ function DeferredNotification (title, options) {
  */
 DeferredNotification.prototype.revoke = function () {
     clearTimeout(this._timeout);
-    console.info(this._notification !== 'undefined' && this.options.displayTime > 0)
     if (typeof this._notification !== 'undefined' && this.options.displayTime > 0) {
         this.options.displayTime = 0;
         this._notification.close();
@@ -69,6 +68,9 @@ DeferredNotification.prototype.show = function (delay) {
                 notification[prop] = this[prop];
             }
         }
+
+        // Preventing the rerun of the notification:
+        notification.addEventListener('close', this.revoke.bind(this));
 
         if (this.options.displayTime) {
             var diff = this.options.displayTime - timeShown;
