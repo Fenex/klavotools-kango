@@ -5,12 +5,17 @@
  */
 
 var sinon = require('sinon');
+var assertStyles = require('../../assert-styles.js');
 var environment = require('../../environment.js');
 var fixtures = require('../../fixtures.js');
+
 var context = require('../../loader.js') (
   'klavotools/background/content-js.js',
   environment
 );
+
+var expect = assertStyles.expect;
+
 var Script = context.Script;
 var UserJS = context.UserJS;
 
@@ -40,7 +45,7 @@ describe('content-js module', function () {
      */
     it('has an unique string representation', function () {
       var script = new Script('empty.user.js', 'empty script');
-      script.toString().should.be.equal('[object Script]');
+      expect(script.toString()).to.be.equal('[object Script]');
     });
 
     /**
@@ -49,8 +54,8 @@ describe('content-js module', function () {
     it('should correctly save the userscript to storage', function () {
       var script = new Script('empty.user.js', 'empty script');
       script.save();
-      setItem
-        .should.have.been
+      expect(setItem)
+        .to.have.been
         .calledWithExactly('userjs_empty.user.js', emptyUserScript);
     });
 
