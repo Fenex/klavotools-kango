@@ -8,7 +8,13 @@ var path = require('path');
 
 function FixturesLoader () {}
 
-FixturesLoader.prototype.fromLocalStorage = function (name) {
+/**
+ * A static method for loading "localStorage" fixtures.
+ *
+ * @param {String} name A name of the entity
+ * @return {String}
+ */
+FixturesLoader.fromLocalStorage = function (name) {
   var js = path.join(__dirname, 'fixtures/localstorage/' + name + '.js');
   var entity = require(js);
   return entity;
