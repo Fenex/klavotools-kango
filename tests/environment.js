@@ -10,11 +10,9 @@ chai.use(sinonChai);
 chai.should();
 
 var kango = require('./kango-mock.js');
-var fixturesLoader = require('./fixtures.js');
 
 module.exports = {
   kango: kango,
   isNull: function (obj) {},
   xhr: function (detail) {},
-  fixtures: new fixturesLoader,
 }

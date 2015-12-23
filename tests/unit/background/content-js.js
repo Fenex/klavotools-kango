@@ -6,6 +6,7 @@
 
 var sinon = require('sinon');
 var environment = require('../../environment.js');
+var fixtures = require('../../fixtures.js');
 var context = require('../../loader.js') (
   'klavotools/background/content-js.js',
   environment
@@ -25,7 +26,6 @@ describe('content-js module', function () {
 
     before(function () {
       // Loading localStorage fixtures for the Script class:
-      var fixtures = environment.fixtures;
       emptyUserScript = fixtures.fromLocalStorage('userjs_empty.user.js');
       // Setting up the kango.storage.getItem stub:
       getItem = sinon.stub(context.kango.storage, 'getItem');
