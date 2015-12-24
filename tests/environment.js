@@ -10,4 +10,8 @@ module.exports = {
   kango: kango,
   isNull: function (obj) {},
   xhr: function (detail) {},
+  setTimeout: setTimeout,
+  setInteval: setInterval,
+  clearTimeout: clearTimeout,
+  clearInterval: clearInterval,
 }
