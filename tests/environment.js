@@ -10,8 +10,10 @@ module.exports = {
   kango: kango,
   isNull: function (obj) {},
   xhr: function (detail) {},
+  // Creating references to some default global functions and objects:
   setTimeout: setTimeout,
   setInteval: setInterval,
   clearTimeout: clearTimeout,
   clearInterval: clearInterval,
+  console: console,
 }
