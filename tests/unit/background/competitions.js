@@ -37,6 +37,8 @@ describe('competitions module', function () {
       sandbox.spy(Competitions.prototype, 'activate');
       // Setting up the Competitions.prototype.deactivate spy:
       sandbox.spy(Competitions.prototype, 'deactivate');
+      // Setting up the Competitions.prototype.check spy:
+      sandbox.spy(Competitions.prototype, 'check');
     });
 
     /**
@@ -116,6 +118,32 @@ describe('competitions module', function () {
       expect(Competitions.prototype.deactivate).to.have.been.calledTwice;
       expect(Competitions.prototype.activate)
         .to.have.been.calledAfter(Competitions.prototype.deactivate);
+    });
+
+    /**
+     * Test for the Competitions.prototype.activate method
+     */
+    it('should call the check() method with the activate() only once', function () {
+      var competitions = new Competitions;
+      competitions.activate();
+      competitions.activate();
+      expect(Competitions.prototype.check).to.have.been.calledOnce;
+    });
+
+    /**
+     * Test for the Competitions.prototype.deactivate method
+     */
+    it('should revoke an existing notification with the deactivate() method', function () {
+      var competitions = new Competitions;
+      competitions.notification = {};
+      // TODO: is this the best way to check the revoke method was called before
+      // the notification object will be set to null?
+      var notificationRevoked = false;
+      competitions.notification.revoke = function () {
+        notificationRevoked = true;
+      };
+      competitions.deactivate();
+      expect(notificationRevoked).to.be.equal(true);
     });
 
     afterEach(function () {
