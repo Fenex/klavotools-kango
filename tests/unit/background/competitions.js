@@ -33,8 +33,10 @@ describe('competitions module', function () {
       sandbox.stub(context.kango.storage, 'getItem');
       // Setting up the the kango.storage.setItem spy:
       sandbox.spy(context.kango.storage, 'setItem');
-      // Setting up the Competitions.activate spy:
+      // Setting up the Competitions.prototype.activate spy:
       sandbox.spy(Competitions.prototype, 'activate');
+      // Setting up the Competitions.prototype.deactivate spy:
+      sandbox.spy(Competitions.prototype, 'deactivate');
     });
 
     /**
@@ -72,7 +74,7 @@ describe('competitions module', function () {
     });
 
     /**
-     * Test for the Competitions.prototype.setParams method
+     * Tests for the Competitions.prototype.setParams method
      */
     it('should save the correct settings to storage with the setParams() method', function () {
       var competitions = new Competitions;
@@ -96,6 +98,26 @@ describe('competitions module', function () {
         .to.have.been.calledWithExactly('competition_delay', 15)
         .to.have.been.calledWithExactly('competition_rates', [1, 2, 3, 5])
         .to.have.been.calledWithExactly('competition_displayTime', 5);
+    });
+
+    it('should call deactivate() method within the setParams() ' +
+        'if the delay or the list of rates are not set', function () {
+      var competitions = new Competitions;
+      competitions.setParams({ delay: 0 });
+      competitions = new Competitions;
+      competitions.setParams({ rates: [] });
+      expect(Competitions.prototype.deactivate).to.have.been.calledTwice;
+    });
+
+    it('should "reactivate" the state within the setParams() method ' +
+        'if the delay or the displayTime are set', function () {
+      var competitions = new Competitions;
+      competitions.setParams({ delay: 15 });
+      competitions = new Competitions;
+      competitions.setParams({ displayTime: 5 });
+      expect(Competitions.prototype.deactivate).to.have.been.calledTwice;
+      expect(Competitions.prototype.activate)
+        .to.have.been.calledAfter(Competitions.prototype.deactivate);
     });
 
     afterEach(function () {
