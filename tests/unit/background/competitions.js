@@ -27,22 +27,35 @@ describe('competitions module', function () {
     var getItem;
     // Reference to the kango.storage.setItem spy:
     var setItem;
+    // Reference to the Competitions.activate spy:
+    var competitionsActivate;
 
     beforeEach(function () {
       // Setting up the kango.storage.getItem stub:
       getItem = sinon.stub(context.kango.storage, 'getItem');
       // Setting up the the kango.storage.setItem spy:
       setItem = sinon.spy(context.kango.storage, 'setItem');
+      // Setting up the Competitions.activate spy:
+      competitionsActivate = sinon.spy(Competitions.prototype, 'activate');
     });
 
     /**
-     * Test for the class constructor
+     * Tests for the Competitions class constructor
      */
     it('should set the correct default settings', function () {
       var competitions = new Competitions;
       expect(competitions.rates).to.be.deep.equal([3, 5]);
       expect(competitions.delay).to.be.equal(60);
       expect(competitions.displayTime).to.be.equal(0);
+    });
+
+    it('should not call activate() method if delay or list of rates are not set', function () {
+      getItem.withArgs('competition_rates').onFirstCall().returns([]);
+      var competitions = new Competitions;
+      expect(competitionsActivate).to.have.not.been.called;
+      getItem.withArgs('competition_delay').returns(0);
+      competitions = new Competitions;
+      expect(competitionsActivate).to.have.not.been.called;
     });
 
     /**
@@ -89,6 +102,7 @@ describe('competitions module', function () {
       // Unwraping all stubs and spies:
       context.kango.storage.getItem.restore();
       context.kango.storage.setItem.restore();
+      Competitions.prototype.activate.restore();
     });
   });
 });
