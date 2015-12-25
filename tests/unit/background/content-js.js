@@ -18,26 +18,28 @@ var expect = assertStyles.expect;
 
 var Script = context.Script;
 var UserJS = context.UserJS;
+var kango = context.kango;
 
 describe('content-js module', function () {
   describe('Script class', function () {
-    // Reference to the kango.storage.getItem stub:
-    var getItem;
-    // Reference to the kango.storage.setItem spy:
-    var setItem;
+    // Reference to the sinon sandbox:
+    var sandbox;
     // Reference to a fixture representing an empty userscript in the kango
     // storage:
     var emptyUserScript;
 
     before(function () {
+      sandbox = sinon.sandbox.create();
       // Loading localStorage fixtures for the Script class:
       emptyUserScript = fixtures.fromLocalStorage('userjs_empty.user.js');
       // Setting up the kango.storage.getItem stub:
-      getItem = sinon.stub(context.kango.storage, 'getItem');
-      getItem.withArgs('userjs_empty.user.js').returns(emptyUserScript);
-      getItem.withArgs('userjs_unexisting.user.js').returns(null);
+      sandbox.stub(kango.storage, 'getItem');
+      kango.storage.getItem
+        .withArgs('userjs_empty.user.js').returns(emptyUserScript);
+      kango.storage.getItem
+        .withArgs('userjs_unexisting.user.js').returns(null);
       // Setting up the the kango.storage.setItem spy:
-      setItem = sinon.spy(context.kango.storage, 'setItem');
+      sandbox.spy(kango.storage, 'setItem');
     });
 
     /**
@@ -54,15 +56,14 @@ describe('content-js module', function () {
     it('should correctly save the userscript to storage', function () {
       var script = new Script('empty.user.js', 'empty script');
       script.save();
-      expect(setItem)
+      expect(kango.storage.setItem)
         .to.have.been
         .calledWithExactly('userjs_empty.user.js', emptyUserScript);
     });
 
     after(function () {
       // Unwraping all stubs and spies:
-      context.kango.storage.getItem.restore();
-      context.kango.storage.setItem.restore();
+      sandbox.restore();
     });
   });
 });
