@@ -13,9 +13,7 @@ module.exports = {
   invokeAsyncCallback: function () {},
 
   console: {
-    log: function (message) {
-      console.log(message);
-    },
+    log: function (message) {},
   },
   storage: {
     getItem: function (name) {},

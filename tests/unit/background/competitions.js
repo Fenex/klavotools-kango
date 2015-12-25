@@ -104,7 +104,6 @@ describe('competitions module', function () {
         'if the delay or the list of rates are not set', function () {
       var competitions = new Competitions;
       competitions.setParams({ delay: 0 });
-      competitions = new Competitions;
       competitions.setParams({ rates: [] });
       expect(Competitions.prototype.deactivate).to.have.been.calledTwice;
     });
@@ -113,7 +112,6 @@ describe('competitions module', function () {
         'if the delay or the displayTime are set', function () {
       var competitions = new Competitions;
       competitions.setParams({ delay: 15 });
-      competitions = new Competitions;
       competitions.setParams({ displayTime: 5 });
       expect(Competitions.prototype.deactivate).to.have.been.calledTwice;
       expect(Competitions.prototype.activate)

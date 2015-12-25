@@ -6,7 +6,7 @@
 
 var kango = require('./kango-mock.js');
 
-module.exports = {
+var context = {
   kango: kango,
   isNull: function (obj) {},
   xhr: function (detail) {},
@@ -15,5 +15,14 @@ module.exports = {
   setInteval: setInterval,
   clearTimeout: clearTimeout,
   clearInterval: clearInterval,
-  console: console,
+  console: {}
 }
+
+// Setting up the console object mock:
+for (var prop in console) {
+  if (typeof console[prop] === 'function') {
+    context.console[prop] = function () {};
+  }
+}
+
+module.exports = context;
