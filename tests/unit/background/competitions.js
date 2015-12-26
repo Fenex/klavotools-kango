@@ -29,15 +29,14 @@ describe('competitions module', function () {
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();
-      // Setting up the kango.storage.getItem stub:
-      sandbox.stub(context.kango.storage, 'getItem');
-      // Setting up the the kango.storage.setItem spy:
-      sandbox.spy(context.kango.storage, 'setItem');
-      // Setting up the Competitions.prototype.activate spy:
+      sandbox.useFakeTimers();
+      // Setting up stubs and spies for the kango mock object:
+      sandbox.stub(kango.storage, 'getItem');
+      sandbox.stub(kango.xhr, 'send');
+      sandbox.spy(kango.storage, 'setItem');
+      // Setting up spies for the Competitions.prototype:
       sandbox.spy(Competitions.prototype, 'activate');
-      // Setting up the Competitions.prototype.deactivate spy:
       sandbox.spy(Competitions.prototype, 'deactivate');
-      // Setting up the Competitions.prototype.check spy:
       sandbox.spy(Competitions.prototype, 'check');
     });
 
@@ -144,6 +143,23 @@ describe('competitions module', function () {
       };
       competitions.deactivate();
       expect(notificationRevoked).to.be.equal(true);
+    });
+
+    /**
+     * Tests for the Competitions.prototype.check method
+     */
+    it('should call the check() method again, ' +
+        'if the server response code not equal to 200');
+
+    it('should call the check() method after 10 seconds, ' +
+        'if there are no competitions at the moment', function () {
+      kango.xhr.send.yields({
+        status: 200,
+        response: { gamelist: [{ params: { competition: false } }] },
+      });
+      var competitions = new Competitions;
+      sandbox.clock.tick(10 * 1000);
+      expect(Competitions.prototype.check).to.have.been.calledTwice;
     });
 
     afterEach(function () {
