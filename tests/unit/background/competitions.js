@@ -34,6 +34,8 @@ describe('competitions module', function () {
       sandbox.spy(Competitions.prototype, 'activate');
       sandbox.spy(Competitions.prototype, 'deactivate');
       sandbox.spy(Competitions.prototype, 'check');
+      // Setting up a spy for the DeferredNotification class constructor:
+      sandbox.spy(global, 'DeferredNotification');
     });
 
     afterEach(function () {
@@ -210,6 +212,44 @@ describe('competitions module', function () {
       expect(Competitions.prototype.check).to.have.been.calledOnce;
       sandbox.clock.tick(120 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
+    });
+
+    it('should show the notifications only for selected rates', function () {
+      var competition1 = {
+        id: 1337,
+        begintime: 300,
+        params: {
+          competition: '100500',
+          regular_competition: 2,
+        },
+      };
+      var competition2 = {
+        id: 1337,
+        begintime: 300,
+        params: {
+          competition: '100500',
+          regular_competition: 3,
+        },
+      };
+      kango.xhr.send
+        .onFirstCall().yields({
+          status: 200,
+          response: {
+            time: 0,
+            gamelist: [competition1],
+          },
+        })
+        .onSecondCall().yields({
+          status: 200,
+          response: {
+            time: 0,
+            gamelist: [competition2],
+          },
+        });
+      var competitions = new Competitions;
+      expect(DeferredNotification).to.have.not.been.called;
+      competitions.check();
+      expect(DeferredNotification).to.have.been.called;
     });
   });
 });
