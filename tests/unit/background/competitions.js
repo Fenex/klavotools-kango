@@ -165,5 +165,26 @@ describe('competitions module', function () {
       sandbox.clock.tick(10 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
     });
+
+    it('should call the check() method after 2 minutes, ' +
+        'if the current competition is already started', function () {
+      var competition = {
+        id: 1337,
+        begintime: 0,
+        params: {
+          competition: '100500',
+        },
+      };
+      kango.xhr.send.yields({
+        status: 200,
+        response: {
+          time: 0,
+          gamelist: [competition],
+        },
+      });
+      var competitions = new Competitions;
+      sandbox.clock.tick(120 * 1000);
+      expect(Competitions.prototype.check).to.have.been.calledTwice;
+    });
   });
 });
