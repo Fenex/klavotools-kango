@@ -16,8 +16,10 @@ describe('competitions module', function () {
 
     before(function () {
       // Setting up the DeferredNotification mock:
-      global.DeferredNotification = function (title) {};
-      global.DeferredNotification.prototype.revoke = function () {};
+      // TODO: is this a good way to set the mock for a global dependency?
+      global.DeferredNotification = function (title, options) {};
+      DeferredNotification.prototype.revoke = function () {};
+      DeferredNotification.prototype.show = function (delay) {};
       loadModule('klavotools/background/competitions.js');
     });
 
@@ -183,6 +185,29 @@ describe('competitions module', function () {
         },
       });
       var competitions = new Competitions;
+      sandbox.clock.tick(120 * 1000);
+      expect(Competitions.prototype.check).to.have.been.calledTwice;
+    });
+
+    it('should call the check() method 2 minutes ' +
+        'after the start of the competition', function () {
+      var competition = {
+        id: 1337,
+        begintime: 300,
+        params: {
+          competition: '100500',
+        },
+      };
+      kango.xhr.send.yields({
+        status: 200,
+        response: {
+          time: 0,
+          gamelist: [competition],
+        },
+      });
+      var competitions = new Competitions;
+      sandbox.clock.tick(300 * 1000);
+      expect(Competitions.prototype.check).to.have.been.calledOnce;
       sandbox.clock.tick(120 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
     });
