@@ -6,19 +6,9 @@
 
 var sinon = require('sinon');
 var assertStyles = require('../../assert-styles.js');
-var environment = require('../../environment.js');
-var fixtures = require('../../fixtures.js');
-
-var context = require('../../loader.js') (
-  'klavotools/background/content-js.js',
-  environment
-);
-
 var expect = assertStyles.expect;
-
-var Script = context.Script;
-var UserJS = context.UserJS;
-var kango = context.kango;
+var fixtures = require('../../fixtures.js');
+var loadModule = require('../../loader.js');
 
 describe('content-js module', function () {
   describe('Script class', function () {
@@ -29,6 +19,10 @@ describe('content-js module', function () {
     var emptyUserScript;
 
     before(function () {
+      loadModule('klavotools/background/content-js.js');
+    });
+
+    beforeEach(function () {
       sandbox = sinon.sandbox.create();
       // Loading localStorage fixtures for the Script class:
       emptyUserScript = fixtures.fromLocalStorage('userjs_empty.user.js');
@@ -40,6 +34,11 @@ describe('content-js module', function () {
         .withArgs('userjs_unexisting.user.js').returns(null);
       // Setting up the the kango.storage.setItem spy:
       sandbox.spy(kango.storage, 'setItem');
+    });
+
+    afterEach(function () {
+      // Unwraping all stubs and spies:
+      sandbox.restore();
     });
 
     /**
@@ -59,11 +58,6 @@ describe('content-js module', function () {
       expect(kango.storage.setItem)
         .to.have.been
         .calledWithExactly('userjs_empty.user.js', emptyUserScript);
-    });
-
-    after(function () {
-      // Unwraping all stubs and spies:
-      sandbox.restore();
     });
   });
 });

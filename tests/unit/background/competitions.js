@@ -4,28 +4,22 @@
  * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
  */
 
-var Q = require('q');
 var sinon = require('sinon');
 var assertStyles = require('../../assert-styles.js');
-var environment = require('../../environment.js');
-
-// Setting up the DeferredNotification mock:
-environment.DeferredNotification = function (title) {};
-
-var context = require('../../loader.js') (
-  'klavotools/background/competitions.js',
-  environment
-);
-
 var expect = assertStyles.expect;
-
-var Competitions = context.Competitions;
-var kango = context.kango;
+var loadModule = require('../../loader.js');
 
 describe('competitions module', function () {
   describe('Competitions class', function () {
     // Reference to the sinon sandbox:
     var sandbox;
+
+    before(function () {
+      // Setting up the DeferredNotification mock:
+      global.DeferredNotification = function (title) {};
+      global.DeferredNotification.prototype.revoke = function () {};
+      loadModule('klavotools/background/competitions.js');
+    });
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();
@@ -38,6 +32,16 @@ describe('competitions module', function () {
       sandbox.spy(Competitions.prototype, 'activate');
       sandbox.spy(Competitions.prototype, 'deactivate');
       sandbox.spy(Competitions.prototype, 'check');
+    });
+
+    afterEach(function () {
+      // Unwraping all stubs and spies:
+      sandbox.restore();
+    });
+
+    after(function () {
+      // Clean the global scope:
+      delete global.DeferredNotification;
     });
 
     /**
@@ -160,11 +164,6 @@ describe('competitions module', function () {
       var competitions = new Competitions;
       sandbox.clock.tick(10 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
-    });
-
-    afterEach(function () {
-      // Unwraping all stubs and spies:
-      sandbox.restore();
     });
   });
 });
