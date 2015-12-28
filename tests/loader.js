@@ -6,14 +6,15 @@
 
 var vm = require('vm');
 var fs = require('fs');
+var path = require('path');
 
 // Adding the kango framework mock object to the global scope:
 global.kango = require('./kango-mock.js');
 
 /**
- * @param {String} path A path to the "vanilla" JavaScript module
+ * @param {String} modulePath A path to the "vanilla" JavaScript module
  */
-module.exports = function (path) {
-  var data = fs.readFileSync(path);
+module.exports = function (modulePath) {
+  var data = fs.readFileSync(path.normalize(modulePath));
   vm.runInThisContext(data);
 };
