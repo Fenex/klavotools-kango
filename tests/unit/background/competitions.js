@@ -115,7 +115,10 @@ describe('competitions module', function () {
       var competitions = new Competitions;
       competitions.setParams({ delay: 0 });
       competitions.setParams({ rates: [] });
-      expect(Competitions.prototype.deactivate).to.have.been.calledTwice;
+      expect(Competitions.prototype.activate).to.have.been.calledOnce;
+      expect(Competitions.prototype.deactivate)
+        .to.have.been.calledTwice
+        .to.have.been.calledAfter(Competitions.prototype.activate);
     });
 
     it('should "reactivate" the state within the setParams() method ' +
