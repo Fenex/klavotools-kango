@@ -137,8 +137,8 @@ Competitions.prototype.check = function() {
         var icon = kango.io.getResourceUrl('res/kg_logo.png');
 
         var displayTime = self.displayTime;
-        if (displayTime > remainingTime) {
-            displayTime = remainingTime;
+        if (displayTime > remainingTime - timer) {
+            displayTime = remainingTime - timer;
         }
 
         self.notification = new DeferredNotification(title, {
