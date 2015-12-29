@@ -14,9 +14,6 @@ describe('content-js module', function () {
   describe('Script class', function () {
     // Reference to the sinon sandbox:
     var sandbox;
-    // Reference to a fixture representing an empty userscript in the kango
-    // storage:
-    var emptyUserScript;
 
     before(function () {
       loadModule('klavotools/background/content-js.js');
@@ -24,12 +21,11 @@ describe('content-js module', function () {
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();
-      // Loading localStorage fixtures for the Script class:
-      emptyUserScript = fixtures.fromLocalStorage('userjs_empty.user.js');
       // Setting up the kango.storage.getItem stub:
       sandbox.stub(kango.storage, 'getItem');
       kango.storage.getItem
-        .withArgs('userjs_empty.user.js').returns(emptyUserScript);
+        .withArgs('userjs_empty.user.js')
+        .returns(fixtures.storage.userjs_empty);
       kango.storage.getItem
         .withArgs('userjs_unexisting.user.js').returns(null);
       // Setting up the the kango.storage.setItem spy:
@@ -57,7 +53,8 @@ describe('content-js module', function () {
       script.save();
       expect(kango.storage.setItem)
         .to.have.been
-        .calledWithExactly('userjs_empty.user.js', emptyUserScript);
+        .calledWithExactly('userjs_empty.user.js',
+          fixtures.storage.userjs_empty);
     });
   });
 });

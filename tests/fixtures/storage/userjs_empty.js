@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 
-var js = path.join(__dirname, '../userscripts/empty.user.js');
+var js = path.join(__dirname, '../userscripts/empty.js');
 var code = fs.readFileSync(js, 'utf8');
 
 module.exports = JSON.stringify({
