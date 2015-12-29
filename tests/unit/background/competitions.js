@@ -7,6 +7,7 @@
 var sinon = require('sinon');
 var assertStyles = require('../../assert-styles.js');
 var expect = assertStyles.expect;
+var fixtures = require('../../fixtures.js');
 var loadModule = require('../../loader.js');
 
 describe('competitions module', function () {
@@ -161,10 +162,9 @@ describe('competitions module', function () {
 
     it('should call the check() method after 10 seconds, ' +
         'if there are no competitions at the moment', function () {
-      kango.xhr.send.yields({
-        status: 200,
-        response: { gamelist: [{ params: { competition: false } }] },
-      });
+      kango.xhr.send.yields(fixtures.xhr.competition({
+        competition: undefined,
+      }));
       var competitions = new Competitions;
       sandbox.clock.tick(10 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
@@ -172,20 +172,9 @@ describe('competitions module', function () {
 
     it('should call the check() method after 2 minutes, ' +
         'if the current competition is already started', function () {
-      var competition = {
-        id: 1337,
-        begintime: 0,
-        params: {
-          competition: '100500',
-        },
-      };
-      kango.xhr.send.yields({
-        status: 200,
-        response: {
-          time: 0,
-          gamelist: [competition],
-        },
-      });
+      kango.xhr.send.yields(fixtures.xhr.competition({
+        beginTime: 0,
+      }));
       var competitions = new Competitions;
       sandbox.clock.tick(120 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
@@ -193,20 +182,9 @@ describe('competitions module', function () {
 
     it('should call the check() method 2 minutes ' +
         'after the start of the competition', function () {
-      var competition = {
-        id: 1337,
-        begintime: 300,
-        params: {
-          competition: '100500',
-        },
-      };
-      kango.xhr.send.yields({
-        status: 200,
-        response: {
-          time: 0,
-          gamelist: [competition],
-        },
-      });
+      kango.xhr.send.yields(fixtures.xhr.competition({
+        beginTime: 300,
+      }));
       var competitions = new Competitions;
       sandbox.clock.tick(300 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledOnce;
@@ -215,37 +193,13 @@ describe('competitions module', function () {
     });
 
     it('should show the notifications only for selected rates', function () {
-      var competition1 = {
-        id: 1337,
-        begintime: 300,
-        params: {
-          competition: '100500',
-          regular_competition: 2,
-        },
-      };
-      var competition2 = {
-        id: 1337,
-        begintime: 300,
-        params: {
-          competition: '100500',
-          regular_competition: 3,
-        },
-      };
       kango.xhr.send
-        .onFirstCall().yields({
-          status: 200,
-          response: {
-            time: 0,
-            gamelist: [competition1],
-          },
-        })
-        .onSecondCall().yields({
-          status: 200,
-          response: {
-            time: 0,
-            gamelist: [competition2],
-          },
-        });
+        .onFirstCall().yields(fixtures.xhr.competition({
+          rate: 2,
+        }))
+        .onSecondCall().yields(fixtures.xhr.competition({
+          rate: 3,
+        }));
       var competitions = new Competitions;
       expect(DeferredNotification).to.have.not.been.called;
       competitions.check();

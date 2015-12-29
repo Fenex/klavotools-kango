@@ -21,11 +21,15 @@ glob.sync(pattern).forEach(function (fixturePath) {
   }
 
   var entity = require(fixturePath);
-  var isModule = false;
-  for (var key in entity) {
-    if (entity.hasOwnProperty(key)) {
-      isModule = true;
-      break;
+  var isModule = true;
+  if (typeof entity === 'object') {
+    isModule = false;
+    // Check for empty object:
+    for (var key in entity) {
+      if (entity.hasOwnProperty(key)) {
+        isModule = true;
+        break;
+      }
     }
   }
 
