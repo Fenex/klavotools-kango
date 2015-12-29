@@ -31,12 +31,14 @@ describe('competitions module', function () {
       sandbox.stub(kango.storage, 'getItem');
       sandbox.stub(kango.xhr, 'send');
       sandbox.spy(kango.storage, 'setItem');
+      sandbox.spy(kango.browser.tabs, 'create');
       // Setting up spies for the Competitions.prototype:
       sandbox.spy(Competitions.prototype, 'activate');
       sandbox.spy(Competitions.prototype, 'deactivate');
       sandbox.spy(Competitions.prototype, 'check');
       // Setting up a spy for the DeferredNotification class constructor:
       sandbox.spy(global, 'DeferredNotification');
+      sandbox.spy(DeferredNotification.prototype, 'show');
     });
 
     afterEach(function () {
@@ -193,6 +195,43 @@ describe('competitions module', function () {
       expect(Competitions.prototype.check).to.have.been.calledOnce;
       sandbox.clock.tick(120 * 1000);
       expect(Competitions.prototype.check).to.have.been.calledTwice;
+    });
+
+    it('should create the "deferred" notification ' +
+        'with the correct parameters', function () {
+      kango.xhr.send.yields(fixtures.xhr.competition({
+        id: 100500,
+        rate: 5,
+        beginTime: 400,
+      }));
+      var competitions = new Competitions;
+      expect(DeferredNotification)
+        .to.have.been.calledWithExactly('Соревнование', {
+          body: 'Соревнование x5 начинается',
+          // TODO: set the stub for the kango.io.getResourceUrl
+          icon: undefined,
+          displayTime: undefined,
+        });
+      // Default delay is set to 1 minute:
+      expect(DeferredNotification.prototype.show)
+        .to.have.been.calledWithExactly(340);
+      // Check the notification's click handler:
+      competitions.notification.onclick();
+      expect(kango.browser.tabs.create)
+        .to.have.been.calledWithExactly({
+          url: 'http://klavogonki.ru/g/?gmid=100500',
+          focused: true,
+        });
+      // Check the case with a huge displayTime:
+      kango.storage.getItem.withArgs('competition_displayTime').returns(500);
+      competitions = new Competitions;
+      expect(DeferredNotification)
+        .to.have.been.calledWithExactly('Соревнование', {
+          body: 'Соревнование x5 начинается',
+          icon: undefined,
+          // displayTime == delay:
+          displayTime: 60,
+        });
     });
 
     it('should show the notifications only for selected rates', function () {
