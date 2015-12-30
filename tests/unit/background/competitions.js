@@ -113,7 +113,7 @@ describe('competitions module', function () {
     });
 
     it('should call deactivate() method within the setParams() ' +
-        'if the delay or the list of rates are not set', function () {
+        'if the delay or the list of rates are disabled', function () {
       var competitions = new Competitions;
       competitions.setParams({ delay: 0 });
       competitions.setParams({ rates: [] });
@@ -163,7 +163,7 @@ describe('competitions module', function () {
      * Tests for the Competitions.prototype.check method
      */
     it('should call the check() method again, ' +
-        'if the server response code not equal to 200');
+        'if the server\'s response code is not equal to 200');
 
     it('should call the check() method after 10 seconds, ' +
         'if there are no competitions at the moment', function () {
