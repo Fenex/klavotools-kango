@@ -232,6 +232,11 @@ describe('competitions module', function () {
           // displayTime == delay:
           displayTime: 60,
         });
+      // Check the case with a huge delay:
+      kango.storage.getItem.withArgs('competition_delay').returns(500);
+      competitions = new Competitions;
+      expect(DeferredNotification.prototype.show)
+        .to.have.been.calledWithExactly(1);
     });
 
     it('should show the notifications only for selected rates', function () {
