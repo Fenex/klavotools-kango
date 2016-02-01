@@ -107,7 +107,7 @@ angular.module('popup.menutree', [])
             sub: [
                 {
                     title: 'Новости',
-                    path: '/forum/new/'
+                    path: '/forum/news/'
                 },
                 {
                     title: 'Общий',
