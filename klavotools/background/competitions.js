@@ -11,7 +11,7 @@ var Competitions = function() {
     this.active = false;
     //point to timeout of this.check
     this.timer = false;
-    
+
     /** default values **/
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
@@ -40,11 +40,11 @@ Competitions.prototype.getParams = function() {
 
 Competitions.prototype.setParams = function(param) {
     this.rates = param.rates || this.rates;
-    if (param.displayTime >= 0) {
+    if (typeof param.displayTime === 'number' && param.displayTime >= 0) {
         this.displayTime = param.displayTime;
     }
 
-    if (param.delay >= 0) {
+    if (typeof param.delay === 'number' && param.delay >= 0) {
         this.delay = param.delay;
     }
 
@@ -64,7 +64,7 @@ Competitions.prototype.setParams = function(param) {
 Competitions.prototype.activate = function() {
     if(this.active)
         return console.log('active already');
-    
+
    this.active = true;
    this.check();
 };
@@ -72,7 +72,7 @@ Competitions.prototype.activate = function() {
 Competitions.prototype.deactivate = function() {
     if(!this.active)
         return console.log('deactive already');
-    
+
     clearTimeout(this.timer);
     if (this.notification !== null) {
         this.notification.revoke();
@@ -84,7 +84,7 @@ Competitions.prototype.deactivate = function() {
 Competitions.prototype.check = function() {
     if(!this.active) { return; }
     var self = this;
-    
+
     var details = {
         method: 'POST',
         url: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',
@@ -98,17 +98,17 @@ Competitions.prototype.check = function() {
     kango.xhr.send(details, function(res) {
         /**
         * FIXME: if @status isn't equal to 200, @check will not performed anymore
-        */        
+        */
         if(res.status != 200) { return; }
         res = res.response;
-        
+
         clearTimeout(self.timer);
-        
+
         if(!res.gamelist[0].params.competition) {
             self.timer = setTimeout(function() { self.check() }, 10 * 1000);
             return false;
         }
-            
+
         var serverTime = res.time;
         var rate = res.gamelist[0].params.regular_competition || 1;
         var beginTime = res.gamelist[0].begintime;
@@ -119,10 +119,10 @@ Competitions.prototype.check = function() {
             self.timer = setTimeout(function() { self.check() }, 120 * 1000);
             return false;
         }
-        
+
         /** next check in (start + 2) minutes **/
         self.timer = setTimeout(function() { self.check() }, (remainingTime + 120) * 1000);
-        
+
         /** does user want to see competition with this rate? **/
         if(!~self.rates.indexOf(rate)) {
             return false;
@@ -137,8 +137,8 @@ Competitions.prototype.check = function() {
         var icon = kango.io.getResourceUrl('res/kg_logo.png');
 
         var displayTime = self.displayTime;
-        if (displayTime > remainingTime) {
-            displayTime = remainingTime;
+        if (displayTime > remainingTime - timer) {
+            displayTime = remainingTime - timer;
         }
 
         self.notification = new DeferredNotification(title, {

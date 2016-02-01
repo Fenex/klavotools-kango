@@ -1,0 +1,28 @@
+{
+  "name": "klavotools",
+  "version": "3.3.0",
+  "description": "Cross-browser extension on kango framework for klavogonki.ru",
+  "private": true,
+  "scripts": {
+    "test": "mocha \"tests/**/*.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fenex/klavotools-kango.git"
+  },
+  "author": "Busko Vitaliy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fenex/klavotools-kango/issues"
+  },
+  "homepage": "https://github.com/Fenex/klavotools-kango#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.2.0",
+    "glob": "^6.0.3",
+    "mocha": "^2.3.4",
+    "q": "^1.4.1",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
+  }
+}
