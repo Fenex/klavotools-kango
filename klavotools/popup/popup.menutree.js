@@ -14,6 +14,10 @@ angular.module('popup.menutree', [])
                     path: '/u/#/__USERID__/stats/'
                 },
                 {
+                    title: 'Достижения',
+                    path: '/u/#/__USERID__/achievements/',
+                },
+                {
                     title: 'Гараж',
                     path: '/u/#/__USERID__/car/'
                 },
