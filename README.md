@@ -1,6 +1,8 @@
 klavotools-kango
 ================
 
+[![Build Status](https://api.travis-ci.org/Fenex/klavotools-kango.svg?branch=master)](https://travis-ci.org/Fenex/klavotools-kango)
+
 Кроссбраузерное расширение для сайта Клавогонки.ру
 
 Сборка проекта
