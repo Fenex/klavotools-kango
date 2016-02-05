@@ -56,8 +56,8 @@
 
   <!-- Mail -->
   <div class="mail" ng:controller="popup:Mail as Mail">
-    <div>
-      <input type="checkbox" title="Скрыть прочитанные" ng:init="Mail.HideReadMsg = true" ng:model="Mail.HideReadMsg" ng:click="Mail.HideReadMsg = !Mail.HideReadMsg" /> Сообщения:
+    <div ng:init="Mail.HideReadMsg = true" ng:click="Mail.HideReadMsg = !Mail.HideReadMsg">
+      <input type="checkbox" title="Скрыть прочитанные" ng:model="Mail.HideReadMsg" /> Сообщения:
     </div>
     <div
       ng:repeat="message in Mail.data.messages"

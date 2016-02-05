@@ -134,7 +134,7 @@ Competitions.prototype.check = function() {
 
         var title = 'Соревнование';
         var body = 'Соревнование x'+rate+' начинается';
-        var icon = kango.io.getResourceUrl('res/kg_logo.png');
+        var icon = kango.io.getResourceUrl('res/comp_btn.png');
 
         var displayTime = self.displayTime;
         if (displayTime > remainingTime - timer) {
