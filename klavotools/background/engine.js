@@ -3,8 +3,8 @@ function isNull(obj) {
 }
 
 function xhr(detail) {
-    var deferred = Q.defer();    
-    
+    var deferred = Q.defer();
+
     var details = {
         method: 'GET',
         url: detail,
@@ -13,17 +13,17 @@ function xhr(detail) {
         //headers: {'If-Modified-Since': 'Sat, 1 Jan 2000 00:00:00 GMT', 'Cache-Control': 'max-age=0'},
         //contentType: 'text'
     };
-    
+
     kango.xhr.send(details, function(data) {
         if (data.status == 200 && data.response != null) {
             var text = data.response;
-            deferred.resolve(text);    
+            deferred.resolve(text);
         }
         else { // something went wrong
             kango.console.log('something went wrong');
         }
     });
-    
+
     return deferred.promise;
 }
 
@@ -31,8 +31,9 @@ function xhr(detail) {
 var KlavoTools = {
     UserJS: new UserJS,
     Skin: new Skin,
+    Competitions: new Competitions,
+    ContextMenus: new ContextMenus,
 };
-KlavoTools.Competitions = new Competitions();
 
 KlavoTools.version = function() {
     return kango.getExtensionInfo().version;
@@ -45,7 +46,7 @@ KlavoTools.tabs = {
     navigateCurrent: function(url) {
         kango.browser.tabs.getCurrent(function(tab) {
             tab.navigate(url);
-        });       
+        });
     }
 };
 
@@ -65,7 +66,7 @@ KlavoTools.Button = {
     update: function() {
         var icon = 'ICON_DEFAULT';
         var unread = '';
-        
+
         if(!KlavoTools.Auth.status.id) {
             KlavoTools.Auth.status.unread = 0;
         } else {
