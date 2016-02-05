@@ -13,7 +13,7 @@ function ContextMenu () {
 /**
  * Adds an item to the menu.
  *
- * @param {Object} options An object with item parameters:
+ * @param {Object} options An object with item's parameters:
  * @param {String} options.label An item's text
  * @param {Function} options.callback An onclick callback function
  * @param {String} [options.icon] A path to the icon for the menu's item
@@ -56,13 +56,13 @@ ContextMenu.prototype.getElement = function () {
     return this.obj;
 };
 
-function createMenu (menu) {
-    var container = new ContextMenu;
-    menu.items.forEach(function (item) {
+function createMenu (structure) {
+    var menu = new ContextMenu;
+    structure.items.forEach(function (item) {
         // Recursively adding submenus:
         if (item.items instanceof Array) {
             var submenu = createMenu(item);
-            return container.addSubmenu(item.label, submenu);
+            return menu.addSubmenu(item.label, submenu);
         }
         var callback = function () {};
         if (item.url) {
@@ -75,14 +75,14 @@ function createMenu (menu) {
                 });
             }.bind({ url: item.url });
         }
-        container.addItem({
+        menu.addItem({
             label: item.label,
             icon: item.icon,
             disabled: item.disabled,
             callback: callback,
         });
     });
-    return container;
+    return menu;
 }
 
 function setupMenu (id, structure) {

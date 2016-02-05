@@ -9,6 +9,10 @@ function ContextMenus () {
 ContextMenus.prototype.getUserMenuStructure = function () {
     var disabled = KlavoTools.Auth.status.id ? false : true;
     return {
+        urlPatterns: [
+            '*://klavogonki.ru/profile/*',
+            '*://klavogonki.ru/u/*',
+        ],
         items: [
             {
                 label: 'Открыть диалог',
@@ -53,6 +57,9 @@ ContextMenus.prototype.getUserMenuStructure = function () {
 ContextMenus.prototype.getVocMenuStructure = function () {
     var disabled = KlavoTools.Auth.status.id ? false : true;
     return {
+        urlPatterns: [
+            '*://klavogonki.ru/vocs/*',
+        ],
         items: [
             {
                 label: 'Информация',

@@ -9,7 +9,8 @@
         "klavotools/background/content-style.js",
         "klavotools/background/context-menus.js",
         "klavotools/background/engine-auth.js",
-        "klavotools/background/engine.js"
+        "klavotools/background/engine.js",
+        "klavotools/background/context-menus.chrome.js"
     ],
     "content_scripts": [
         "klavotools/foreground/userstyle.js",
@@ -32,6 +33,7 @@
     "name": "KlavoTools Kango",
     "options_page": "options.html",
     "permissions": {
-        "notifications": true
+        "notifications": true,
+        "contextMenus": true
     }
 }
