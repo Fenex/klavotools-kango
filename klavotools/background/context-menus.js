@@ -74,15 +74,14 @@ ContextMenus.prototype.getVocMenuStructure = function () {
                             '&level_to=9&timeout=10&submit=1&voc={voc_id}',
                     },
                     {
-                        label: 'Одиночный заезд, 5 сек',
-                        url: '/create?gametype=voc&type=practice&level_from=1' +
-                            '&level_to=9&timeout=5&submit=1&voc={voc_id}',
-                        disabled: disabled,
-                    },
-                    {
                         label: 'Открытый заезд, 20 сек',
                         url: '/create/?gametype=voc&type=normal&level_from=1' +
                             '&level_to=9&timeout=20&submit=1&voc={voc_id}',
+                    },
+                    {
+                        label: 'Одиночный заезд, 5 сек',
+                        url: '/create?gametype=voc&type=practice&level_from=1' +
+                            '&level_to=9&timeout=5&submit=1&voc={voc_id}',
                     },
                     {
                         label: 'Заезд с друзьями, 10 сек',
@@ -94,7 +93,6 @@ ContextMenus.prototype.getVocMenuStructure = function () {
                         label: 'Квалификация, 5 сек',
                         url: '/create/?gametype=voc&type=practice&level_from=1' +
                             '&level_to=9&timeout=5&submit=1&qual=1&voc={voc_id}',
-                        disabled: disabled,
                     },
                 ],
             },
