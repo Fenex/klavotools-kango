@@ -7,7 +7,6 @@ function ContextMenus () {
 
 // TODO: Move structure's data from the module
 ContextMenus.prototype.getUserMenuStructure = function () {
-    var disabled = KlavoTools.Auth.status.id ? false : true;
     return {
         urlPatterns: [
             '*://klavogonki.ru/profile/*',
@@ -18,7 +17,7 @@ ContextMenus.prototype.getUserMenuStructure = function () {
                 label: 'Открыть диалог',
                 icon: 'icons/context_messages.png',
                 url: '/u/#/{auth_id}/messages/{user_id}',
-                disabled: disabled,
+                authorized: true,
             },
             {
                 label: 'Сводка',
@@ -55,7 +54,6 @@ ContextMenus.prototype.getUserMenuStructure = function () {
 };
 
 ContextMenus.prototype.getVocMenuStructure = function () {
-    var disabled = KlavoTools.Auth.status.id ? false : true;
     return {
         urlPatterns: [
             '*://klavogonki.ru/vocs/*',
@@ -87,7 +85,7 @@ ContextMenus.prototype.getVocMenuStructure = function () {
                         label: 'Заезд с друзьями, 10 сек',
                         url: '/create/?gametype=voc&type=private&level_from=1' +
                             '&level_to=9&timeout=10&submit=1&voc={voc_id}',
-                        disabled: disabled,
+                        authorized: true,
                     },
                     {
                         label: 'Квалификация, 5 сек',

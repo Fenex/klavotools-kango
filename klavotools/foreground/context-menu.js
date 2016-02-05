@@ -18,6 +18,7 @@ function ContextMenu () {
  * @param {Function} options.callback An onclick callback function
  * @param {String} [options.icon] A path to the icon for the menu's item
  * @param {Boolean} [options.disabled=false] Wheither the item is disabled
+ * @return {Object} Created <menuitem> element
  */
 ContextMenu.prototype.addItem = function (options) {
     var item = document.createElement('menuitem');
@@ -29,10 +30,13 @@ ContextMenu.prototype.addItem = function (options) {
             item.icon = url;
         });
     }
+
     if (options.disabled) {
         item.disabled = 'disabled';
     }
+
     this.getElement().appendChild(item);
+    return item;
 };
 
 /**
@@ -58,12 +62,14 @@ ContextMenu.prototype.getElement = function () {
 
 function createMenu (structure) {
     var menu = new ContextMenu;
+    var auth_dependent = [];
     structure.items.forEach(function (item) {
         // Recursively adding submenus:
         if (item.items instanceof Array) {
             var submenu = createMenu(item);
             return menu.addSubmenu(item.label, submenu);
         }
+
         var callback = function () {};
         if (item.url) {
             // TODO: use promises:
@@ -75,13 +81,28 @@ function createMenu (structure) {
                 });
             }.bind({ url: item.url });
         }
-        menu.addItem({
+
+        var itemElement = menu.addItem({
             label: item.label,
             icon: item.icon,
-            disabled: item.disabled,
             callback: callback,
         });
+
+        if (item.authorized) {
+            auth_dependent.push(itemElement);
+        }
     });
+
+    kango.addMessageListener('AuthStatusChanged', function (event) {
+        auth_dependent.forEach(function (item) {
+            if (!event.data.id) {
+                item.disabled = 'disabled';
+            } else {
+                item.removeAttribute('disabled');
+            }
+        });
+    });
+
     return menu;
 }
 

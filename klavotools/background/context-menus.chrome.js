@@ -58,6 +58,21 @@ ChromeContextMenu.prototype.addItem = function (options) {
 };
 
 /**
+ * Updates an item by the given id.
+ *
+ * @param {Number|String} id An id of the item
+ * @param {Object} options Item's parameters (same object as for addItem())
+ */
+ChromeContextMenu.prototype.updateItem = function (id, options) {
+    chrome.contextMenus.update(id, {
+        title: options.label,
+        contexts: options.contexts,
+        onclick: options.callback,
+        enabled: options.disabled ? false : true,
+    });
+};
+
+/**
  * Adds an item to the menu.
  *
  * @param {Object} options An object with submenu's item's parameters:
@@ -78,16 +93,13 @@ ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
             });
         });
         menu.parent = parentId;
-    })
-    .fail(function (error) {
-        deferred.reject(error);
     });
-
 };
 
 (function () {
     function createChromeMenu (structure) {
         var menu = new ChromeContextMenu(structure.urlPatterns);
+        var auth_dependent = [];
         structure.items.forEach(function (item) {
             // Recursively adding submenus:
             if (item.items instanceof Array) {
@@ -96,6 +108,7 @@ ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
                     label: item.label,
                 }, submenu);
             }
+
             var callback = function () {};
             if (item.url) {
                 callback = function () {
@@ -109,12 +122,25 @@ ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
                     });
                 }.bind({ url: item.url });
             }
+
             menu.addItem({
                 label: item.label,
-                disabled: item.disabled,
                 callback: callback,
+            }).then(function (id) {
+                if (item.authorized) {
+                    auth_dependent.push(id);
+                }
             });
         });
+
+        kango.addMessageListener('AuthStatusChanged', function (event) {
+            auth_dependent.forEach(function (item) {
+                menu.updateItem(item, {
+                    disabled: !event.data.id,
+                });
+            });
+        });
+
         return menu;
     }
 

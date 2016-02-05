@@ -11,6 +11,13 @@ Auth.prototype.ChangedStatus = function(auth) {
             this.status[key] = auth[key];
 
     KlavoTools.Button.update();
+    var status = this.status;
+    kango.dispatchMessage('AuthStatusChanged', status);
+    kango.browser.tabs.getAll(function (tabs) {
+        tabs.forEach(function (tab) {
+            tab.dispatchMessage('AuthStatusChanged', status)
+        });
+    });
     this.Timer.start();
 };
 
