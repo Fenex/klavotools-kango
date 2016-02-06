@@ -38,6 +38,7 @@ describe('competitions module', function () {
       sandbox.spy(Competitions.prototype, 'check');
       // Setting up a spy for the DeferredNotification class constructor:
       sandbox.spy(global, 'DeferredNotification');
+      sandbox.spy(DeferredNotification.prototype, 'revoke');
       sandbox.spy(DeferredNotification.prototype, 'show');
     });
 
@@ -237,6 +238,17 @@ describe('competitions module', function () {
       competitions = new Competitions;
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(1);
+    });
+
+    it('should revoke the notification with the click on it', function () {
+      kango.xhr.send.yields(fixtures.xhr.competition({
+        beginTime: 400,
+        rate: 5,
+      }));
+      var competitions = new Competitions;
+      sandbox.clock.tick(340 * 1000);
+      competitions.notification.onclick();
+      expect(DeferredNotification.prototype.revoke).to.have.been.called;
     });
 
     it('should show the notifications only for selected rates', function () {

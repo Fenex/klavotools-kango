@@ -152,6 +152,7 @@ Competitions.prototype.check = function() {
                 url: 'http://klavogonki.ru/g/?gmid='+gmid,
                 focused: true,
             });
+            self.notification.revoke();
         };
 
         self.notification.show(timer);
