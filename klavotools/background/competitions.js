@@ -88,23 +88,18 @@ Competitions.prototype.check = function() {
     var details = {
         method: 'POST',
         url: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',
-        async: true,
         params: {
             'cached_users': '0'
         },
         contentType: 'json'
     };
 
-    kango.xhr.send(details, function(res) {
-        /**
-        * FIXME: if @status isn't equal to 200, @check will not performed anymore
-        */
-        if(res.status != 200) { return; }
-        res = res.response;
-
+    kango.xhr.send(details, function (data) {
         clearTimeout(self.timer);
 
-        if(!res.gamelist[0].params.competition) {
+        var res = data.response;
+
+        if (data.status && data.status != 200 || !res.gamelist[0].params.competition) {
             self.timer = setTimeout(function() { self.check() }, 10 * 1000);
             return false;
         }

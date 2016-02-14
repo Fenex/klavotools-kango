@@ -163,8 +163,16 @@ describe('competitions module', function () {
     /**
      * Tests for the Competitions.prototype.check method
      */
-    it('should call the check() method again, ' +
-        'if the server\'s response code is not equal to 200');
+    it('should call the check() method after 10 seconds, ' +
+        'if the server\'s response code is not equal to 200', function () {
+      kango.xhr.send.yields({
+        status: 403,
+        response: '',
+      });
+      var competitions = new Competitions;
+      sandbox.clock.tick(10 * 1000);
+      expect(Competitions.prototype.check).to.have.been.calledTwice;
+    });
 
     it('should call the check() method after 10 seconds, ' +
         'if there are no competitions at the moment', function () {
