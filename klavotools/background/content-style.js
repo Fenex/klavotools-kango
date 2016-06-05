@@ -1,6 +1,6 @@
 var Skin = function() {
     //list of all skins
-    this.list = ['beige', 'pink', 'green', 'blue', 'gray'];
+    this.list = ['beige', 'pink', 'green', 'blue', 'gray', 'nikitakozin'];
     //object {skin-name: isEnable}
     this.skins = {};
     //active skin

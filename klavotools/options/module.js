@@ -95,6 +95,7 @@ angular.module('klavotools', ['klavotools.joke'])
             case 'pink': return 'Розовый';
             case 'blue': return 'Синий';
             case 'gray': return 'Серый';
+            case 'nikitakozin': return 'Минималистический стиль, убирающий лишний цветовой шум. Автор nikitakozin.';
             default: return input;
         }
     }
