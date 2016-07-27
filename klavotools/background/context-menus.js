@@ -117,7 +117,7 @@ ContextMenus.prototype.getVocMenuStructure = function () {
  * @return {String}
  */
 ContextMenus.prototype.makeRedirectURL = function(template) {
-    var auth_id = KlavoTools.Auth.status.id;
+    var auth_id = KlavoTools.Auth.getState().id;
     if (auth_id) {
         template = template.replace(/{auth_id}/g, auth_id);
     }

@@ -27,17 +27,25 @@ function xhr(detail) {
     return deferred.promise;
 }
 
-
 var KlavoTools = {
-    UserJS: new UserJS,
-    Skin: new Skin,
-    Competitions: new Competitions,
-    ContextMenus: new ContextMenus,
+    const: {
+        BUTTON_BADGE_COLOR: [255, 0, 0, 255],
+        ICON_DEFAULT: 'icons/digits.png',
+        ICON_AUTH: 'icons/normal.png',
+        ICON_UNREAD: 'icons/dic.png',
+        WS_BASE_URL: 'ws://klavogonki.ru/ws',
+    },
+    version: function() {
+        return kango.getExtensionInfo().version;
+    },
 };
 
-KlavoTools.version = function() {
-    return kango.getExtensionInfo().version;
-};
+KlavoTools.UserJS = new UserJS;
+KlavoTools.Skin = new Skin;
+KlavoTools.Competitions = new Competitions;
+KlavoTools.ContextMenus = new ContextMenus;
+KlavoTools.Button = new Button;
+KlavoTools.Auth = new Auth;
 
 KlavoTools.tabs = {
     create: function(data) {
@@ -50,40 +58,3 @@ KlavoTools.tabs = {
     }
 };
 
-KlavoTools.const = {
-    ICON_DEFAULT: 'icons/digits.png',
-    ICON_AUTH: 'icons/normal.png',
-    ICON_UNREAD: 'icons/dic.png'
-};
-
-KlavoTools.Auth = new Auth();
-
-KlavoTools.Button = {
-    setBadgeValue: function(num) {
-        if(num == 0)
-            num = '';
-    },
-    update: function() {
-        var icon = 'ICON_DEFAULT';
-        var unread = '';
-
-        if(!KlavoTools.Auth.status.id) {
-            KlavoTools.Auth.status.unread = 0;
-        } else {
-            if(KlavoTools.Auth.status.unread > 0) {
-                unread = KlavoTools.Auth.status.unread;
-                icon = 'ICON_UNREAD';
-            } else {
-                icon = 'ICON_AUTH';
-            }
-        }
-
-        kango.ui.browserButton.setIcon(KlavoTools.const[icon]);
-        kango.ui.browserButton.setBadgeValue(unread);
-    },
-    init: function() {
-        kango.ui.browserButton.setBadgeBackgroundColor([255, 0, 0, 255]);
-    }
-};
-
-KlavoTools.Button.init();

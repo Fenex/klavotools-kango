@@ -133,7 +133,7 @@ ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
             });
         });
 
-        kango.addMessageListener('AuthStatusChanged', function (event) {
+        kango.addMessageListener('AuthStateChanged', function (event) {
             auth_dependent.forEach(function (item) {
                 menu.updateItem(item, {
                     disabled: !event.data.id,

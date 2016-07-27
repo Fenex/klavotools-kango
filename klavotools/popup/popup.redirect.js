@@ -10,21 +10,21 @@ angular.module('popup.redirect', [])
         login: null,
         id: null
     };
-    
-    kango.invokeAsync('KlavoTools.Auth.get', function(res) {
+
+    kango.invokeAsync('KlavoTools.Auth.getState', function(res) {
         auth.login = res.login;
         auth.id = res.id;
     });
-    
+
     return auth;
 })
 .factory('Redirect', function(RedirectMode, Auth) {
     var extensionURI = '';
-    
+
     kango.invokeAsync('kango.io.getResourceUrl', '/', function(URI) {
         extensionURI = URI;
     });
-    
+
     function replacer(url) {
         if(/^__FALSE__$/.test(url)) {
             return false;
@@ -45,10 +45,10 @@ angular.module('popup.redirect', [])
                 url = '/' + url;
             url = 'http://klavogonki.ru' + url;
         }
-            
+
         return url;
     }
-    
+
     return function(url, mode) {
         url = replacer(url);
         if(!url)

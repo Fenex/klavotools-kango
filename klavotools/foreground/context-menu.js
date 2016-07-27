@@ -93,7 +93,7 @@ function createMenu (structure) {
         }
     });
 
-    kango.addMessageListener('AuthStatusChanged', function (event) {
+    kango.addMessageListener('AuthStateChanged', function (event) {
         auth_dependent.forEach(function (item) {
             if (!event.data.id) {
                 item.disabled = 'disabled';
