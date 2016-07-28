@@ -1,7 +1,6 @@
 /**
- * Unit tests for the competitions background module
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file Unit tests for the competitions background module
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 var sinon = require('sinon');
