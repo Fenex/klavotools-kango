@@ -1,5 +1,6 @@
 /**
- * ContextMenus class constructor.
+ * @file ContextMenus module.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 function ContextMenus () {
     this._params = {};
@@ -112,7 +113,6 @@ ContextMenus.prototype.getVocMenuStructure = function () {
 
 /**
  * Substitutes variables into the URL's path.
- *
  * @param {String} template The URL's path template
  * @return {String}
  */

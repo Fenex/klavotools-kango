@@ -1,5 +1,5 @@
 /**
- * Represents current session state of the user.
+ * @file Auth module. Represents current session state of the user.
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 function Auth () {

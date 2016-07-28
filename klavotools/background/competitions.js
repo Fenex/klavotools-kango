@@ -1,9 +1,9 @@
 /**
- *  Competitions Module
- *
- *  The module checks for new open competitions and shows notifications.
-*/
-
+ * @file Competitions Module. The module checks for new open competitions and shows
+ *  notifications to user.
+ * @author Vitaliy Busko
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
+ */
 var Competitions = function() {
     // A reference to the deferred notification:
     this.notification = null;

@@ -1,5 +1,5 @@
 /**
- * A wrapper for the extension button.
+ * @file A wrapper for the extension button.
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 function Button () {

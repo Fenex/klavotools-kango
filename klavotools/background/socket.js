@@ -1,5 +1,5 @@
 /**
- * A wrapper for klavogonki.ru WebSocket connection.
+ * @file A wrapper for klavogonki.ru WebSocket connection.
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 function Socket () {
@@ -154,7 +154,6 @@ Socket.prototype._onMessage = function (deferred, event) {
  * @param {Object} deferred A Q deferred object.
  * @param {Event#close} event A close event.
  * @listens Event#close
- * @fires CustomEvent#error
  * @private
  */
 Socket.prototype._onClose = function (deferred, event) {
@@ -169,7 +168,7 @@ Socket.prototype._onClose = function (deferred, event) {
 
 /**
  * WebSocket.onerror handler.
- * @param {Event#error} event An error event.
+ * @param {(Event#error|CustomEvent#error)} event An error event.
  * @listens Event#error
  * @listens CustomEvent#error
  * @private

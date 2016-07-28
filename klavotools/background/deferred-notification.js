@@ -1,8 +1,7 @@
 /**
- * DeferredNotification module.
- *
- * Example of usage:
- *
+ * @file DeferredNotification module.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
+ * @example <caption>Example of usage.</caption>
  * var notify = new DeferredNotification('title', {
  *     body: 'Hello, world!',
  *     icon: 'http://example.com/img.png',
@@ -20,10 +19,9 @@
  * window.Notification's constructor, with the addition of an optional parameter:
  *
  * {Number} [options.displayTime] Sets the display time for the notification in seconds
- *
- * @param {String} title
+ * @param {string} title
  * @param {Object} options
- * @return {Object}
+ * @returns {Object}
  */
 function DeferredNotification (title, options) {
     if (typeof title === 'undefined') {
@@ -52,8 +50,7 @@ DeferredNotification.prototype.revoke = function () {
 
 /**
  * Create the Notification after the certain delay.
- *
- * @param {Number} [delay=0] Delay in seconds
+ * @param {number} [delay=0] Delay in seconds
  */
 DeferredNotification.prototype.show = function (delay) {
     delay = delay || 0;

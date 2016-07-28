@@ -1,15 +1,15 @@
 /**
- * A background script for creating context menus in the Chrome.
+ * @file A background script for creating context menus in the Chrome.
  *
  * Chrome doesn't support the creation of context menus with the <menu> element
  * at the moment (http://caniuse.com/#feat=menu). Using the Extensions API as
  * a workaround.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 /**
  * ChromeContextMenu class constructor.
- *
- * @param {Array} [urlPatterns] An array of match patterns for target elements
+ * @param {string[]} [urlPatterns] An array of match patterns for target elements
  */
 function ChromeContextMenu (urlPatterns) {
     // An array with ids of items:
@@ -21,14 +21,13 @@ function ChromeContextMenu (urlPatterns) {
 
 /**
  * Adds an item to the menu.
- *
  * @param {Object} options An object with item's parameters:
- * @param {String} options.label An item's text
- * @param {Function} [options.callback] An onclick callback function
- * @param {Array} [options.urlPattern] An array of match patterns
- * @param {Boolean} [options.disabled=false] Wheither the item is disabled
- * @param {Array} [options.contexts] An array of contexts. Defaults to ['link']
- * @return {Promise<Number|String>} A Q promise to the id of created menu's item
+ * @param {string} options.label An item's text
+ * @param {function} [options.callback] An onclick callback function
+ * @param {string[]} [options.urlPattern] An array of match patterns
+ * @param {boolean} [options.disabled=false] Wheither the item is disabled
+ * @param {string[]} [options.contexts] An array of contexts. Defaults to ['link']
+ * @returns {Promise.<(number|string)>} A Q promise to the id of created menu's item
  */
 ChromeContextMenu.prototype.addItem = function (options) {
     if (!options.contexts) {
@@ -59,8 +58,7 @@ ChromeContextMenu.prototype.addItem = function (options) {
 
 /**
  * Updates an item by the given id.
- *
- * @param {Number|String} id An id of the item
+ * @param {(number|string)} id An id of the item
  * @param {Object} options Item's parameters (same object as for addItem())
  */
 ChromeContextMenu.prototype.updateItem = function (id, options) {
@@ -74,11 +72,10 @@ ChromeContextMenu.prototype.updateItem = function (id, options) {
 
 /**
  * Adds an item to the menu.
- *
  * @param {Object} options An object with submenu's item's parameters:
- * @param {String} options.label A submenu's label
- * @param {Function} [options.callback] An onclick callback function
- * @param {Boolean} [options.disabled] Wheither the submenu's item is disabled
+ * @param {string} options.label A submenu's labels
+ * @param {function} [options.callback] An onclick callback function
+ * @param {boolean} [options.disabled] Wheither the submenu's item is disabled
  * @param {Object} menu An instance of the ChromeContextMenu class
  */
 ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
