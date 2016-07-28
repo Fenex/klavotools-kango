@@ -27,7 +27,7 @@
         "icon": "icons/button.png",
         "tooltipText": "KlavoTools",
         "popup": {
-            "url": "klavotools/popup/index.html",
+            "url": "popup.html",
             "width": 520,
             "height": 170
         }
