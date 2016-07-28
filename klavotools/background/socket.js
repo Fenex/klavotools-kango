@@ -37,11 +37,16 @@ Socket.prototype.connect = function (id, hash) {
 
 /**
  * Removes all listeners and closes current WebSocket session.
+ * @param {number} [code] Close event code (in the range [4000, 4999]).
+ * @param {string} [reason] Close event reason.
+ * @fires Event#close
  */
-Socket.prototype.disconnect = function () {
+Socket.prototype.disconnect = function (code, reason) {
     this._listeners = {};
-    if (this._ws && this._ws.readyState === 1) {
-        this._ws.close();
+    this._authorized = false;
+    clearTimeout(this._heartbeatTimer);
+    if (this._ws && this._ws.readyState === this._ws.OPEN) {
+        this._ws.close(code, reason);
     }
 };
 
@@ -60,10 +65,12 @@ Socket.prototype.on = function (eventName, callback) {
 
 /**
  * Sends the auth request after the socket was opened.
+ * @listens Event#open
  * @private
  */
 Socket.prototype._auth = function () {
     this._ws.send('["auth ' + this._id + ':' + this._hash + '"]');
+    this._onHeartbeat();
 };
 
 /**
@@ -88,16 +95,38 @@ Socket.prototype._subscribeAll = function () {
 };
 
 /**
+ * Heartbeat frames handler.
+ * @fires CustomEvent#error
+ * @private
+ */
+Socket.prototype._onHeartbeat = function () {
+    clearTimeout(this._heartbeatTimer);
+    this._heartbeatTimer = setTimeout(function () {
+        this._ws.dispatchEvent(new CustomEvent('error', {
+            detail: {
+                code: 4000,
+                reason: 'Connection closed by client due to server inactivity.',
+            }
+        }));
+    }.bind(this), KlavoTools.const.WS_HEARTBEAT_TIMEOUT * 1000);
+};
+
+/**
  * WebSocket.onmessage handler.
  * @param {Object} deferred A Q deferred object.
- * @param {WebSocket#message} event A message event.
- * @listens WebSocket#message
+ * @param {MessageEvent#message} event A message event.
+ * @listens MessageEvent#message
  * @private
  */
 Socket.prototype._onMessage = function (deferred, event) {
-    if (!event.data.length || event.data.length === 1) {
+    if (!event.data.length || event.data === 'o') {
         return;
     }
+
+    if (event.data === 'h') {
+        return this._onHeartbeat();
+    }
+
     var messageType = event.data[0];
     // Extract the 'answer' message from the 'a["answer"]' frame:
     var message = event.data.substring(1).slice(2, -2).replace(/\\"/g, '"');
@@ -123,29 +152,35 @@ Socket.prototype._onMessage = function (deferred, event) {
 /**
  * WebSocket.onclose handler.
  * @param {Object} deferred A Q deferred object.
- * @param {WebSocket#close} event A close event.
- * @listens WebSocket#close
+ * @param {Event#close} event A close event.
+ * @listens Event#close
+ * @fires CustomEvent#error
  * @private
  */
 Socket.prototype._onClose = function (deferred, event) {
-    if (!event.wasClean) {
+    if (!event.wasClean || event.code === 4000) {
         if (!this._authorized) {
             deferred.reject(event.reason);
         } else {
-            kango.console.log('WebSocket error: #' + event.code + ': ' + event.reason);
-
+            kango.console.log('WebSocket closed: #' + event.code + ': ' + event.reason);
         }
     }
-    this._authorized = false;
 };
 
 /**
  * WebSocket.onerror handler.
- * @param {WebSocket#error} event An error event.
- * @listens WebSocket#error
+ * @param {Event#error} event An error event.
+ * @listens Event#error
+ * @listens CustomEvent#error
  * @private
  */
 Socket.prototype._onError = function (event) {
+    kango.console.log('A WebSocket error has occured.');
+    if (event.detail && event.detail.code) {
+        this.disconnect(event.detail.code, event.detail.reason);
+    } else {
+        this.disconnect();
+    }
     if (typeof this.onError !== 'function') {
         return;
     }

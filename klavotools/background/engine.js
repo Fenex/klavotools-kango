@@ -15,12 +15,10 @@ function xhr(detail) {
     };
 
     kango.xhr.send(details, function(data) {
-        if (data.status == 200 && data.response != null) {
-            var text = data.response;
-            deferred.resolve(text);
-        }
-        else { // something went wrong
-            kango.console.log('something went wrong');
+        if (data.status > 0 && data.status < 400 && data.response != null) {
+            deferred.resolve(data.response);
+        } else {
+            deferred.reject(data);
         }
     });
 
@@ -34,6 +32,7 @@ var KlavoTools = {
         ICON_AUTH: 'icons/normal.png',
         ICON_UNREAD: 'icons/dic.png',
         WS_BASE_URL: 'ws://klavogonki.ru/ws',
+        WS_HEARTBEAT_TIMEOUT: 40,
     },
     version: function() {
         return kango.getExtensionInfo().version;

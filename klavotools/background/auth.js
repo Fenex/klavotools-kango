@@ -71,6 +71,7 @@ Auth.prototype.relogin = function (madeAttempts) {
     }
     setTimeout(function () {
         this.login().fail(this.relogin.bind(this, ++madeAttempts));
+        kango.console.log('Relogin attempt #' + madeAttempts + '...');
     }.bind(this), 5000);
 };
 
