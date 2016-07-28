@@ -2,8 +2,9 @@
     "description": "KlavoTools Kango",
     "creator": "Busko Vitaliy",
     "background_scripts": [
-        "klavotools/background/deferred-notification.js",
         "klavotools/background/lib/q.js",
+        "klavotools/background/lib/xhr.js",
+        "klavotools/background/deferred-notification.js",
         "klavotools/background/competitions.js",
         "klavotools/background/content-js.js",
         "klavotools/background/content-style.js",
