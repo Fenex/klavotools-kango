@@ -6,7 +6,7 @@
 
 try {
     var link = document.querySelector('.user-dropdown .dropmenu a.btn');
-    var userId = link ? link.href.match(/\d+/)[0] : null;
+    var userId = link ? link.href.match(/\d+/)[0] * 1 : null;
     kango.invokeAsync('KlavoTools.Auth.getState', function (state) {
         if (state.id !== userId) {
             if (userId) {
