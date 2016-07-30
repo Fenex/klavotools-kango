@@ -1,7 +1,6 @@
 /**
- * A fixtures loader helper
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file A fixtures loader helper.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 var fs = require('fs');

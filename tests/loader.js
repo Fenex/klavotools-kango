@@ -1,7 +1,6 @@
 /**
- * A simple helper for loading "vanilla" JavaScript modules
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file A simple helper for loading "vanilla" JavaScript modules
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 var vm = require('vm');
