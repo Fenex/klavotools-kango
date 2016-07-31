@@ -29,7 +29,21 @@ function DeferredNotification (title, options) {
     }
 
     this.title = title;
-    this.options = options || {};
+    // For testing purposes it's important to save the original state of the arguments.
+    // So, we can't simply assign this.options to options || {}, because the first can be
+    // changed further:
+    this.options = {};
+
+    if (options) {
+        if (typeof options !== 'object') {
+            throw new TypeError('Argument 2 of DeferredNotification should be an object');
+        }
+
+        for (var field in options) {
+            this.options[field] = options[field];
+        }
+    }
+
     if (this.options.displayTime && !this.options.tag) {
         // Set the tag property for the possibility of replacing of same notifications:
         this.options.tag = Math.random().toString(16).slice(2);

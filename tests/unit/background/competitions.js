@@ -15,12 +15,8 @@ describe('competitions module', function () {
     var sandbox;
 
     before(function () {
-      // Setting up the DeferredNotification mock:
-      // TODO: is this a good way to set the mock for a global dependency?
-      global.DeferredNotification = function (title, options) {};
-      DeferredNotification.prototype.revoke = function () {};
-      DeferredNotification.prototype.show = function (delay) {};
-      loadModule('klavotools/background/competitions.js');
+      loadModule('klavotools/background/competitions.js')
+        .loadDependency('klavotools/background/deferred-notification.js');
     });
 
     beforeEach(function () {
@@ -37,18 +33,13 @@ describe('competitions module', function () {
       sandbox.spy(Competitions.prototype, 'check');
       // Setting up a spy for the DeferredNotification class constructor:
       sandbox.spy(global, 'DeferredNotification');
-      sandbox.spy(DeferredNotification.prototype, 'revoke');
-      sandbox.spy(DeferredNotification.prototype, 'show');
+      sandbox.stub(DeferredNotification.prototype, 'revoke');
+      sandbox.stub(DeferredNotification.prototype, 'show');
     });
 
     afterEach(function () {
       // Unwraping all stubs and spies:
       sandbox.restore();
-    });
-
-    after(function () {
-      // Clean the global scope:
-      delete global.DeferredNotification;
     });
 
     /**
