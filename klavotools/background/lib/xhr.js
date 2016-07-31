@@ -8,6 +8,7 @@
  * Performs a XHR request using kango.xhr.send() method.
  * @param {(string|Object)} settings An URL string for simple GET request, or an object
  *  with settings for the kango.xhr.send() method.
+ * @throws {TypeError}
  * @returns {Promise.<(Object|string|XMLDOMDocument)>}
  */
 function xhr (settings) {
@@ -18,6 +19,8 @@ function xhr (settings) {
 
     if (typeof settings === 'string') {
         settings = { url: settings };
+    } else if (!settings || !settings.url) {
+        throw new TypeError('URL not specified');
     }
 
     for (var field in defaultSettings) {
@@ -27,7 +30,7 @@ function xhr (settings) {
     }
 
     kango.xhr.send(settings, function(data) {
-        if (data.status > 0 && data.status < 400 && data.response != null) {
+        if (data.status > 99 && data.status < 400) {
             deferred.resolve(data.response);
         } else {
             deferred.reject(data);
