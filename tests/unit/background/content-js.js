@@ -3,20 +3,16 @@
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
+require('../background.js');
 var sinon = require('sinon');
 var assertStyles = require('../../assert-styles.js');
 var expect = assertStyles.expect;
 var fixtures = require('../../fixtures.js');
-var loadModule = require('../../loader.js');
 
 describe('content-js module', function () {
   describe('Script class', function () {
     // Reference to the sinon sandbox:
     var sandbox;
-
-    before(function () {
-      loadModule('klavotools/background/content-js.js');
-    });
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();

@@ -3,24 +3,15 @@
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
+require('../background.js');
 var sinon = require('sinon');
 var assertStyles = require('../../assert-styles.js');
 var expect = assertStyles.expect;
-var loadModule = require('../../loader.js');
 
 describe('xhr module', function () {
   describe('xhr function', function () {
     // Reference to the sinon sandbox:
     var sandbox;
-
-    before(function () {
-      loadModule('klavotools/background/lib/xhr.js')
-        .loadDependency({
-          globalName: 'Q',
-          path: 'klavotools/background/lib/q.js',
-          type: 'commonjs',
-        });
-    });
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();

@@ -18,7 +18,7 @@ module.exports = {
     getItem: function (name) {},
     setItem: function (name, value) {},
     removeItem: function (name) {},
-    getKeys: function () {},
+    getKeys: function () { return []; },
     clear: function () {},
   },
   xhr: {
