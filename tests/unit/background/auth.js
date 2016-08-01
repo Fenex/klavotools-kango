@@ -5,6 +5,7 @@
 
 require('../background.js');
 var sinon = require('sinon');
+var _Q = require('q');
 var assertStyles = require('../../assert-styles.js');
 var fixtures = require('../../fixtures.js');
 var expect = assertStyles.expect;
@@ -46,7 +47,7 @@ describe('auth module', function () {
           status: 200,
           response: fixtures.xhr.page_constant_me_null,
         });
-      return Promise.all([
+      return _Q.all([
         expect(auth._fetchState())
           .to.be.fulfilled
           .to.eventually.be.deep.equal({

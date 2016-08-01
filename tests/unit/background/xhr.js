@@ -5,6 +5,7 @@
 
 require('../background.js');
 var sinon = require('sinon');
+var _Q = require('q');
 var assertStyles = require('../../assert-styles.js');
 var expect = assertStyles.expect;
 
@@ -69,7 +70,7 @@ describe('xhr module', function () {
         .onFirstCall().yields({ status: 0, response: 'Network error' })
         .onSecondCall().yields({ status: 402, response: 'Payment Required' })
         .onThirdCall().yields({ status: 502, response: 'Bad Gateway' });
-      return Promise.all([
+      return _Q.all([
         expect(xhr('http://klavogonki.ru')).to.be.rejected,
         expect(xhr('http://klavogonki.ru')).to.be.rejected,
         expect(xhr('http://klavogonki.ru')).to.be.rejected,
