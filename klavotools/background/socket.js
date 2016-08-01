@@ -17,7 +17,7 @@ function Socket () {
  */
 Socket.prototype.connect = function (id, hash) {
     if (!id || !hash) {
-        return Q.reject(new Error('The user id or disposable hash not specified.'));
+        return Q.reject(new TypeError('The user id or disposable hash not specified.'));
     }
     var deferred = Q.defer();
     // By default, SockJS appends to the base URL two random ids:
