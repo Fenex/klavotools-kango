@@ -12,8 +12,8 @@ function Socket () {
  * Starts new WebSocket session.
  * @param {number} id The Me.id value.
  * @param {string} hash The Me.one_shot_hash value.
- * @returns {Promise.<(string|Error)>} A Q promise, which resolves when the auth process
- *  is finished.
+ * @returns {Promise.<(string|TypeError)>} A Q promise, which resolves when the auth
+ *  process is finished.
  */
 Socket.prototype.connect = function (id, hash) {
     if (!id || !hash) {

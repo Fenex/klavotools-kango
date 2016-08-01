@@ -5,8 +5,8 @@
 function Auth () {
     this._state = {};
     this._socket = new Socket;
-    this._socket.onError = this.relogin.bind(this, 0);
-    this.login().fail(this.relogin.bind(this, 0));
+    this._socket.onError = this.relogin.bind(this);
+    this.login().fail(this.relogin.bind(this));
 }
 
 /**
@@ -41,7 +41,7 @@ Auth.prototype._fetchState = function () {
     var deferred = Q.defer();
     xhr('http://klavogonki.ru').then(function(body) {
         try {
-            var Me = JSON.parse(body.match(/constant\(\s*'Me',\s*(.*)\s*\)/)[1]);
+            var Me = JSON.parse(body.match(/constant\(\s*'Me',\s*(.+)\s*\)/)[1]);
             deferred.resolve(Me || {});
         } catch (e) {
             kango.console.log(e.toString());
@@ -61,9 +61,10 @@ Auth.prototype.getState = function () {
 /**
  * Repeatedly calls the .login() method (if its promise is rejected) with 5 seconds
  * delays for 10 times.
- * @param {!number} madeAttempts The number of already made login attempts.
+ * @param {number} [madeAttempts=0] The number of already made login attempts.
  */
 Auth.prototype.relogin = function (madeAttempts) {
+    madeAttempts = typeof madeAttempts === 'number' ? madeAttempts : 0;
     var attempts = 10;
     if (madeAttempts === attempts) {
         kango.console.log('Giving up after ' + attempts + ' unsuccessfull attempts...');
