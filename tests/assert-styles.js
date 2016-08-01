@@ -1,7 +1,6 @@
 /**
- * A helper for setting up the chai assertions library.
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file A helper for setting up the chai assertions library.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 var chai = require('chai');

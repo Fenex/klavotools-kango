@@ -1,5 +1,6 @@
 /**
- * ContextMenus class constructor.
+ * @file ContextMenus module.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 function ContextMenus () {
     this._params = {};
@@ -112,12 +113,11 @@ ContextMenus.prototype.getVocMenuStructure = function () {
 
 /**
  * Substitutes variables into the URL's path.
- *
  * @param {String} template The URL's path template
  * @return {String}
  */
 ContextMenus.prototype.makeRedirectURL = function(template) {
-    var auth_id = KlavoTools.Auth.status.id;
+    var auth_id = KlavoTools.Auth.getState().id;
     if (auth_id) {
         template = template.replace(/{auth_id}/g, auth_id);
     }

@@ -1,8 +1,7 @@
 /**
- * DeferredNotification module.
- *
- * Example of usage:
- *
+ * @file DeferredNotification module.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
+ * @example <caption>Example of usage.</caption>
  * var notify = new DeferredNotification('title', {
  *     body: 'Hello, world!',
  *     icon: 'http://example.com/img.png',
@@ -20,10 +19,9 @@
  * window.Notification's constructor, with the addition of an optional parameter:
  *
  * {Number} [options.displayTime] Sets the display time for the notification in seconds
- *
- * @param {String} title
+ * @param {string} title
  * @param {Object} options
- * @return {Object}
+ * @returns {Object}
  */
 function DeferredNotification (title, options) {
     if (typeof title === 'undefined') {
@@ -31,7 +29,21 @@ function DeferredNotification (title, options) {
     }
 
     this.title = title;
-    this.options = options || {};
+    // For testing purposes it's important to save the original state of the arguments.
+    // So, we can't simply assign this.options to options || {}, because the first can be
+    // changed further:
+    this.options = {};
+
+    if (options) {
+        if (typeof options !== 'object') {
+            throw new TypeError('Argument 2 of DeferredNotification should be an object');
+        }
+
+        for (var field in options) {
+            this.options[field] = options[field];
+        }
+    }
+
     if (this.options.displayTime && !this.options.tag) {
         // Set the tag property for the possibility of replacing of same notifications:
         this.options.tag = Math.random().toString(16).slice(2);
@@ -52,8 +64,7 @@ DeferredNotification.prototype.revoke = function () {
 
 /**
  * Create the Notification after the certain delay.
- *
- * @param {Number} [delay=0] Delay in seconds
+ * @param {number} [delay=0] Delay in seconds
  */
 DeferredNotification.prototype.show = function (delay) {
     delay = delay || 0;

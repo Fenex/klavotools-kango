@@ -1,7 +1,6 @@
 /**
- * A kango framework mock object
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file A kango framework mock object.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 module.exports = {
@@ -19,7 +18,7 @@ module.exports = {
     getItem: function (name) {},
     setItem: function (name, value) {},
     removeItem: function (name) {},
-    getKeys: function () {},
+    getKeys: function () { return []; },
     clear: function () {},
   },
   xhr: {

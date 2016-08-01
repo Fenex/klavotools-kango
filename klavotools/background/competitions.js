@@ -1,9 +1,9 @@
 /**
- *  Competitions Module
- *
- *  The module checks for new open competitions and shows notifications.
-*/
-
+ * @file Competitions Module. The module checks for new open competitions and shows
+ *  notifications to user.
+ * @author Vitaliy Busko
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
+ */
 var Competitions = function() {
     // A reference to the deferred notification:
     this.notification = null;
@@ -63,7 +63,7 @@ Competitions.prototype.setParams = function(param) {
 
 Competitions.prototype.activate = function() {
     if(this.active)
-        return console.log('active already');
+        return kango.console.log('active already');
 
    this.active = true;
    this.check();
@@ -71,7 +71,7 @@ Competitions.prototype.activate = function() {
 
 Competitions.prototype.deactivate = function() {
     if(!this.active)
-        return console.log('deactive already');
+        return kango.console.log('deactive already');
 
     clearTimeout(this.timer);
     if (this.notification !== null) {

@@ -4,7 +4,8 @@
 // ==/UserScript==
 
 /**
- * ContextMenu class constructor.
+ * @file ContextMenu content script.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 function ContextMenu () {
     this.obj = document.createElement('menu');
@@ -12,13 +13,12 @@ function ContextMenu () {
 
 /**
  * Adds an item to the menu.
- *
- * @param {Object} options An object with item's parameters:
- * @param {String} options.label An item's text
- * @param {Function} options.callback An onclick callback function
- * @param {String} [options.icon] A path to the icon for the menu's item
- * @param {Boolean} [options.disabled=false] Wheither the item is disabled
- * @return {Object} Created <menuitem> element
+ * @param {object} options An object with item's parameters:
+ * @param {string} options.label An item's text
+ * @param {function} options.callback An onclick callback function
+ * @param {string} [options.icon] A path to the icon for the menu's item
+ * @param {boolean} [options.disabled=false] Wheither the item is disabled
+ * @returns {Object} Created <menuitem> element
  */
 ContextMenu.prototype.addItem = function (options) {
     var item = document.createElement('menuitem');
@@ -41,8 +41,7 @@ ContextMenu.prototype.addItem = function (options) {
 
 /**
  * Adds a submenu
- *
- * @param {String} label A submenu's label
+ * @param {string} label A submenu's label
  * @param {Object} menu An instance of the ContextMenu class
  */
 ContextMenu.prototype.addSubmenu = function (label, menu) {
@@ -53,8 +52,7 @@ ContextMenu.prototype.addSubmenu = function (label, menu) {
 
 /**
  * Returns the <menu> html element.
- *
- * @return {Object}
+ * @returns {Object}
  */
 ContextMenu.prototype.getElement = function () {
     return this.obj;
@@ -93,7 +91,7 @@ function createMenu (structure) {
         }
     });
 
-    kango.addMessageListener('AuthStatusChanged', function (event) {
+    kango.addMessageListener('AuthStateChanged', function (event) {
         auth_dependent.forEach(function (item) {
             if (!event.data.id) {
                 item.disabled = 'disabled';
@@ -137,7 +135,6 @@ kango.invokeAsync('ContextMenus.parseLinkURL.toString', function (funcBody) {
 
 /**
  * "Binds" the given <a> element to corresponding context menu.
- *
  * @param {Object} link
  */
 function bindLink (link) {

@@ -1,7 +1,6 @@
 /**
- * A fixtures loader helper
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file A fixtures loader helper.
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
 var fs = require('fs');
@@ -10,27 +9,34 @@ var glob = require('glob');
 
 var fixtures = {};
 // glob library uses only forwarding slashes:
-var pattern = __dirname + '/fixtures/**/*.js';
+var pattern = __dirname + '/fixtures/**/*.*';
 glob.sync(pattern).forEach(function (fixturePath) {
   // Get the parent folder name for the fixture:
   var folder = path.dirname(fixturePath).split(path.sep).pop();
+  // Get the fixture extension:
+  var ext = path.extname(fixturePath);
   // Get the fixture filename:
-  var name = path.basename(fixturePath, '.js');
+  var name = path.basename(fixturePath, ext);
+
   if (!fixtures.hasOwnProperty(folder)) {
     fixtures[folder] = {};
   }
 
-  var entity = require(fixturePath);
   var isModule = true;
-  if (typeof entity === 'object') {
-    isModule = false;
-    // Check for empty object:
-    for (var key in entity) {
-      if (entity.hasOwnProperty(key)) {
-        isModule = true;
-        break;
+  if (ext === '.js') {
+    var entity = require(fixturePath);
+    if (typeof entity === 'object') {
+      isModule = false;
+      // Check for empty object:
+      for (var key in entity) {
+        if (entity.hasOwnProperty(key)) {
+          isModule = true;
+          break;
+        }
       }
     }
+  } else {
+    isModule = false;
   }
 
   if (isModule) {

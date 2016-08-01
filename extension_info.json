@@ -2,20 +2,23 @@
     "description": "KlavoTools Kango",
     "creator": "Busko Vitaliy",
     "background_scripts": [
-        "klavotools/background/deferred-notification.js",
         "klavotools/background/lib/q.js",
+        "klavotools/background/lib/xhr.js",
+        "klavotools/background/deferred-notification.js",
         "klavotools/background/competitions.js",
         "klavotools/background/content-js.js",
         "klavotools/background/content-style.js",
         "klavotools/background/context-menus.js",
-        "klavotools/background/engine-auth.js",
+        "klavotools/background/socket.js",
+        "klavotools/background/auth.js",
+        "klavotools/background/button.js",
         "klavotools/background/engine.js",
         "klavotools/background/context-menus.chrome.js"
     ],
     "content_scripts": [
         "klavotools/foreground/userstyle.js",
         "klavotools/foreground/userjs-exec.js",
-        "klavotools/foreground/auth-status.js",
+        "klavotools/foreground/auth-state.js",
         "klavotools/foreground/context-menu.js"
     ],
     "homepage_url": "http://klavogonki.ru/",
@@ -25,7 +28,7 @@
         "icon": "icons/button.png",
         "tooltipText": "KlavoTools",
         "popup": {
-            "url": "klavotools/popup/index.html",
+            "url": "popup.html",
             "width": 520,
             "height": 170
         }

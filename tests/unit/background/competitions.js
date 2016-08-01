@@ -1,28 +1,18 @@
 /**
- * Unit tests for the competitions background module
- *
- * @author Daniil Filippov aka agile <filippovdaniil@gmail.com>
+ * @file Unit tests for the competitions background module
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 
+require('../background.js');
 var sinon = require('sinon');
 var assertStyles = require('../../assert-styles.js');
 var expect = assertStyles.expect;
 var fixtures = require('../../fixtures.js');
-var loadModule = require('../../loader.js');
 
 describe('competitions module', function () {
   describe('Competitions class', function () {
     // Reference to the sinon sandbox:
     var sandbox;
-
-    before(function () {
-      // Setting up the DeferredNotification mock:
-      // TODO: is this a good way to set the mock for a global dependency?
-      global.DeferredNotification = function (title, options) {};
-      DeferredNotification.prototype.revoke = function () {};
-      DeferredNotification.prototype.show = function (delay) {};
-      loadModule('klavotools/background/competitions.js');
-    });
 
     beforeEach(function () {
       sandbox = sinon.sandbox.create();
@@ -38,18 +28,13 @@ describe('competitions module', function () {
       sandbox.spy(Competitions.prototype, 'check');
       // Setting up a spy for the DeferredNotification class constructor:
       sandbox.spy(global, 'DeferredNotification');
-      sandbox.spy(DeferredNotification.prototype, 'revoke');
-      sandbox.spy(DeferredNotification.prototype, 'show');
+      sandbox.stub(DeferredNotification.prototype, 'revoke');
+      sandbox.stub(DeferredNotification.prototype, 'show');
     });
 
     afterEach(function () {
       // Unwraping all stubs and spies:
       sandbox.restore();
-    });
-
-    after(function () {
-      // Clean the global scope:
-      delete global.DeferredNotification;
     });
 
     /**
