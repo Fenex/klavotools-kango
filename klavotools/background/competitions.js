@@ -81,6 +81,66 @@ Competitions.prototype.deactivate = function() {
     this.active = false;
 };
 
+Competitions.prototype._update = function (data) {
+    clearTimeout(this.timer);
+
+    var res = data.response;
+
+    if (data.status && data.status != 200 || !res.gamelist[0].params.competition) {
+        this.timer = setTimeout(this.check.bind(this), 10 * 1000);
+        return false;
+    }
+
+    var serverTime = res.time;
+    var rate = res.gamelist[0].params.regular_competition || 1;
+    var beginTime = res.gamelist[0].begintime;
+    var gmid = res.gamelist[0].id;
+    var remainingTime = beginTime - serverTime;
+
+    if (remainingTime <= 0) {
+        this.timer = setTimeout(this.check.bind(this), 120 * 1000);
+        return false;
+    }
+
+    // Next check in (start + 2) minutes:
+    this.timer = setTimeout(this.check.bind(this), (remainingTime + 120) * 1000);
+
+    // Does user want to see competition with this rate?
+    if (!~this.rates.indexOf(rate)) {
+        return false;
+    }
+
+    var timer = remainingTime - this.delay;
+    if (timer < 1) {
+        timer = 1;
+    }
+
+    var title = 'Соревнование';
+    var body = 'Соревнование x' + rate + ' начинается';
+    var icon = kango.io.getResourceUrl('res/comp_btn.png');
+
+    var displayTime = this.displayTime;
+    if (displayTime > remainingTime - timer) {
+        displayTime = remainingTime - timer;
+    }
+
+    this.notification = new DeferredNotification(title, {
+        body: body,
+        icon: icon,
+        displayTime: displayTime > 0 ? displayTime : undefined,
+    });
+
+    this.notification.onclick = function () {
+        kango.browser.tabs.create({
+            url: 'http://klavogonki.ru/g/?gmid='+gmid,
+            focused: true,
+        });
+        this.notification.revoke();
+    }.bind(this);
+
+    this.notification.show(timer);
+};
+
 Competitions.prototype.check = function() {
     if(!this.active) { return; }
     var self = this;
@@ -94,62 +154,5 @@ Competitions.prototype.check = function() {
         contentType: 'json'
     };
 
-    kango.xhr.send(details, function (data) {
-        clearTimeout(self.timer);
-
-        var res = data.response;
-
-        if (data.status && data.status != 200 || !res.gamelist[0].params.competition) {
-            self.timer = setTimeout(function() { self.check() }, 10 * 1000);
-            return false;
-        }
-
-        var serverTime = res.time;
-        var rate = res.gamelist[0].params.regular_competition || 1;
-        var beginTime = res.gamelist[0].begintime;
-        var gmid = res.gamelist[0].id;
-        var remainingTime = beginTime - serverTime;
-
-        if (remainingTime <= 0) {
-            self.timer = setTimeout(function() { self.check() }, 120 * 1000);
-            return false;
-        }
-
-        /** next check in (start + 2) minutes **/
-        self.timer = setTimeout(function() { self.check() }, (remainingTime + 120) * 1000);
-
-        /** does user want to see competition with this rate? **/
-        if(!~self.rates.indexOf(rate)) {
-            return false;
-        }
-
-        var timer = remainingTime - self.delay;
-        if(timer < 1)
-            timer = 1;
-
-        var title = 'Соревнование';
-        var body = 'Соревнование x'+rate+' начинается';
-        var icon = kango.io.getResourceUrl('res/comp_btn.png');
-
-        var displayTime = self.displayTime;
-        if (displayTime > remainingTime - timer) {
-            displayTime = remainingTime - timer;
-        }
-
-        self.notification = new DeferredNotification(title, {
-            body: body,
-            icon: icon,
-            displayTime: displayTime > 0 ? displayTime : undefined,
-        });
-
-        self.notification.onclick = function () {
-            kango.browser.tabs.create({
-                url: 'http://klavogonki.ru/g/?gmid='+gmid,
-                focused: true,
-            });
-            self.notification.revoke();
-        };
-
-        self.notification.show(timer);
-    });
+    kango.xhr.send(details, this._update.bind(this));
 };
