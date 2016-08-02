@@ -12,6 +12,8 @@ var Competitions = function() {
     //point to timeout of this.check
     this.timer = false;
 
+    this.url = 'http://klavogonki.ru/gamelist.data?KTS_REQUEST';
+    
     /** default values **/
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
@@ -50,7 +52,6 @@ Competitions.prototype.setParams = function(param) {
 
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
-    kango.storage.setItem('competition_rates', this.rates);
     kango.storage.setItem('competition_displayTime', this.displayTime);
 
     if (this.delay * this.rates.length === 0) return this.deactivate();
@@ -81,33 +82,63 @@ Competitions.prototype.deactivate = function() {
     this.active = false;
 };
 
-Competitions.prototype.check = function() {
-    if(!this.active) { return; }
-    var self = this;
-
+Competitions.prototype.checkKango = function(data) {
     var details = {
         method: 'POST',
-        url: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',
+        url: this.url,
         params: {
             'cached_users': '0'
         },
         contentType: 'json'
     };
 
+    var deferred = Q.defer();
     kango.xhr.send(details, function (data) {
+        if(data.status == 200)
+            deferred.resolve(data.response);
+        else
+            deferred.reject(data);
+    });
+    return deferred.promise;
+};
+
+Competitions.prototype.checkFetch = function(data) {
+    return fetch(this.url, {
+        method: 'POST',
+        body: JSON.stringify({
+            cached_users: '0'
+        })
+    }).then(function(res) {
+        return res.json()
+    });
+};
+
+Competitions.prototype.check = function() {
+    if(!this.active) { return; }
+    var self = this;
+
+    var defer;
+    
+    if(typeof fetch == 'function') {
+        //returned native Promise
+        this._last_type_xhr = 'fetch';
+        defer = this.checkFetch();
+    } else {
+        //returned Q-promise
+        this._last_type_xhr = 'kango';
+        defer = this.checkKango();
+    }
+    
+    defer.then(function(data) {
+        if(!data.gamelist[0].params.competition)
+            return Q.reject();
+        
         clearTimeout(self.timer);
-
-        var res = data.response;
-
-        if (data.status && data.status != 200 || !res.gamelist[0].params.competition) {
-            self.timer = setTimeout(function() { self.check() }, 10 * 1000);
-            return false;
-        }
-
-        var serverTime = res.time;
-        var rate = res.gamelist[0].params.regular_competition || 1;
-        var beginTime = res.gamelist[0].begintime;
-        var gmid = res.gamelist[0].id;
+        
+        var serverTime = data.time;
+        var rate = data.gamelist[0].params.regular_competition || 1;
+        var beginTime = data.gamelist[0].begintime;
+        var gmid = data.gamelist[0].id;
         var remainingTime = beginTime - serverTime;
 
         if (remainingTime <= 0) {
@@ -139,7 +170,7 @@ Competitions.prototype.check = function() {
         self.notification = new DeferredNotification(title, {
             body: body,
             icon: icon,
-            displayTime: displayTime > 0 ? displayTime : undefined,
+            displayTime: displayTime > 0 ? displayTime : void 0,
         });
 
         self.notification.onclick = function () {
@@ -151,5 +182,8 @@ Competitions.prototype.check = function() {
         };
 
         self.notification.show(timer);
+    }).catch(function(err) {
+        clearTimeout(self.timer);
+        self.timer = setTimeout(function() { self.check() }, 10 * 1000);
     });
 };
