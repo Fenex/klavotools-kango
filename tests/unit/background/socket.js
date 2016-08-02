@@ -61,6 +61,15 @@ describe('socket module', function () {
       return expect(promise).to.be.rejectedWith('a["auth failed"]');
     });
 
+    it('should return correct server time delta with getServerTimeDelta() ' +
+        'method', function () {
+      var promise = socket.connect(1337, '7331');
+      socket._ws.onopen();
+      expect(socket.getServerTimeDelta()).to.be.null;
+      socket._ws.onmessage({ data: 'a["time 1470153477584"]' });
+      return expect(socket.getServerTimeDelta()).to.be.equal(1470153477584);
+    });
+
     it('should reject connect() promise if the WebSocket was closed ' +
         'not cleanly', function () {
       var promise = socket.connect(1337, '7331');
