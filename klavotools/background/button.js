@@ -60,6 +60,7 @@ Button.prototype.setState = function (state) {
 Button.prototype._update = function (event) {
     var state = event.data;
     if (state.id) {
+        console.log(state);
         KlavoTools.Auth.on('counters:' + state.id + '/unreadMail', function (data) {
             this.setState({ authorized: true, unreadMessagesNumber: data.newAmount });
         }.bind(this));
