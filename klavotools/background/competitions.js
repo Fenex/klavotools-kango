@@ -66,7 +66,9 @@ Competitions.prototype._updateNotifications = function () {
         if (competition.notification) {
             competition.notification.revoke();
         }
-        this._notify(id);
+        if (competition.beginTime !== null) {
+            this._notify(id);
+        }
     }
 };
 
