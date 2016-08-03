@@ -58,16 +58,17 @@ describe('socket module', function () {
       var promise = socket.connect(1337, '7331');
       socket._ws.onopen();
       socket._ws.onmessage({ data: 'a["auth failed"]' });
-      return expect(promise).to.be.rejectedWith('a["auth failed"]');
+      return expect(promise).to.be.rejectedWith('auth failed');
     });
 
     it('should return correct server time delta with getServerTimeDelta() ' +
         'method', function () {
+      sandbox.clock.tick(1000);
       var promise = socket.connect(1337, '7331');
       socket._ws.onopen();
       expect(socket.getServerTimeDelta()).to.be.null;
-      socket._ws.onmessage({ data: 'a["time 1470153477584"]' });
-      return expect(socket.getServerTimeDelta()).to.be.equal(1470153477584);
+      socket._ws.onmessage({ data: 'a["time 2000"]' });
+      return expect(socket.getServerTimeDelta()).to.be.equal(1000);
     });
 
     it('should reject connect() promise if the WebSocket was closed ' +
@@ -86,7 +87,7 @@ describe('socket module', function () {
       var promise = socket.connect(1337, '7331');
       socket._ws.onopen();
       socket._ws.onmessage({ data: 'a["auth ok"]' });
-      return expect(promise).to.eventually.be.equal('a["auth ok"]');
+      return expect(promise).to.eventually.be.equal('auth ok');
     });
 
     it('should send subscribe messages only after the authentication ' +
@@ -132,8 +133,8 @@ describe('socket module', function () {
       socket._ws.onmessage({ data: 'a["auth ok"]' });
       return promise.then(function () {
         socket.on('someEvent2', spy2);
-        socket._ws.onmessage({ data: 'a["[\"someEvent1\",{\"message\":1}]"]' });
-        socket._ws.onmessage({ data: 'a["[\"someEvent2\",{\"message\":2}]"]' });
+        socket._ws.onmessage({ data: 'a["[\\"someEvent1\\",{\\"message\\":1}]"]' });
+        socket._ws.onmessage({ data: 'a["[\\"someEvent2\\",{\\"message\\":2}]"]' });
         expect(spy1).to.have.been.calledTwice
           .to.have.been.calledWithExactly({ message: 1 });
         expect(spy2).to.have.been.calledOnce
@@ -149,10 +150,10 @@ describe('socket module', function () {
       socket._ws.onmessage({ data: 'a["auth ok"]' });
       return promise.then(function () {
         expect(function () {
-          socket._ws.onmessage({ data: 'a["[\"someEvent1\",{\"bad json]"]' });
+          socket._ws.onmessage({ data: 'a["[\\"someEvent1\\",{\\"bad json]"]' });
         }).to.not.throw();
         expect(function () {
-          socket._ws.onmessage({ data: 'a["\"someEvent1\",{\"message\":1}"]' });
+          socket._ws.onmessage({ data: 'a["\\"someEvent1\\",{\\"message\\":1}"]' });
         }).to.not.throw();
         expect(spy1).to.have.not.been.called;
       });

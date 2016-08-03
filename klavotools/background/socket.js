@@ -138,15 +138,35 @@ Socket.prototype._onMessage = function (deferred, event) {
     }
 
     var messageType = event.data[0];
-    // Extract the 'answer' message from the 'a["answer"]' frame:
-    var message = event.data.substring(1).slice(2, -2).replace(/\\"/g, '"');
+    try {
+        var payload = JSON.parse(event.data.slice(1));
+    } catch (err) {
+        return kango.console.log('Got bad JSON from WebSocket: ' + err.toString());
+    }
+
+    if (messageType === 'a') {
+        payload.forEach(function (message) {
+            this._handleMessage(deferred, message)
+        }, this);
+    } else if (messageType === 'm') {
+        this._handleMessage(deferred, payload);
+    }
+};
+
+/**
+ * A handler for klavogonki.ru WebSocket messages.
+ * @param {Object} deferred A Q deferred object.
+ * @param {string} message A message got from WebSocket.
+ * @private
+ */
+Socket.prototype._handleMessage = function (deferred, message) {
     if (!this._authorized) {
         if (message === 'auth ok') {
             this._authorized = true;
             this._subscribeAll();
-            deferred.resolve(event.data);
+            deferred.resolve(message);
         } else if (message === 'auth failed') {
-            deferred.reject(event.data);
+            deferred.reject(message);
         } else {
             var match = message.match(/^time (\d+)$/);
             if (match) {
@@ -154,7 +174,11 @@ Socket.prototype._onMessage = function (deferred, event) {
             }
         }
     } else {
-        try { message = JSON.parse(message); } catch (e) {}
+        try {
+            message = JSON.parse(message);
+        } catch (err) {
+            kango.console.log('Got bad JSON from the site: ' + err.toString());
+        }
 
         if (message && message.length === 2 && this._listeners[message[0]]) {
             this._listeners[message[0]].forEach(function (listener) {
