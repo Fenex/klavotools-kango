@@ -56,11 +56,11 @@ Button.prototype.setState = function (state) {
  * site WebSocket events.
  * @param {Auth#AuthStateChanged} event An event with the current session data.
  * @listens Socket#counters:{userId}/unreadMail
+ * @private
  */
 Button.prototype._update = function (event) {
     var state = event.data;
     if (state.id) {
-        console.log(state);
         KlavoTools.Auth.on('counters:' + state.id + '/unreadMail', function (data) {
             this.setState({ authorized: true, unreadMessagesNumber: data.newAmount });
         }.bind(this));
@@ -73,6 +73,7 @@ Button.prototype._update = function (event) {
 /**
  * Sets the default button state and listens for AuthStateChanged events.
  * @listens Auth#AuthStateChanged
+ * @private
  */
 Button.prototype._init = function () {
     this.setState({ authorized: false });

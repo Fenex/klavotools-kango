@@ -35,4 +35,3 @@ KlavoTools.tabs = {
         });
     }
 };
-
