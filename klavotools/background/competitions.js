@@ -123,11 +123,11 @@ Competitions.prototype.getRemainingTime = function (beginTime) {
     var beginTimestamp;
     if (typeof beginTime === 'string') {
         beginTimestamp = new Date(beginTime).getTime();
-    } else if (typeof beginTime === 'number' && !Math.floor(beginTime / 1e10)) {
+    } else if (typeof beginTime === 'number') {
         beginTimestamp = beginTime * 1000;
     }
 
-    if (!beginTimestamp) {
+    if (typeof beginTimestamp === 'undefined') {
         throw new TypeError('Wrong argument type for getRemainingTime() method');
     }
 
@@ -137,7 +137,7 @@ Competitions.prototype.getRemainingTime = function (beginTime) {
     }
 
     var remaining = beginTimestamp - (Date.now() + timeCorrection);
-    return remaining > 0 ? Math.floor(remaining / 1000) : 0;
+    return remaining > 0 ? Math.round(remaining / 1000) : 0;
 };
 
 /**

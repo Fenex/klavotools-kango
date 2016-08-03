@@ -99,10 +99,11 @@ describe('competitions module', function () {
       expect(Competitions.prototype._updateNotifications).to.have.been.calledTwice;
     });
 
-    it('should recreate deferred notifications instances with the ' +
-        '_updateNotifications() method for active competitions', function () {
+    it('should recreate deferred notifications instances with the for ' +
+        'active competitions', function () {
       var spy1 = new DeferredNotification('test1');
       var spy2 = new DeferredNotification('test2');
+      sandbox.stub(Competitions.prototype, 'getRemainingTime').returns(1000);
       competitions._hash = {
         1337: {
           id: 1337,
@@ -111,13 +112,14 @@ describe('competitions module', function () {
         },
         1338: {
           id: 1338,
-          beginTime: 1000,
+          // For this test doesn't matter:
+          beginTime: 0,
           ratingValue: 3,
           notification: spy1,
         },
         1339: {
           id: 1339,
-          beginTime: 3000,
+          beginTime: 0,
           ratingValue: 5,
           notification: spy2,
         },
@@ -134,13 +136,14 @@ describe('competitions module', function () {
         .to.be.not.deep.equal(spy2);
     });
 
-    it('should create the "deferred" notification ' +
-        'with the correct parameters', function () {
-      kango.xhr.send.yields(fixtures.xhr.competition({
-        id: 100500,
-        rate: 5,
-        beginTime: 400,
-      }));
+    it('should create the "deferred" notification with correct parameters', function () {
+      var competitionData = {
+        id: 1337,
+        ratingValue: 5,
+        // For this test doesn't matter:
+        beginTime: 0,
+      };
+      var notification = competitions._createNotification(competitionData, 400);
       expect(DeferredNotification)
         .to.have.been.calledWithExactly('Соревнование', {
           body: 'Соревнование x5 начинается',
@@ -152,15 +155,16 @@ describe('competitions module', function () {
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(340);
       // Check the notification's click handler:
-      competitions.notification.onclick();
+      notification.onclick();
       expect(kango.browser.tabs.create)
         .to.have.been.calledWithExactly({
-          url: 'http://klavogonki.ru/g/?gmid=100500',
+          url: 'http://klavogonki.ru/g/?gmid=1337',
           focused: true,
         });
       // Check the case with a huge displayTime:
       kango.storage.getItem.withArgs('competition_displayTime').returns(500);
       competitions = new Competitions;
+      var notification = competitions._createNotification(competitionData, 400);
       expect(DeferredNotification)
         .to.have.been.calledWithExactly('Соревнование', {
           body: 'Соревнование x5 начинается',
@@ -171,31 +175,152 @@ describe('competitions module', function () {
       // Check the case with a huge delay:
       kango.storage.getItem.withArgs('competition_delay').returns(500);
       competitions = new Competitions;
+      var notification = competitions._createNotification(competitionData, 400);
       expect(DeferredNotification.prototype.show)
-        .to.have.been.calledWithExactly(1);
+        .to.have.been.calledWithExactly(0);
     });
 
     it('should revoke the notification with the click on it', function () {
-      kango.xhr.send.yields(fixtures.xhr.competition({
-        beginTime: 400,
-        rate: 5,
-      }));
-      sandbox.clock.tick(340 * 1000);
-      competitions.notification.onclick();
+      var competitionData = {
+        id: 1337,
+        ratingValue: 5,
+        // For this test doesn't matter:
+        beginTime: 0,
+      };
+      var notification = competitions._createNotification(competitionData, 400);
+      notification.onclick();
       expect(DeferredNotification.prototype.revoke).to.have.been.called;
     });
 
-    it('should show the notifications only for selected rates', function () {
-      kango.xhr.send
-        .onFirstCall().yields(fixtures.xhr.competition({
-          rate: 2,
-        }))
-        .onSecondCall().yields(fixtures.xhr.competition({
-          rate: 3,
-        }));
-      expect(DeferredNotification).to.have.not.been.called;
-      competitions.check();
-      expect(DeferredNotification).to.have.been.called;
+    it('should correctly calculate the remaining time before the ' +
+        'competition start', function () {
+      sandbox.clock.tick(1470230514177);
+      // The default server time delta is set to 1000 milliseconds:
+      expect(competitions.getRemainingTime(1470230614)).to.be.equal(99);
+      expect(competitions.getRemainingTime('2016-08-03T13:23:34.000Z')).to.be.equal(99);
     });
+
+    it('should throw an error for invalid competition begin time or ' +
+        'server time delta', function () {
+      sandbox.clock.tick(1470230514177);
+      expect(competitions.getRemainingTime.bind(competitions, null)).to.throw(TypeError);
+      Auth.prototype.getServerTimeDelta.returns(null);
+      expect(competitions.getRemainingTime.bind(competitions, 1470230614))
+        .to.throw(Error);
+    });
+
+    it('should delete already started competitions with _clearStarted() ' +
+        'method', function () {
+      sandbox.clock.tick(2 * 1e3);
+      competitions._hash = {
+        1337: {
+          id: 1337,
+          beginTime: null,
+          ratingValue: 1,
+        },
+        1338: {
+          id: 1338,
+          beginTime: 0,
+          ratingValue: 3,
+        },
+        1339: {
+          id: 1339,
+          beginTime: 5,
+          ratingValue: 5,
+        },
+      };
+      competitions._clearStarted();
+      expect(competitions._hash[1337]).to.be.an('object');
+      expect(competitions._hash[1338]).to.be.undefined;
+      expect(competitions._hash[1339]).to.be.an('object');
+    });
+
+    it('should show the notifications only for selected rates', function () {
+      sandbox.stub(Competitions.prototype, 'getRemainingTime').returns(1000);
+      kango.storage.getItem.withArgs('competition_rates').returns([2, 3, 5]);
+      competitions = new Competitions;
+      competitions._hash = {
+        1337: {
+          id: 1337,
+          beginTime: 0,
+          ratingValue: 1,
+        },
+        1338: {
+          id: 1338,
+          beginTime: 0,
+          ratingValue: 2,
+        },
+        1339: {
+          id: 1339,
+          beginTime: 0,
+          ratingValue: 3,
+        },
+        1340: {
+          id: 1340,
+          beginTime: 0,
+          ratingValue: 5,
+        },
+      };
+      competitions._notify(1337);
+      competitions._notify(1338);
+      competitions._notify(1339);
+      competitions._notify(1340);
+      expect(Competitions.prototype._createNotification).to.have.been.calledThrice;
+    });
+
+    it('should not show notifications if the delay is set to zero', function () {
+      sandbox.stub(Competitions.prototype, 'getRemainingTime').returns(1000);
+      kango.storage.getItem.withArgs('competition_delay').returns(0);
+      competitions = new Competitions;
+      competitions._hash = {
+        1337: {
+          id: 1338,
+          beginTime: 0,
+          ratingValue: 3,
+        },
+        1338: {
+          id: 1339,
+          beginTime: 5,
+          ratingValue: 5,
+        },
+      };
+      competitions._notify(1337);
+      competitions._notify(1338);
+      expect(Competitions.prototype._createNotification).to.not.been.called;
+    });
+
+    it('should update the competition start time on the ' +
+        '"gamelist/gameUpdated" socket event', function () {
+      competitions._hash = {
+        1337: {
+          id: 1337,
+          beginTime: null,
+          ratingValue: 1,
+        },
+      };
+      competitions._processUpdated({
+        g: 1337,
+        diff: {
+          begintime: 1,
+        },
+      });
+      expect(competitions._hash[1337].beginTime).to.be.equal(1);
+      competitions._processUpdated({
+        g: 1338,
+        diff: {
+          begintime: 2,
+        },
+      });
+      expect(competitions._hash[1337].beginTime).to.be.equal(1);
+    });
+
+    it('should add competition data on the "gamelist/gameCreated" ' +
+        'socket event');
+
+    it('should process the gamelist data on the "gamelist/initList" ' +
+        'socket event');
+
+    it('should subscribe for gamelist changes if the user ' +
+        'is authorized');
   });
 });
