@@ -5,16 +5,7 @@
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
 var Competitions = function() {
-    // A reference to the deferred notification:
-    this.notification = null;
-    //active status of the module
-    this.active = false;
-    //point to timeout of this.check
-    this.timer = false;
-
-    this.url = 'http://klavogonki.ru/gamelist.data?KTS_REQUEST';
-    
-    /** default values **/
+    // Set default values:
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
     this.displayTime = kango.storage.getItem('competition_displayTime');
@@ -27,11 +18,15 @@ var Competitions = function() {
         this.displayTime = 0;
     }
 
-    if (this.delay * this.rates.length > 0) {
-        this.activate();
-    }
+    // A key-value hash object with active competitions data:
+    this._hash = {};
+    this._init();
 };
 
+/**
+ * Returns current parameters for the options page.
+ * @returns {Object}
+ */
 Competitions.prototype.getParams = function() {
     return {
         rates: this.rates,
@@ -40,7 +35,11 @@ Competitions.prototype.getParams = function() {
     };
 };
 
-Competitions.prototype.setParams = function(param) {
+/**
+ * Save new parameters got from the options page.
+ * @param {Object} param A hash object with new parameters,
+ */
+Competitions.prototype.setParams = function (param) {
     this.rates = param.rates || this.rates;
     if (typeof param.displayTime === 'number' && param.displayTime >= 0) {
         this.displayTime = param.displayTime;
@@ -52,138 +51,189 @@ Competitions.prototype.setParams = function(param) {
 
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
+    kango.storage.setItem('competition_rates', this.rates);
     kango.storage.setItem('competition_displayTime', this.displayTime);
+    this._updateNotifications();
+};
 
-    if (this.delay * this.rates.length === 0) return this.deactivate();
-
-    if (param.delay || param.displayTime >= 0) {
-        this.deactivate();
-        this.activate();
+/**
+ * Recreates existing notifications for active competitions.
+ * @private
+ */
+Competitions.prototype._updateNotifications = function () {
+    for (var id in this._hash) {
+        var competition = this._hash[id];
+        if (competition.notification) {
+            competition.notification.revoke();
+        }
+        if (competition.beginTime !== null) {
+            this._notify(id);
+        }
     }
 };
 
-Competitions.prototype.activate = function() {
-    if(this.active)
-        return kango.console.log('active already');
-
-   this.active = true;
-   this.check();
-};
-
-Competitions.prototype.deactivate = function() {
-    if(!this.active)
-        return kango.console.log('deactive already');
-
-    clearTimeout(this.timer);
-    if (this.notification !== null) {
-        this.notification.revoke();
-        this.notification = null;
+/**
+ * Creates a new DeferredNotification instance by the given competition data and
+ * remaining time.
+ * @param {Object} competition A hash object with competition data
+ * @param {number} remainingTime Remaining time before the competition start (in seconds)
+ * @returns {Object} DeferredNotification class instance
+ */
+Competitions.prototype._createNotification = function (competition, remainingTime) {
+    var title = 'Соревнование';
+    var body = 'Соревнование x' + competition.ratingValue + ' начинается';
+    var icon = kango.io.getResourceUrl('res/comp_btn.png');
+    var showDelay = remainingTime - this.delay;
+    if (showDelay < 0) {
+        showDelay = 0;
     }
-    this.active = false;
-};
 
-Competitions.prototype.checkKango = function(data) {
-    var details = {
-        method: 'POST',
-        url: this.url,
-        params: {
-            'cached_users': '0'
-        },
-        contentType: 'json'
+    var displayTime = this.displayTime;
+    if (displayTime > remainingTime - showDelay) {
+        displayTime = remainingTime - showDelay;
+    }
+
+    var notification = new DeferredNotification(title, {
+        body: body,
+        icon: icon,
+        displayTime: displayTime > 0 ? displayTime : void 0,
+    });
+
+    notification.onclick = function () {
+        kango.browser.tabs.create({
+            url: 'http://klavogonki.ru/g/?gmid=' + competition.id,
+            focused: true,
+        });
+        notification.revoke();
     };
 
-    var deferred = Q.defer();
-    kango.xhr.send(details, function (data) {
-        if(data.status == 200)
-            deferred.resolve(data.response);
-        else
-            deferred.reject(data);
-    });
-    return deferred.promise;
+    notification.show(showDelay);
+    return notification;
 };
 
-Competitions.prototype.checkFetch = function(data) {
-    return fetch(this.url, {
-        method: 'POST',
-        body: JSON.stringify({
-            cached_users: '0'
-        })
-    }).then(function(res) {
-        return res.json()
-    });
-};
-
-Competitions.prototype.check = function() {
-    if(!this.active) { return; }
-    var self = this;
-
-    var defer;
-    
-    if(typeof fetch == 'function') {
-        //returned native Promise
-        this._last_type_xhr = 'fetch';
-        defer = this.checkFetch();
-    } else {
-        //returned Q-promise
-        this._last_type_xhr = 'kango';
-        defer = this.checkKango();
+/**
+ * Returns the remaining time before the competition start.
+ * @param {(string|number)} beginTime A string in the ISO 8601 format, or an unix
+ *  timestamp.
+ * @throws TypeError
+ * @throws Error
+ * @returns {number} remaining time in seconds.
+ */
+Competitions.prototype.getRemainingTime = function (beginTime) {
+    var beginTimestamp;
+    if (typeof beginTime === 'string') {
+        beginTimestamp = new Date(beginTime).getTime();
+    } else if (typeof beginTime === 'number') {
+        beginTimestamp = beginTime * 1000;
     }
-    
-    defer.then(function(data) {
-        if(!data.gamelist[0].params.competition)
-            return Q.reject();
-        
-        clearTimeout(self.timer);
-        
-        var serverTime = data.time;
-        var rate = data.gamelist[0].params.regular_competition || 1;
-        var beginTime = data.gamelist[0].begintime;
-        var gmid = data.gamelist[0].id;
-        var remainingTime = beginTime - serverTime;
 
-        if (remainingTime <= 0) {
-            self.timer = setTimeout(function() { self.check() }, 120 * 1000);
-            return false;
+    if (typeof beginTimestamp === 'undefined') {
+        throw new TypeError('Wrong argument type for getRemainingTime() method');
+    }
+
+    var timeCorrection = KlavoTools.Auth.getServerTimeDelta();
+    if (timeCorrection === null) {
+        throw new Error('Server time delta is null');
+    }
+
+    var remaining = beginTimestamp - (Date.now() + timeCorrection);
+    return remaining > 0 ? Math.round(remaining / 1000) : 0;
+};
+
+/**
+ * Deletes all started competitions from the this._hash object.
+ * @private
+ */
+Competitions.prototype._clearStarted = function () {
+    for (var id in this._hash) {
+        var beginTime = this._hash[id].beginTime;
+        if (beginTime !== null && this.getRemainingTime(beginTime) === 0) {
+            delete this._hash[id];
         }
+    }
+};
 
-        /** next check in (start + 2) minutes **/
-        self.timer = setTimeout(function() { self.check() }, (remainingTime + 120) * 1000);
+/**
+ * Checks the remaining time before the competition start by its id, creates and saves
+ * the new notification instance if needed.
+ * @param {number} id An id of the competition
+ * @private
+ */
+Competitions.prototype._notify = function (id) {
+    var competition = this._hash[id];
+    var remainingTime = this.getRemainingTime(competition.beginTime);
+    if (this.delay > 0 && remainingTime > 0
+            && !!~this.rates.indexOf(competition.ratingValue)) {
+        this._hash[id].notification = this._createNotification(competition, remainingTime);
+    }
+};
 
-        /** does user want to see competition with this rate? **/
-        if(!~self.rates.indexOf(rate)) {
-            return false;
+/**
+ * A handler for the Socket#gamelist/gameUpdated event.
+ * @param {Object} game A hash object with game data diff.
+ * @private
+ */
+Competitions.prototype._processUpdated = function (game) {
+    if (!this._hash[game.g]) {
+        return false;
+    }
+    if (game.diff && game.diff.begintime) {
+        this._hash[game.g].beginTime = game.diff.begintime;
+        this._notify(game.g);
+    }
+};
+
+/**
+ * A handler for the Socket#gamelist/gameCreated event.
+ * @param {Object} game A hash object with game data.
+ * @private
+ */
+Competitions.prototype._processCreated = function (game) {
+    if (!game.params || !game.params.competition) {
+        return false;
+    }
+
+    this._hash[game.id] = {
+        id: game.id,
+        ratingValue: game.params.regular_competition || 1,
+        beginTime: game.begintime,
+    }
+
+    if (game.begintime !== null) {
+        this._notify(game.id);
+    }
+
+    this._clearStarted();
+};
+
+/**
+ * A handler for the Socket#gamelist/initList event.
+ * @param {Object[]} list An array with current gamelist data.
+ * @private
+ */
+Competitions.prototype._processInitList = function (list) {
+    list.forEach(function (game) {
+        if (typeof game.info === 'object') {
+            this._processCreated(game.info);
         }
+    }, this);
+};
 
-        var timer = remainingTime - self.delay;
-        if(timer < 1)
-            timer = 1;
-
-        var title = 'Соревнование';
-        var body = 'Соревнование x'+rate+' начинается';
-        var icon = kango.io.getResourceUrl('res/comp_btn.png');
-
-        var displayTime = self.displayTime;
-        if (displayTime > remainingTime - timer) {
-            displayTime = remainingTime - timer;
+/**
+ * Sets a handler for AuthStateChanged events and listens for changes in the gamelist,
+ * if the user is authorized.
+ * @listens Auth#AuthStateChanged
+ * @listens Socket#gamelist/initList
+ * @listens Socket#gamelist/gameCreated
+ * @listens Socket#gamelist/gameUpdated
+ * @private
+ */
+Competitions.prototype._init = function() {
+    kango.addMessageListener('AuthStateChanged', function (event) {
+        if (event.data.id) {
+            KlavoTools.Auth.on('gamelist/initList', this._processInitList.bind(this));
+            KlavoTools.Auth.on('gamelist/gameCreated', this._processCreated.bind(this));
+            KlavoTools.Auth.on('gamelist/gameUpdated', this._processUpdated.bind(this));
         }
-
-        self.notification = new DeferredNotification(title, {
-            body: body,
-            icon: icon,
-            displayTime: displayTime > 0 ? displayTime : void 0,
-        });
-
-        self.notification.onclick = function () {
-            kango.browser.tabs.create({
-                url: 'http://klavogonki.ru/g/?gmid='+gmid,
-                focused: true,
-            });
-            self.notification.revoke();
-        };
-
-        self.notification.show(timer);
-    }).catch(function(err) {
-        clearTimeout(self.timer);
-        self.timer = setTimeout(function() { self.check() }, 10 * 1000);
-    });
+    }.bind(this));
 };
