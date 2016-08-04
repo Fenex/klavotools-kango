@@ -51,7 +51,6 @@ Competitions.prototype.setParams = function (param) {
 
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
-    kango.storage.setItem('competition_rates', this.rates);
     kango.storage.setItem('competition_displayTime', this.displayTime);
     this._updateNotifications();
 };
