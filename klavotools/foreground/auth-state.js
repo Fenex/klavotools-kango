@@ -6,6 +6,9 @@
 
 try {
     var link = document.querySelector('.user-dropdown .dropmenu a.btn');
+    if (!link) {
+        throw new ReferenceError('".user-dropwdown .dropmenu a.btn" element not found.');
+    }
     var userId = link ? link.href.match(/\d+/)[0] * 1 : null;
     kango.invokeAsync('KlavoTools.Auth.getState', function (state) {
         if (state.id !== userId) {

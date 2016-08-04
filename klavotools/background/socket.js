@@ -6,6 +6,7 @@ function Socket () {
     this._ws = null;
     this._authorized = false;
     this._listeners = {};
+    this._serverTimeDelta = null;
 }
 
 /**
@@ -44,6 +45,7 @@ Socket.prototype.connect = function (id, hash) {
 Socket.prototype.disconnect = function (code, reason) {
     this._listeners = {};
     this._authorized = false;
+    this._serverTimeDelta = null;
     clearTimeout(this._heartbeatTimer);
     if (this._ws && this._ws.readyState === this._ws.OPEN) {
         this._ws.close(code, reason);
@@ -61,6 +63,14 @@ Socket.prototype.on = function (eventName, callback) {
         this._subscribe(eventName);
     }
     this._listeners[eventName].push(callback);
+};
+
+/**
+ * Returns the time correction got from the server.
+ * @returns {(number|null)} The time delta in milliseconds or null.
+ */
+Socket.prototype.getServerTimeDelta = function () {
+    return this._serverTimeDelta;
 };
 
 /**
@@ -128,18 +138,47 @@ Socket.prototype._onMessage = function (deferred, event) {
     }
 
     var messageType = event.data[0];
-    // Extract the 'answer' message from the 'a["answer"]' frame:
-    var message = event.data.substring(1).slice(2, -2).replace(/\\"/g, '"');
+    try {
+        var payload = JSON.parse(event.data.slice(1));
+    } catch (err) {
+        return kango.console.log('Got bad JSON from WebSocket: ' + err.toString());
+    }
+
+    if (messageType === 'a') {
+        payload.forEach(function (message) {
+            this._handleMessage(deferred, message)
+        }, this);
+    } else if (messageType === 'm') {
+        this._handleMessage(deferred, payload);
+    }
+};
+
+/**
+ * A handler for klavogonki.ru WebSocket messages.
+ * @param {Object} deferred A Q deferred object.
+ * @param {string} message A message got from WebSocket.
+ * @private
+ */
+Socket.prototype._handleMessage = function (deferred, message) {
     if (!this._authorized) {
-        if (messageType === 'a' && message === 'auth ok') {
+        if (message === 'auth ok') {
             this._authorized = true;
             this._subscribeAll();
-            deferred.resolve(event.data);
-        } else if (messageType === 'a' && message === 'auth failed') {
-            deferred.reject(event.data);
+            deferred.resolve(message);
+        } else if (message === 'auth failed') {
+            deferred.reject(message);
+        } else {
+            var match = message.match(/^time (\d+)$/);
+            if (match) {
+                this._serverTimeDelta = match[1] - Date.now();
+            }
         }
     } else {
-        try { message = JSON.parse(message); } catch (e) {}
+        try {
+            message = JSON.parse(message);
+        } catch (err) {
+            kango.console.log('Got bad JSON from the site: ' + err.toString());
+        }
 
         if (message && message.length === 2 && this._listeners[message[0]]) {
             this._listeners[message[0]].forEach(function (listener) {

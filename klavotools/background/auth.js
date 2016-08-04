@@ -53,9 +53,18 @@ Auth.prototype._fetchState = function () {
 
 /**
  * Returns the stored session state.
+ * @returns {Object} A key-value hash object.
  */
 Auth.prototype.getState = function () {
     return this._state;
+};
+
+/**
+ * Returns the time correction got from the WebSocket.
+ * @returns {(number|null)} The time delta in milliseconds or null.
+ */
+Auth.prototype.getServerTimeDelta = function () {
+    return this._socket.getServerTimeDelta();
 };
 
 /**
