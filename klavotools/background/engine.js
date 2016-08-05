@@ -12,6 +12,7 @@ var KlavoTools = {
         ICON_UNREAD: 'icons/dic.png',
         WS_BASE_URL: 'ws://klavogonki.ru/ws',
         WS_HEARTBEAT_TIMEOUT: 40,
+
     },
     version: function() {
         return kango.getExtensionInfo().version;
@@ -22,6 +23,7 @@ KlavoTools.UserJS = new UserJS;
 KlavoTools.Skin = new Skin;
 KlavoTools.Competitions = new Competitions;
 KlavoTools.ContextMenus = new ContextMenus;
+KlavoTools.Socket = new Socket;
 KlavoTools.Button = new Button;
 KlavoTools.Auth = new Auth;
 

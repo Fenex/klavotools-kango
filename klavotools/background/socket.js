@@ -7,6 +7,7 @@ function Socket () {
     this._authorized = false;
     this._listeners = {};
     this._serverTimeDelta = null;
+    this._init();
 }
 
 /**
@@ -210,6 +211,7 @@ Socket.prototype._onClose = function (deferred, event) {
  * @param {(Event#error|CustomEvent#error)} event An error event.
  * @listens Event#error
  * @listens CustomEvent#error
+ * @fires Socket#SocketError
  * @private
  */
 Socket.prototype._onError = function (event) {
@@ -219,8 +221,22 @@ Socket.prototype._onError = function (event) {
     } else {
         this.disconnect();
     }
-    if (typeof this.onError !== 'function') {
-        return;
-    }
-    this.onError(event);
+    kango.dispatchMessage('SocketError', event);
+};
+
+
+/**
+ * Listens for AuthStateChanged event and creates new WebSocket connection if the user
+ * is authorized.
+ * @listens Auth#AuthStateChanged
+ * @private
+ */
+Socket.prototype._init = function () {
+    kango.addMessageListener('AuthStateChanged', function (event) {
+        if (event.data.id) {
+            this.connect(event.data.id, event.data.one_shot_hash)
+        } else {
+            this.disconnect();
+        }
+    }.bind(this));
 };

@@ -21,6 +21,7 @@ describe('socket module', function () {
       sandbox.spy(global, 'WebSocket');
       sandbox.spy(global, 'CustomEvent');
       sandbox.spy(kango.console, 'log');
+      sandbox.spy(kango, 'dispatchMessage');
       sandbox.stub(WebSocket.prototype, 'send');
       sandbox.stub(WebSocket.prototype, 'close');
       sandbox.stub(WebSocket.prototype, 'dispatchEvent');
@@ -206,17 +207,22 @@ describe('socket module', function () {
       expect(spy).to.have.been.calledTwice;
     });
 
-    it('should log a message and call the custom onError function ' +
+    it('should log a message and broadcast a SocketError event ' +
         'on any WebSocket error', function () {
-      var spy = sinon.spy();
-      socket.onError = spy;
       socket.connect(1337, '1337');
       socket._ws.onerror({ detail: { code: 4000, reason: 'Connection closed.' } });
-      expect(spy)
-        .to.have.been
-        .calledWithExactly({ detail: { code: 4000, reason: 'Connection closed.' } });
       expect(kango.console.log)
         .to.have.been.calledWithExactly('A WebSocket error has occured.');
+      expect(kango.dispatchMessage)
+        .to.have.been
+        .calledWithExactly('SocketError',
+          { detail: { code: 4000, reason: 'Connection closed.' } });
     });
+
+    it('should call the connect() method on the AuthStateChanged event, if the user ' +
+        'is authorized');
+
+    it('should call the disconnect() method on the AuthStateChanged event, if the user ' +
+        'is not authorized');
   });
 });

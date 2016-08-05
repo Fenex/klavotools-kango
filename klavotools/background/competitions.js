@@ -130,7 +130,7 @@ Competitions.prototype.getRemainingTime = function (beginTime) {
         throw new TypeError('Wrong argument type for getRemainingTime() method');
     }
 
-    var timeCorrection = KlavoTools.Auth.getServerTimeDelta();
+    var timeCorrection = KlavoTools.Socket.getServerTimeDelta();
     if (timeCorrection === null) {
         throw new Error('Server time delta is null');
     }
@@ -230,9 +230,9 @@ Competitions.prototype._processInitList = function (list) {
 Competitions.prototype._init = function() {
     kango.addMessageListener('AuthStateChanged', function (event) {
         if (event.data.id) {
-            KlavoTools.Auth.on('gamelist/initList', this._processInitList.bind(this));
-            KlavoTools.Auth.on('gamelist/gameCreated', this._processCreated.bind(this));
-            KlavoTools.Auth.on('gamelist/gameUpdated', this._processUpdated.bind(this));
+            KlavoTools.Socket.on('gamelist/initList', this._processInitList.bind(this));
+            KlavoTools.Socket.on('gamelist/gameCreated', this._processCreated.bind(this));
+            KlavoTools.Socket.on('gamelist/gameUpdated', this._processUpdated.bind(this));
         }
     }.bind(this));
 };
