@@ -12,7 +12,7 @@ var KlavoTools = {
         ICON_UNREAD: 'icons/dic.png',
         WS_BASE_URL: 'ws://klavogonki.ru/ws',
         WS_HEARTBEAT_TIMEOUT: 40,
-
+        GAMELIST_DATA_URL: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',
     },
     version: function() {
         return kango.getExtensionInfo().version;
