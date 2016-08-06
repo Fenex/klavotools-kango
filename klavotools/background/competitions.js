@@ -130,8 +130,8 @@ Competitions.prototype.getRemainingTime = function (beginTime) {
         throw new TypeError('Wrong argument type for getRemainingTime() method');
     }
 
-    if (typeof this._timeCorrection === 'undefined') {
-        throw new Error('Server time delta is undefined');
+    if (typeof this._timeCorrection !== 'number') {
+        throw new Error('Server time delta is not set');
     }
 
     var remaining = beginTimestamp - (Date.now() + this._timeCorrection);

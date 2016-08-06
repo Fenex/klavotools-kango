@@ -30,10 +30,9 @@ describe('competitions module', function () {
       sandbox.spy(global, 'DeferredNotification');
       sandbox.stub(DeferredNotification.prototype, 'revoke');
       sandbox.stub(DeferredNotification.prototype, 'show');
-      sandbox.stub(Socket.prototype, 'getServerTimeDelta');
-      // Set the default server time correction to 1 second:
-      Socket.prototype.getServerTimeDelta.returns(1000);
       competitions = new Competitions;
+      // Set the default server time delta to 1000 milliseconds:
+      competitions._timeCorrection = 1000;
     });
 
     afterEach(function () {
@@ -204,7 +203,7 @@ describe('competitions module', function () {
         'server time delta', function () {
       sandbox.clock.tick(1470230514177);
       expect(competitions.getRemainingTime.bind(competitions, null)).to.throw(TypeError);
-      Socket.prototype.getServerTimeDelta.returns(null);
+      competitions._timeCorrection = null;
       expect(competitions.getRemainingTime.bind(competitions, 1470230614))
         .to.throw(Error);
     });
