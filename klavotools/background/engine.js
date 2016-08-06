@@ -13,6 +13,7 @@ var KlavoTools = {
         WS_BASE_URL: 'ws://klavogonki.ru/ws',
         WS_HEARTBEAT_TIMEOUT: 40,
         GAMELIST_DATA_URL: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',
+        PM_DATA_URL: 'http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST',
     },
     version: function() {
         return kango.getExtensionInfo().version;
