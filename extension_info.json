@@ -6,6 +6,7 @@
         "klavotools/background/lib/xhr.js",
         "klavotools/background/deferred-notification.js",
         "klavotools/background/competitions.js",
+        "klavotools/background/competitions-ws.js",
         "klavotools/background/content-js.js",
         "klavotools/background/content-style.js",
         "klavotools/background/context-menus.js",

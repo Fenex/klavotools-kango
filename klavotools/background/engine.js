@@ -21,7 +21,7 @@ var KlavoTools = {
 
 KlavoTools.UserJS = new UserJS;
 KlavoTools.Skin = new Skin;
-KlavoTools.Competitions = new Competitions;
+KlavoTools.Competitions = new CompetitionsWS;
 KlavoTools.ContextMenus = new ContextMenus;
 KlavoTools.Socket = new Socket;
 KlavoTools.Button = new Button;

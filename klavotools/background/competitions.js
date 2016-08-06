@@ -18,8 +18,23 @@ var Competitions = function() {
         this.displayTime = 0;
     }
 
-    // A key-value hash object with active competitions data:
+    /**
+     * Competition object structure.
+     * @typedef {Object} CompetitionData
+     * @property {number} id An id of the competition.
+     * @property {number} ratingValue A rating value of the competition (1, 2, 3, or 5).
+     * @property {beginTime} beginTime A string in the ISO 8601 format, or an unix
+     *  timestamp.
+     */
+
+    /**
+     * A key-value hash object with active competitions data.
+     * @name Competitions#_hash
+     * @property {CompetitionData}
+     */
     this._hash = {};
+    // A server time delta in milliseconds. Should be set by the implementing class:
+    this._timeCorrection = null;
     this._init();
 };
 
@@ -74,7 +89,7 @@ Competitions.prototype._updateNotifications = function () {
 /**
  * Creates a new DeferredNotification instance by the given competition data and
  * remaining time.
- * @param {Object} competition A hash object with competition data
+ * @param {CompetitionData} competition A hash object with competition data
  * @param {number} remainingTime Remaining time before the competition start (in seconds)
  * @returns {Object} DeferredNotification class instance
  */
@@ -167,81 +182,7 @@ Competitions.prototype._notify = function (id) {
 };
 
 /**
- * A handler for the Socket#gamelist/gameUpdated event.
- * @param {Object} game A hash object with game data diff.
+ * Initialization method to implement.
  * @private
  */
-Competitions.prototype._processUpdated = function (game) {
-    if (!this._hash[game.g]) {
-        return false;
-    }
-    if (game.diff && game.diff.begintime) {
-        this._hash[game.g].beginTime = game.diff.begintime;
-        this._notify(game.g);
-    }
-};
-
-/**
- * A handler for the Socket#gamelist/gameCreated event.
- * @param {Object} game A hash object with game data.
- * @private
- */
-Competitions.prototype._processCreated = function (game) {
-    if (!game.params || !game.params.competition) {
-        return false;
-    }
-
-    this._hash[game.id] = {
-        id: game.id,
-        ratingValue: game.params.regular_competition || 1,
-        beginTime: game.begintime,
-    }
-
-    if (game.begintime !== null) {
-        this._notify(game.id);
-    }
-
-    this._clearStarted();
-};
-
-/**
- * A handler for the Socket#gamelist/initList event.
- * @param {Object[]} list An array with current gamelist data.
- * @private
- */
-Competitions.prototype._processInitList = function (list) {
-    list.forEach(function (game) {
-        if (typeof game.info === 'object') {
-            this._processCreated(game.info);
-        }
-    }, this);
-};
-
-/**
- * Sets a handler for AuthStateChanged events and listens for changes in the gamelist,
- * if the user is authorized.
- * @listens Auth#AuthStateChanged
- * @listens Socket#SocketConnected
- * @listens Socket#ServerTimeDelta
- * @fires SocketSubscribe
- * @listens Socket#gamelist/initList
- * @listens Socket#gamelist/gameCreated
- * @listens Socket#gamelist/gameUpdated
- * @private
- */
-Competitions.prototype._init = function() {
-    kango.addMessageListener('AuthStateChanged', function (event) {
-        if (event.data.id) {
-            kango.addMessageListener('SocketConnected', function (event) {
-                event.target.dispatchMessage('SocketSubscribe', {
-                    'gamelist/initList': this._processInitList.bind(this),
-                    'gamelist/gameCreated': this._processCreated.bind(this),
-                    'gamelist/gameUpdated': this._processUpdated.bind(this),
-                });
-            }.bind(this));
-            kango.addMessageListener('ServerTimeDelta', function (event) {
-                this._timeCorrection = event.data;
-            }.bind(this))
-        }
-    }.bind(this));
-};
+Competitions.prototype._init = function () {};
