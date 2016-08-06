@@ -107,7 +107,7 @@ CompetitionsXHR.prototype._fetchData = function () {
  * @private
  */
 CompetitionsXHR.prototype._init = function () {
-    kango.addMessageListener('AuthStateChanged', function (event) {
+    this.addMessageListener('AuthStateChanged', function (event) {
         if (event.data.id) {
             this._check();
         }

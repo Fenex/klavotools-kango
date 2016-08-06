@@ -9,6 +9,9 @@ function Socket () {
     this._init();
 }
 
+// Adding the teardown() and addMessageListener() methods to the prototype:
+Socket.prototype.__proto__ = MutableModule.prototype;
+
 /**
  * Starts new WebSocket session.
  * @param {number} id The Me.id value.
@@ -146,7 +149,7 @@ Socket.prototype._handleMessage = function (deferred, message) {
     if (!this._authorized) {
         if (message === 'auth ok') {
             this._authorized = true;
-            kango.addMessageListener('SocketSubscribe', this._subscribe.bind(this));
+            this.addMessageListener('SocketSubscribe', this._subscribe.bind(this));
             kango.dispatchMessage('SocketConnected', message);
             deferred.resolve(message);
         } else if (message === 'auth failed') {
@@ -207,6 +210,13 @@ Socket.prototype._onError = function (event) {
     kango.dispatchMessage('SocketError', event);
 };
 
+/**
+ * Closes active connection on teardown.
+ */
+Socket.prototype.teardown = function () {
+    MutableModule.prototype.teardown.apply(this, arguments);
+    this.disconnect();
+};
 
 /**
  * Listens for AuthStateChanged event and creates new WebSocket connection if the user
@@ -215,7 +225,7 @@ Socket.prototype._onError = function (event) {
  * @private
  */
 Socket.prototype._init = function () {
-    kango.addMessageListener('AuthStateChanged', function (event) {
+    this.addMessageListener('AuthStateChanged', function (event) {
         if (event.data.id) {
             this.connect(event.data.id, event.data.one_shot_hash)
         } else {

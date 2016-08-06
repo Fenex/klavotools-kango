@@ -225,5 +225,7 @@ describe('socket module', function () {
 
     it('should call the disconnect() method on the AuthStateChanged event, if the user ' +
         'is not authorized');
+
+    it('should call the disconnect() method on teardown');
   });
 });

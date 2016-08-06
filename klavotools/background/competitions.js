@@ -38,6 +38,9 @@ var Competitions = function() {
     this._init();
 };
 
+// Adding the teardown() and addMessageListener() methods to the prototype:
+Competitions.prototype.__proto__ = MutableModule.prototype;
+
 /**
  * Returns current parameters for the options page.
  * @returns {Object}
@@ -186,3 +189,17 @@ Competitions.prototype._notify = function (id) {
  * @private
  */
 Competitions.prototype._init = function () {};
+
+
+/**
+ * Revokes all deferred notifications on teardown.
+ */
+Competitions.prototype.teardown = function () {
+    MutableModule.prototype.teardown.apply(this, arguments);
+    for (var id in this._hash) {
+        var competition = this._hash[id];
+        if (competition.notification) {
+            competition.notification.revoke();
+        }
+    }
+};

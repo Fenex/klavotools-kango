@@ -77,16 +77,16 @@ CompetitionsWS.prototype._processInitList = function (list) {
  * @private
  */
 CompetitionsWS.prototype._init = function() {
-    kango.addMessageListener('AuthStateChanged', function (event) {
+    this.addMessageListener('AuthStateChanged', function (event) {
         if (event.data.id) {
-            kango.addMessageListener('SocketConnected', function (event) {
+            this.addMessageListener('SocketConnected', function (event) {
                 event.target.dispatchMessage('SocketSubscribe', {
                     'gamelist/initList': this._processInitList.bind(this),
                     'gamelist/gameCreated': this._processCreated.bind(this),
                     'gamelist/gameUpdated': this._processUpdated.bind(this),
                 });
             }.bind(this));
-            kango.addMessageListener('ServerTimeDelta', function (event) {
+            this.addMessageListener('ServerTimeDelta', function (event) {
                 this._timeCorrection = event.data;
             }.bind(this))
         }

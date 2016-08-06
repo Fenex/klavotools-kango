@@ -287,5 +287,7 @@ describe('competitions module', function () {
       competitions._notify(1338);
       expect(Competitions.prototype._createNotification).to.not.been.called;
     });
+
+    it('should revoke all notifications on teardown');
   });
 });
