@@ -55,14 +55,21 @@ Button.prototype.setState = function (state) {
  * Handles the AuthStateChanged event and listens for the counters:{userId}/unreadMail
  * site WebSocket events.
  * @param {Auth#AuthStateChanged} event An event with the current session data.
+ * @listens Socket#SocketConnected
+ * @fires SocketSubscribe
  * @listens Socket#counters:{userId}/unreadMail
  * @private
  */
 Button.prototype._update = function (event) {
     var state = event.data;
     if (state.id) {
-        KlavoTools.Socket.on('counters:' + state.id + '/unreadMail', function (data) {
-            this.setState({ authorized: true, unreadMessagesNumber: data.newAmount });
+        kango.addMessageListener('SocketConnected', function (event) {
+            var subscriber = {};
+            subscriber['counters:' + state.id + '/unreadMail'] = function (data) {
+                this.setState({ authorized: true, unreadMessagesNumber: data.newAmount });
+            }.bind(this);
+
+            event.target.dispatchMessage('SocketSubscribe', subscriber);
         }.bind(this));
         this.setState({ authorized: true, unreadMessagesNumber: state.unread_mail });
     } else {

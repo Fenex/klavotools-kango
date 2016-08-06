@@ -130,12 +130,11 @@ Competitions.prototype.getRemainingTime = function (beginTime) {
         throw new TypeError('Wrong argument type for getRemainingTime() method');
     }
 
-    var timeCorrection = KlavoTools.Socket.getServerTimeDelta();
-    if (timeCorrection === null) {
-        throw new Error('Server time delta is null');
+    if (typeof this._timeCorrection === 'undefined') {
+        throw new Error('Server time delta is undefined');
     }
 
-    var remaining = beginTimestamp - (Date.now() + timeCorrection);
+    var remaining = beginTimestamp - (Date.now() + this._timeCorrection);
     return remaining > 0 ? Math.round(remaining / 1000) : 0;
 };
 
@@ -222,6 +221,9 @@ Competitions.prototype._processInitList = function (list) {
  * Sets a handler for AuthStateChanged events and listens for changes in the gamelist,
  * if the user is authorized.
  * @listens Auth#AuthStateChanged
+ * @listens Socket#SocketConnected
+ * @listens Socket#ServerTimeDelta
+ * @fires SocketSubscribe
  * @listens Socket#gamelist/initList
  * @listens Socket#gamelist/gameCreated
  * @listens Socket#gamelist/gameUpdated
@@ -230,9 +232,16 @@ Competitions.prototype._processInitList = function (list) {
 Competitions.prototype._init = function() {
     kango.addMessageListener('AuthStateChanged', function (event) {
         if (event.data.id) {
-            KlavoTools.Socket.on('gamelist/initList', this._processInitList.bind(this));
-            KlavoTools.Socket.on('gamelist/gameCreated', this._processCreated.bind(this));
-            KlavoTools.Socket.on('gamelist/gameUpdated', this._processUpdated.bind(this));
+            kango.addMessageListener('SocketConnected', function (event) {
+                event.target.dispatchMessage('SocketSubscribe', {
+                    'gamelist/initList': this._processInitList.bind(this),
+                    'gamelist/gameCreated': this._processCreated.bind(this),
+                    'gamelist/gameUpdated': this._processUpdated.bind(this),
+                });
+            }.bind(this));
+            kango.addMessageListener('ServerTimeDelta', function (event) {
+                this._timeCorrection = event.data;
+            }.bind(this))
         }
     }.bind(this));
 };

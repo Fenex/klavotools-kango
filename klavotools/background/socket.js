@@ -6,7 +6,6 @@ function Socket () {
     this._ws = null;
     this._authorized = false;
     this._listeners = {};
-    this._serverTimeDelta = null;
     this._init();
 }
 
@@ -46,32 +45,10 @@ Socket.prototype.connect = function (id, hash) {
 Socket.prototype.disconnect = function (code, reason) {
     this._listeners = {};
     this._authorized = false;
-    this._serverTimeDelta = null;
     clearTimeout(this._heartbeatTimer);
     if (this._ws && this._ws.readyState === this._ws.OPEN) {
         this._ws.close(code, reason);
     }
-};
-
-/**
- * Adds a handler for the given klavogonki.ru WebSocket event.
- * @param {string} eventName The event name.
- * @param {function} callback The event handler.
- */
-Socket.prototype.on = function (eventName, callback) {
-    if (!this._listeners[eventName]) {
-        this._listeners[eventName] = [];
-        this._subscribe(eventName);
-    }
-    this._listeners[eventName].push(callback);
-};
-
-/**
- * Returns the time correction got from the server.
- * @returns {(number|null)} The time delta in milliseconds or null.
- */
-Socket.prototype.getServerTimeDelta = function () {
-    return this._serverTimeDelta;
 };
 
 /**
@@ -85,23 +62,24 @@ Socket.prototype._auth = function () {
 };
 
 /**
- * Sends the subscribe request for the given event name.
+ * SocketSubscribe event handler: sends subscribe requests for the given events
+ * names and adds callbacks to this._listeners hash.
+ * @param {Object} message A kango message.
+ * @param {Object} message.data A key-value hash object (eventName → callback).
  * @private
- * @param {string} eventName The event name.
  */
-Socket.prototype._subscribe = function (eventName) {
-    if (this._authorized) {
-        this._ws.send('["subscribe ' + eventName + '"]');
+Socket.prototype._subscribe = function (message) {
+    if (!this._authorized) {
+        return false;
     }
-};
 
-/**
- * Sends the subscribe requests for all registered events.
- * @private
- */
-Socket.prototype._subscribeAll = function () {
-    for (var event in this._listeners) {
-        this._subscribe(event);
+    for (var eventName in message.data) {
+        if (!this._listeners[eventName]) {
+            this._listeners[eventName] = [message.data[eventName]];
+            this._ws.send('["subscribe ' + eventName +'"]');
+        } else {
+            this._listeners[eventName].push(message.data[eventName]);
+        }
     }
 };
 
@@ -158,20 +136,25 @@ Socket.prototype._onMessage = function (deferred, event) {
  * A handler for klavogonki.ru WebSocket messages.
  * @param {Object} deferred A Q deferred object.
  * @param {string} message A message got from WebSocket.
+ * @listens SocketSubscribe
+ * @fires Socket#SocketConnected
+ * @fires Socket#ServerTimeDelta
+ * @fires Socket#{SocketEvent}
  * @private
  */
 Socket.prototype._handleMessage = function (deferred, message) {
     if (!this._authorized) {
         if (message === 'auth ok') {
             this._authorized = true;
-            this._subscribeAll();
+            kango.addMessageListener('SocketSubscribe', this._subscribe.bind(this));
+            kango.dispatchMessage('SocketConnected', message);
             deferred.resolve(message);
         } else if (message === 'auth failed') {
             deferred.reject(message);
         } else {
             var match = message.match(/^time (\d+)$/);
             if (match) {
-                this._serverTimeDelta = match[1] - Date.now();
+                kango.dispatchMessage('ServerTimeDelta', match[1] - Date.now());
             }
         }
     } else {
