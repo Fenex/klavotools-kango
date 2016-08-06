@@ -287,39 +287,5 @@ describe('competitions module', function () {
       competitions._notify(1338);
       expect(Competitions.prototype._createNotification).to.not.been.called;
     });
-
-    it('should update the competition start time on the ' +
-        '"gamelist/gameUpdated" socket event', function () {
-      competitions._hash = {
-        1337: {
-          id: 1337,
-          beginTime: null,
-          ratingValue: 1,
-        },
-      };
-      competitions._processUpdated({
-        g: 1337,
-        diff: {
-          begintime: 1,
-        },
-      });
-      expect(competitions._hash[1337].beginTime).to.be.equal(1);
-      competitions._processUpdated({
-        g: 1338,
-        diff: {
-          begintime: 2,
-        },
-      });
-      expect(competitions._hash[1337].beginTime).to.be.equal(1);
-    });
-
-    it('should add competition data on the "gamelist/gameCreated" ' +
-        'socket event');
-
-    it('should process the gamelist data on the "gamelist/initList" ' +
-        'socket event');
-
-    it('should subscribe for gamelist changes if the user ' +
-        'is authorized');
   });
 });
