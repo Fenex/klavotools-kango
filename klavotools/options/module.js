@@ -5,6 +5,30 @@ angular.module('klavotools', ['klavotools.joke'])
         $scope.$apply();
     });
 })
+.controller('GlobalSettings', function($scope) {
+    $scope.settings = [];
+    kango.invokeAsync('KlavoTools.Settings.get', function(data) {
+        var settings = [];
+        for (var key in data) {
+            settings.push({
+                name: key,
+                type: typeof data[key],
+                value: data[key],
+            });
+        }
+        $scope.settings = settings;
+    });
+    $scope.$watch('settings', function(newSettings, oldSettings) {
+        if (!newSettings.length || !oldSettings.length) {
+            return false;
+        }
+        var settings = {};
+        newSettings.forEach(function (setting) {
+            settings[setting.name] = setting.value;
+        });
+        kango.invokeAsync('KlavoTools.Settings.set', settings);
+    }, true);
+})
 .controller('StyleCtrl', function($scope) {
     kango.invokeAsync('KlavoTools.Skin.getAll', function(res) {
         $scope.skins = res;
@@ -13,12 +37,12 @@ angular.module('klavotools', ['klavotools.joke'])
                 $scope.active = name;
         }
     });
-    
+
     $scope.$watch('active', function(a, b) {
         for(var name in $scope.skins) {
             $scope.skins[name] = (a == name) ? true : false;
         }
-        
+
         kango.invokeAsync('KlavoTools.Skin.save', a);
     });
 })
@@ -32,10 +56,10 @@ angular.module('klavotools', ['klavotools.joke'])
                 description: scripts[i].desc
             }
         }
-        
+
         $scope.scripts = tmp;
     });
-    
+
     $scope.save = function(script) {
         kango.invokeAsync('KlavoTools.UserJS.set', {
             id: script+'.user.js',
@@ -86,6 +110,13 @@ angular.module('klavotools', ['klavotools.joke'])
         if(typeof b != 'object')
             sendPrefs({delay: parseInt(a)});
     });
+})
+.filter('settingDescription', function () {
+    return function (input) {
+        switch (input) {
+            case 'useWebSockets': return 'Использовать WebSocket соединение с сайтом.';
+        }
+    }
 })
 .filter('skin', function() {
     return function(input) {

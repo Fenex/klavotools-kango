@@ -22,11 +22,8 @@ var KlavoTools = {
 
 KlavoTools.UserJS = new UserJS;
 KlavoTools.Skin = new Skin;
-KlavoTools.Competitions = new CompetitionsWS;
 KlavoTools.ContextMenus = new ContextMenus;
-KlavoTools.Socket = new Socket;
 KlavoTools.Button = new Button;
-KlavoTools.Auth = new Auth;
 
 KlavoTools.tabs = {
     create: function(data) {
@@ -38,3 +35,53 @@ KlavoTools.tabs = {
         });
     }
 };
+
+var defaultGlobalSettings = {
+    useWebSockets: true,
+};
+var globalSettings = kango.storage.getItem('settings') || defaultGlobalSettings;
+
+KlavoTools.Settings = {
+    _hash: globalSettings,
+
+    set: function (params) {
+        for (var setting in params) {
+            this._hash[setting] = params[setting];
+        }
+
+        kango.storage.setItem('settings', this._hash);
+        this._apply();
+    },
+
+    get: function () {
+        return this._hash;
+    },
+
+    _apply: function () {
+        if (this._hash.useWebSockets) {
+            if (KlavoTools.Competitions instanceof CompetitionsXHR) {
+                KlavoTools.Competitions.teardown();
+                KlavoTools.UnreadPMCounter.teardown();
+            }
+            KlavoTools.Competitions = new CompetitionsWS;
+            KlavoTools.Socket = new Socket;
+        } else {
+            if (KlavoTools.Competitions instanceof CompetitionsWS) {
+                KlavoTools.Competitions.teardown();
+                KlavoTools.Socket.teardown();
+            }
+            KlavoTools.Competitions = new CompetitionsXHR;
+            KlavoTools.UnreadPMCounter = new UnreadPMCounter;
+        }
+
+        if (typeof KlavoTools.Auth === 'undefined') {
+            KlavoTools.Auth = new Auth;
+        } else {
+            // Force relogin to affect changes:
+            KlavoTools.Auth.logout();
+            KlavoTools.Auth.login();
+        }
+    },
+}
+
+KlavoTools.Settings._apply();

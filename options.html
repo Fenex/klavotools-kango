@@ -58,6 +58,16 @@
 
     <h4>Настройки KlavoTools</h4>
 
+    <b>Глобальные настройки:</b>
+    <form id="KTS_globalSettings" ng:controller="GlobalSettings">
+      <div ng:repeat="setting in settings">
+        <div ng-if="setting.type === 'boolean'">
+          <input type="checkbox" ng-model="setting.value" name="{{setting.name}}" id="KTS_settings_checkbox_{{setting.name}}"/>
+          <label for="KTS_settings_checkbox_{{setting.name}}">{{setting.name | settingDescription}}</label>
+        </div>
+      </div>
+    </form>
+
     <b>Стили:</b>
     <form id="KTS_style" ng:controller="StyleCtrl">
       <div ng:repeat="(skin, value) in skins">
