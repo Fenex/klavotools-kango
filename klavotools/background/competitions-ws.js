@@ -79,14 +79,14 @@ CompetitionsWS.prototype._processInitList = function (list) {
 CompetitionsWS.prototype._init = function() {
     this.addMessageListener('AuthStateChanged', function (event) {
         if (event.data.id) {
-            this.addMessageListener('SocketConnected', function (event) {
+            this.setMessageListener('SocketConnected', function (event) {
                 event.target.dispatchMessage('SocketSubscribe', {
                     'gamelist/initList': this._processInitList.bind(this),
                     'gamelist/gameCreated': this._processCreated.bind(this),
                     'gamelist/gameUpdated': this._processUpdated.bind(this),
                 });
             }.bind(this));
-            this.addMessageListener('ServerTimeDelta', function (event) {
+            this.setMessageListener('ServerTimeDelta', function (event) {
                 this._timeCorrection = event.data;
             }.bind(this))
         }

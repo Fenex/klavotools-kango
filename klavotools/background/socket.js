@@ -149,7 +149,7 @@ Socket.prototype._handleMessage = function (deferred, message) {
     if (!this._authorized) {
         if (message === 'auth ok') {
             this._authorized = true;
-            this.addMessageListener('SocketSubscribe', this._subscribe.bind(this));
+            this.setMessageListener('SocketSubscribe', this._subscribe.bind(this));
             kango.dispatchMessage('SocketConnected', message);
             deferred.resolve(message);
         } else if (message === 'auth failed') {
