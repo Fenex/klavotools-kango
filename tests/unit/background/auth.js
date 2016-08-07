@@ -20,21 +20,12 @@ describe('auth module', function () {
     beforeEach(function () {
       sandbox = sinon.sandbox.create();
       sandbox.useFakeTimers();
-      sandbox.stub(Socket.prototype, 'on');
-      sandbox.stub(Socket.prototype, 'connect');
-      sandbox.stub(Socket.prototype, 'disconnect');
       sandbox.stub(kango.xhr, 'send');
       auth = new Auth;
     });
 
     afterEach(function () {
       sandbox.restore();
-    });
-
-    it('should proxy on() calls to the Socket class instance', function (){
-      auth.on('someEvent1', function () {});
-      expect(Socket.prototype.on)
-        .to.have.been.calledWithExactly('someEvent1', sinon.match.func);
     });
 
     it('should fetch the user session state properly', function () {
@@ -73,15 +64,15 @@ describe('auth module', function () {
     it('should call login() method for 10 times before giving up ' +
         'with relogin() method')
 
+    it('should call relogin() method if the login() promise was rejected');
+
+    it('should call relogin() method on SocketError event');
+
     it('should broadcast the AuthStateChanged event to all scripts with ' +
         '_broadcastStateChange() method');
 
     it('should broadcast the user session state after fetching');
 
     it('should broadcast the user session state on logout()');
-
-    it('should create a WebSocket connection if the user is authorized');
-
-    it('should close current WebSocket connection with logout() method');
   });
 });

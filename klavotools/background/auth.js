@@ -4,19 +4,9 @@
  */
 function Auth () {
     this._state = {};
-    this._socket = new Socket;
-    this._socket.onError = this.relogin.bind(this);
     this.login().fail(this.relogin.bind(this));
+    kango.addMessageListener('SocketError', this.relogin.bind(this));
 }
-
-/**
- * Adds a handler for the given klavogonki.ru WebSocket event.
- * @param {string} eventName The event name.
- * @param {function} handler The event handler.
- */
-Auth.prototype.on = function (eventName, handler) {
-    this._socket.on(eventName, handler);
-};
 
 /**
  * Broadcasts an AuthStateChanged event with the current session state data.
@@ -60,14 +50,6 @@ Auth.prototype.getState = function () {
 };
 
 /**
- * Returns the time correction got from the WebSocket.
- * @returns {(number|null)} The time delta in milliseconds or null.
- */
-Auth.prototype.getServerTimeDelta = function () {
-    return this._socket.getServerTimeDelta();
-};
-
-/**
  * Repeatedly calls the .login() method (if its promise is rejected) with 5 seconds
  * delays for 10 times.
  * @param {number} [madeAttempts=0] The number of already made login attempts.
@@ -86,26 +68,20 @@ Auth.prototype.relogin = function (madeAttempts) {
 };
 
 /**
- * Fetches the session information, creates the long-lived WebSocket connection and
- * broadcasts the AuthStateChanged event.
+ * Fetches the session information and broadcasts the AuthStateChanged event.
  */
 Auth.prototype.login = function () {
     return this._fetchState().then(function (state) {
         this._state = state;
         this._broadcastStateChange();
-        if (state.id) {
-            return this._socket.connect(state.id, state.one_shot_hash);
-        }
-        return Q.resolve(state);
+        return state;
     }.bind(this));
 };
 
 /**
- * Clears the session information, closes the WebSocket connection and broadcasts
- * the AuthStateChanged event.
+ * Clears the session information and broadcasts the AuthStateChanged event.
  */
 Auth.prototype.logout = function () {
     this._state = {};
     this._broadcastStateChange();
-    this._socket.disconnect();
 };

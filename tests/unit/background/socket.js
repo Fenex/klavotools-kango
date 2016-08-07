@@ -21,6 +21,7 @@ describe('socket module', function () {
       sandbox.spy(global, 'WebSocket');
       sandbox.spy(global, 'CustomEvent');
       sandbox.spy(kango.console, 'log');
+      sandbox.spy(kango, 'dispatchMessage');
       sandbox.stub(WebSocket.prototype, 'send');
       sandbox.stub(WebSocket.prototype, 'close');
       sandbox.stub(WebSocket.prototype, 'dispatchEvent');
@@ -61,14 +62,13 @@ describe('socket module', function () {
       return expect(promise).to.be.rejectedWith('auth failed');
     });
 
-    it('should return correct server time delta with getServerTimeDelta() ' +
-        'method', function () {
+    it('should broadcast a ServerTimeDelta event with correct time delta', function () {
       sandbox.clock.tick(1000);
       var promise = socket.connect(1337, '7331');
       socket._ws.onopen();
-      expect(socket.getServerTimeDelta()).to.be.null;
       socket._ws.onmessage({ data: 'a["time 2000"]' });
-      return expect(socket.getServerTimeDelta()).to.be.equal(1000);
+      return expect(kango.dispatchMessage)
+        .to.have.been.calledWithExactly('ServerTimeDelta', 1000);
     });
 
     it('should reject connect() promise if the WebSocket was closed ' +
@@ -94,28 +94,30 @@ describe('socket module', function () {
         'process', function () {
       // Stubbing the _auth method to avoid extra call of the WebSocket.prototype.send:
       sandbox.stub(Socket.prototype, '_auth');
-      socket.connect(1337, '7331');
-      socket.on('someEvent', function () {});
+      socket._subscribe({ data: { missedSubscribe: function () {} } });
+      var promise = socket.connect(1337, '7331');
+      socket._subscribe({ data: { missedSubscribe: function () {} } });
       socket._ws.onopen();
+      socket._subscribe({ data: { missedSubscribe: function () {} } });
       expect(WebSocket.prototype.send).to.have.not.been.called;
       socket._ws.onmessage({ data: 'a["auth ok"]' });
-      expect(WebSocket.prototype.send).to.have.been.calledOnce
-        .to.have.been.calledWithExactly('["subscribe someEvent"]');
+      return promise.then(function () {
+        socket._subscribe({ data: { someEvent: function () {} } });
+        expect(WebSocket.prototype.send).to.have.been.calledOnce
+          .to.have.been.calledWithExactly('["subscribe someEvent"]');
+      });
     });
 
     it('should send a subscribe message only once per event type', function () {
       // Stubbing the _auth method to avoid extra call of the WebSocket.prototype.send:
       sandbox.stub(Socket.prototype, '_auth');
-      socket.on('someEvent1', function () {});
       var promise = socket.connect(1337, '7331');
-      socket.on('someEvent2', function () {});
-      socket._ws.onopen();
-      socket.on('someEvent2', function () {});
-      socket.on('someEvent1', function () {});
       socket._ws.onmessage({ data: 'a["auth ok"]' });
       return promise.then(function () {
-        socket.on('someEvent2', function () {});
-        socket.on('someEvent3', function () {});
+        socket._subscribe({ data: { someEvent1: function () {} } });
+        socket._subscribe({ data: { someEvent2: function () {} } });
+        socket._subscribe({ data: { someEvent2: function () {} } });
+        socket._subscribe({ data: { someEvent3: function () {} } });
         expect(WebSocket.prototype.send).to.have.been.calledThrice
           .to.have.been.calledWithExactly('["subscribe someEvent1"]')
           .to.have.been.calledWithExactly('["subscribe someEvent2"]')
@@ -126,13 +128,13 @@ describe('socket module', function () {
     it('should broadcast an event message to all subscribers', function () {
       var spy1 = sinon.spy();
       var spy2 = sinon.spy();
-      socket.on('someEvent1', spy1);
       var promise = socket.connect(1337, '7331');
-      socket.on('someEvent1', spy1);
       socket._ws.onopen();
       socket._ws.onmessage({ data: 'a["auth ok"]' });
       return promise.then(function () {
-        socket.on('someEvent2', spy2);
+        socket._subscribe({ data: { someEvent1: spy1 } });
+        socket._subscribe({ data: { someEvent1: spy1 } });
+        socket._subscribe({ data: { someEvent2: spy2 } });
         socket._ws.onmessage({ data: 'a["[\\"someEvent1\\",{\\"message\\":1}]"]' });
         socket._ws.onmessage({ data: 'a["[\\"someEvent2\\",{\\"message\\":2}]"]' });
         expect(spy1).to.have.been.calledTwice
@@ -144,11 +146,11 @@ describe('socket module', function () {
 
     it('should ignore all messages with bad JSON', function () {
       var spy1 = sinon.spy();
-      socket.on('someEvent1', spy1);
       var promise = socket.connect(1337, '7331');
       socket._ws.onopen();
       socket._ws.onmessage({ data: 'a["auth ok"]' });
       return promise.then(function () {
+        socket._subscribe({ data: { someEvent1: spy1 } });
         expect(function () {
           socket._ws.onmessage({ data: 'a["[\\"someEvent1\\",{\\"bad json]"]' });
         }).to.not.throw();
@@ -206,17 +208,24 @@ describe('socket module', function () {
       expect(spy).to.have.been.calledTwice;
     });
 
-    it('should log a message and call the custom onError function ' +
+    it('should log a message and broadcast a SocketError event ' +
         'on any WebSocket error', function () {
-      var spy = sinon.spy();
-      socket.onError = spy;
       socket.connect(1337, '1337');
       socket._ws.onerror({ detail: { code: 4000, reason: 'Connection closed.' } });
-      expect(spy)
-        .to.have.been
-        .calledWithExactly({ detail: { code: 4000, reason: 'Connection closed.' } });
       expect(kango.console.log)
         .to.have.been.calledWithExactly('A WebSocket error has occured.');
+      expect(kango.dispatchMessage)
+        .to.have.been
+        .calledWithExactly('SocketError',
+          { detail: { code: 4000, reason: 'Connection closed.' } });
     });
+
+    it('should call the connect() method on the AuthStateChanged event, if the user ' +
+        'is authorized');
+
+    it('should call the disconnect() method on the AuthStateChanged event, if the user ' +
+        'is not authorized');
+
+    it('should call the disconnect() method on teardown');
   });
 });

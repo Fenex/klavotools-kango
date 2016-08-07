@@ -30,10 +30,9 @@ describe('competitions module', function () {
       sandbox.spy(global, 'DeferredNotification');
       sandbox.stub(DeferredNotification.prototype, 'revoke');
       sandbox.stub(DeferredNotification.prototype, 'show');
-      sandbox.stub(Auth.prototype, 'getServerTimeDelta');
-      // Set the default server time correction to 1 second:
-      Auth.prototype.getServerTimeDelta.returns(1000);
       competitions = new Competitions;
+      // Set the default server time delta to 1000 milliseconds:
+      competitions._timeCorrection = 1000;
     });
 
     afterEach(function () {
@@ -204,7 +203,7 @@ describe('competitions module', function () {
         'server time delta', function () {
       sandbox.clock.tick(1470230514177);
       expect(competitions.getRemainingTime.bind(competitions, null)).to.throw(TypeError);
-      Auth.prototype.getServerTimeDelta.returns(null);
+      competitions._timeCorrection = null;
       expect(competitions.getRemainingTime.bind(competitions, 1470230614))
         .to.throw(Error);
     });
@@ -289,38 +288,6 @@ describe('competitions module', function () {
       expect(Competitions.prototype._createNotification).to.not.been.called;
     });
 
-    it('should update the competition start time on the ' +
-        '"gamelist/gameUpdated" socket event', function () {
-      competitions._hash = {
-        1337: {
-          id: 1337,
-          beginTime: null,
-          ratingValue: 1,
-        },
-      };
-      competitions._processUpdated({
-        g: 1337,
-        diff: {
-          begintime: 1,
-        },
-      });
-      expect(competitions._hash[1337].beginTime).to.be.equal(1);
-      competitions._processUpdated({
-        g: 1338,
-        diff: {
-          begintime: 2,
-        },
-      });
-      expect(competitions._hash[1337].beginTime).to.be.equal(1);
-    });
-
-    it('should add competition data on the "gamelist/gameCreated" ' +
-        'socket event');
-
-    it('should process the gamelist data on the "gamelist/initList" ' +
-        'socket event');
-
-    it('should subscribe for gamelist changes if the user ' +
-        'is authorized');
+    it('should revoke all notifications on teardown');
   });
 });

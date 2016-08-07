@@ -52,18 +52,15 @@ Button.prototype.setState = function (state) {
 };
 
 /**
- * Handles the AuthStateChanged event and listens for the counters:{userId}/unreadMail
- * site WebSocket events.
+ * Handles the AuthStateChanged event.
  * @param {Auth#AuthStateChanged} event An event with the current session data.
- * @listens Socket#counters:{userId}/unreadMail
  * @private
  */
 Button.prototype._update = function (event) {
     var state = event.data;
+    // Saving the user id for later use:
+    this._authId = state.id;
     if (state.id) {
-        KlavoTools.Auth.on('counters:' + state.id + '/unreadMail', function (data) {
-            this.setState({ authorized: true, unreadMessagesNumber: data.newAmount });
-        }.bind(this));
         this.setState({ authorized: true, unreadMessagesNumber: state.unread_mail });
     } else {
         this.setState({ authorized: false });
@@ -71,11 +68,30 @@ Button.prototype._update = function (event) {
 };
 
 /**
- * Sets the default button state and listens for AuthStateChanged events.
+ * Sets the default button state and listens for AuthStateChanged events,
+ * with the events related to the counter of unread private messages.
  * @listens Auth#AuthStateChanged
+ * @listens Socket#SocketConnected
+ * @fires SocketSubscribe
+ * @listens Socket#counters:{userId}/unreadMail
+ * @listens UnreadPMCounter#unreadMessagesNumber
  * @private
  */
 Button.prototype._init = function () {
     this.setState({ authorized: false });
     kango.addMessageListener('AuthStateChanged', this._update.bind(this));
+
+    // Using WebSocket connection to get the number of unread PM:
+    kango.addMessageListener('SocketConnected', function (event) {
+        var subscriber = {};
+        subscriber['counters:' + this._authId + '/unreadMail'] = function (data) {
+            this.setState({ authorized: true, unreadMessagesNumber: data.newAmount });
+        }.bind(this);
+        event.target.dispatchMessage('SocketSubscribe', subscriber);
+    }.bind(this));
+
+    // Also subscribing for the UnreadPMCounter#UnreadMessagesNumber event:
+    kango.addMessageListener('UnreadMessagesNumber', function (event) {
+        this.setState({ authorized: true, unreadMessagesNumber: event.data });
+    }.bind(this));
 };

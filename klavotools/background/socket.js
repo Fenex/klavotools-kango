@@ -6,8 +6,11 @@ function Socket () {
     this._ws = null;
     this._authorized = false;
     this._listeners = {};
-    this._serverTimeDelta = null;
+    this._init();
 }
+
+// Adding the teardown() and addMessageListener() methods to the prototype:
+Socket.prototype.__proto__ = MutableModule.prototype;
 
 /**
  * Starts new WebSocket session.
@@ -45,32 +48,10 @@ Socket.prototype.connect = function (id, hash) {
 Socket.prototype.disconnect = function (code, reason) {
     this._listeners = {};
     this._authorized = false;
-    this._serverTimeDelta = null;
     clearTimeout(this._heartbeatTimer);
     if (this._ws && this._ws.readyState === this._ws.OPEN) {
         this._ws.close(code, reason);
     }
-};
-
-/**
- * Adds a handler for the given klavogonki.ru WebSocket event.
- * @param {string} eventName The event name.
- * @param {function} callback The event handler.
- */
-Socket.prototype.on = function (eventName, callback) {
-    if (!this._listeners[eventName]) {
-        this._listeners[eventName] = [];
-        this._subscribe(eventName);
-    }
-    this._listeners[eventName].push(callback);
-};
-
-/**
- * Returns the time correction got from the server.
- * @returns {(number|null)} The time delta in milliseconds or null.
- */
-Socket.prototype.getServerTimeDelta = function () {
-    return this._serverTimeDelta;
 };
 
 /**
@@ -84,23 +65,24 @@ Socket.prototype._auth = function () {
 };
 
 /**
- * Sends the subscribe request for the given event name.
+ * SocketSubscribe event handler: sends subscribe requests for the given events
+ * names and adds callbacks to this._listeners hash.
+ * @param {Object} message A kango message.
+ * @param {Object} message.data A key-value hash object (eventName → callback).
  * @private
- * @param {string} eventName The event name.
  */
-Socket.prototype._subscribe = function (eventName) {
-    if (this._authorized) {
-        this._ws.send('["subscribe ' + eventName + '"]');
+Socket.prototype._subscribe = function (message) {
+    if (!this._authorized) {
+        return false;
     }
-};
 
-/**
- * Sends the subscribe requests for all registered events.
- * @private
- */
-Socket.prototype._subscribeAll = function () {
-    for (var event in this._listeners) {
-        this._subscribe(event);
+    for (var eventName in message.data) {
+        if (!this._listeners[eventName]) {
+            this._listeners[eventName] = [message.data[eventName]];
+            this._ws.send('["subscribe ' + eventName +'"]');
+        } else {
+            this._listeners[eventName].push(message.data[eventName]);
+        }
     }
 };
 
@@ -157,20 +139,25 @@ Socket.prototype._onMessage = function (deferred, event) {
  * A handler for klavogonki.ru WebSocket messages.
  * @param {Object} deferred A Q deferred object.
  * @param {string} message A message got from WebSocket.
+ * @listens SocketSubscribe
+ * @fires Socket#SocketConnected
+ * @fires Socket#ServerTimeDelta
+ * @fires Socket#{SocketEvent}
  * @private
  */
 Socket.prototype._handleMessage = function (deferred, message) {
     if (!this._authorized) {
         if (message === 'auth ok') {
             this._authorized = true;
-            this._subscribeAll();
+            this.setMessageListener('SocketSubscribe', this._subscribe.bind(this));
+            kango.dispatchMessage('SocketConnected', message);
             deferred.resolve(message);
         } else if (message === 'auth failed') {
             deferred.reject(message);
         } else {
             var match = message.match(/^time (\d+)$/);
             if (match) {
-                this._serverTimeDelta = match[1] - Date.now();
+                kango.dispatchMessage('ServerTimeDelta', match[1] - Date.now());
             }
         }
     } else {
@@ -210,6 +197,7 @@ Socket.prototype._onClose = function (deferred, event) {
  * @param {(Event#error|CustomEvent#error)} event An error event.
  * @listens Event#error
  * @listens CustomEvent#error
+ * @fires Socket#SocketError
  * @private
  */
 Socket.prototype._onError = function (event) {
@@ -219,8 +207,29 @@ Socket.prototype._onError = function (event) {
     } else {
         this.disconnect();
     }
-    if (typeof this.onError !== 'function') {
-        return;
-    }
-    this.onError(event);
+    kango.dispatchMessage('SocketError', event);
+};
+
+/**
+ * Closes active connection on teardown.
+ */
+Socket.prototype.teardown = function () {
+    MutableModule.prototype.teardown.apply(this, arguments);
+    this.disconnect();
+};
+
+/**
+ * Listens for AuthStateChanged event and creates new WebSocket connection if the user
+ * is authorized.
+ * @listens Auth#AuthStateChanged
+ * @private
+ */
+Socket.prototype._init = function () {
+    this.addMessageListener('AuthStateChanged', function (event) {
+        if (event.data.id) {
+            this.connect(event.data.id, event.data.one_shot_hash)
+        } else {
+            this.disconnect();
+        }
+    }.bind(this));
 };

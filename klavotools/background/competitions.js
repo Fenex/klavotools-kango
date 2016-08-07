@@ -18,10 +18,28 @@ var Competitions = function() {
         this.displayTime = 0;
     }
 
-    // A key-value hash object with active competitions data:
+    /**
+     * Competition object structure.
+     * @typedef {Object} CompetitionData
+     * @property {number} id An id of the competition.
+     * @property {number} ratingValue A rating value of the competition (1, 2, 3, or 5).
+     * @property {beginTime} beginTime A string in the ISO 8601 format, or an unix
+     *  timestamp.
+     */
+
+    /**
+     * A key-value hash object with active competitions data.
+     * @name Competitions#_hash
+     * @property {CompetitionData}
+     */
     this._hash = {};
+    // A server time delta in milliseconds. Should be set by the implementing class:
+    this._timeCorrection = null;
     this._init();
 };
+
+// Adding the teardown() and addMessageListener() methods to the prototype:
+Competitions.prototype.__proto__ = MutableModule.prototype;
 
 /**
  * Returns current parameters for the options page.
@@ -74,7 +92,7 @@ Competitions.prototype._updateNotifications = function () {
 /**
  * Creates a new DeferredNotification instance by the given competition data and
  * remaining time.
- * @param {Object} competition A hash object with competition data
+ * @param {CompetitionData} competition A hash object with competition data
  * @param {number} remainingTime Remaining time before the competition start (in seconds)
  * @returns {Object} DeferredNotification class instance
  */
@@ -130,12 +148,11 @@ Competitions.prototype.getRemainingTime = function (beginTime) {
         throw new TypeError('Wrong argument type for getRemainingTime() method');
     }
 
-    var timeCorrection = KlavoTools.Auth.getServerTimeDelta();
-    if (timeCorrection === null) {
-        throw new Error('Server time delta is null');
+    if (typeof this._timeCorrection !== 'number') {
+        throw new Error('Server time delta is not set');
     }
 
-    var remaining = beginTimestamp - (Date.now() + timeCorrection);
+    var remaining = beginTimestamp - (Date.now() + this._timeCorrection);
     return remaining > 0 ? Math.round(remaining / 1000) : 0;
 };
 
@@ -149,6 +166,20 @@ Competitions.prototype._clearStarted = function () {
         if (beginTime !== null && this.getRemainingTime(beginTime) === 0) {
             delete this._hash[id];
         }
+    }
+};
+
+/**
+ * Deletes all competitions from the this._hash object.
+ * @private
+ */
+Competitions.prototype._clearAll = function () {
+    for (var id in this._hash) {
+        var competition = this._hash[id];
+        if (competition.notification) {
+            competition.notification.revoke();
+        }
+        delete this._hash[id];
     }
 };
 
@@ -168,71 +199,15 @@ Competitions.prototype._notify = function (id) {
 };
 
 /**
- * A handler for the Socket#gamelist/gameUpdated event.
- * @param {Object} game A hash object with game data diff.
- * @private
+ * Revokes all deferred notifications on teardown.
  */
-Competitions.prototype._processUpdated = function (game) {
-    if (!this._hash[game.g]) {
-        return false;
-    }
-    if (game.diff && game.diff.begintime) {
-        this._hash[game.g].beginTime = game.diff.begintime;
-        this._notify(game.g);
-    }
+Competitions.prototype.teardown = function () {
+    MutableModule.prototype.teardown.apply(this, arguments);
+    this._clearAll();
 };
 
 /**
- * A handler for the Socket#gamelist/gameCreated event.
- * @param {Object} game A hash object with game data.
+ * Initialization method to implement.
  * @private
  */
-Competitions.prototype._processCreated = function (game) {
-    if (!game.params || !game.params.competition) {
-        return false;
-    }
-
-    this._hash[game.id] = {
-        id: game.id,
-        ratingValue: game.params.regular_competition || 1,
-        beginTime: game.begintime,
-    }
-
-    if (game.begintime !== null) {
-        this._notify(game.id);
-    }
-
-    this._clearStarted();
-};
-
-/**
- * A handler for the Socket#gamelist/initList event.
- * @param {Object[]} list An array with current gamelist data.
- * @private
- */
-Competitions.prototype._processInitList = function (list) {
-    list.forEach(function (game) {
-        if (typeof game.info === 'object') {
-            this._processCreated(game.info);
-        }
-    }, this);
-};
-
-/**
- * Sets a handler for AuthStateChanged events and listens for changes in the gamelist,
- * if the user is authorized.
- * @listens Auth#AuthStateChanged
- * @listens Socket#gamelist/initList
- * @listens Socket#gamelist/gameCreated
- * @listens Socket#gamelist/gameUpdated
- * @private
- */
-Competitions.prototype._init = function() {
-    kango.addMessageListener('AuthStateChanged', function (event) {
-        if (event.data.id) {
-            KlavoTools.Auth.on('gamelist/initList', this._processInitList.bind(this));
-            KlavoTools.Auth.on('gamelist/gameCreated', this._processCreated.bind(this));
-            KlavoTools.Auth.on('gamelist/gameUpdated', this._processUpdated.bind(this));
-        }
-    }.bind(this));
-};
+Competitions.prototype._init = function () {};
