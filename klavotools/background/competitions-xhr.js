@@ -26,6 +26,7 @@ CompetitionsXHR.prototype.setParams = function () {
 /**
  * Processes a single competition data.
  * @param {Object} competition A hash object with competition data
+ * @returns {boolean} Whether the check timer was set
  * @private
  */
 CompetitionsXHR.prototype._processCompetition = function (competition) {
@@ -42,9 +43,14 @@ CompetitionsXHR.prototype._processCompetition = function (competition) {
     this._notify(competition.id);
     this._clearStarted();
     var remainingTime = this.getRemainingTime(competition.begintime);
-    if (remainingTime > 0) {
-        setTimeout(this._check.bind(this), (remainingTime + 120) * 1000);
+    if (remainingTime > 0 && (!this._lastTimeout || remainingTime < this._lastTimeout)) {
+        this._lastTimeout = remainingTime;
+        clearTimeout(this._timer);
+        this._timer = setTimeout(this._check.bind(this), (remainingTime + 120) * 1000);
+        return true;
     }
+
+    return false;
 };
 
 /**
@@ -53,16 +59,15 @@ CompetitionsXHR.prototype._processCompetition = function (competition) {
  * @private
  */
 CompetitionsXHR.prototype._processGamelist = function (gamelist) {
-    var foundCompetition = false;
-    gamelist.forEach(function (game) {
+    this._lastTimeout = null;
+    var foundCompetition = gamelist.some(function (game) {
         if (game.params && game.params.competition) {
-            foundCompetition = true;
-            this._processCompetition(game);
+            return this._processCompetition(game);
         }
     }, this);
 
     if (!foundCompetition) {
-        setTimeout(this._check.bind(this), 120 * 1000);
+        this._timer = setTimeout(this._check.bind(this), 120 * 1000);
     }
 };
 
@@ -77,8 +82,8 @@ CompetitionsXHR.prototype._check = function () {
         this._processGamelist(data.gamelist);
     }.bind(this)).catch(function (error) {
         kango.console.log('Error while fetching gamelist data: ' + error.toString());
-        setTimeout(this._check.bind(this), 10 * 1000);
-    });
+        this._timer = setTimeout(this._check.bind(this), 10 * 1000);
+    }.bind(this));
 };
 
 /**
@@ -101,6 +106,14 @@ CompetitionsXHR.prototype._fetchData = function () {
 };
 
 /**
+ * Clears the timer on teardown.
+ */
+CompetitionsXHR.prototype.teardown = function () {
+    Competitions.prototype.teardown.apply(this, arguments);
+    clearTimeout(this._timer);
+};
+
+/**
  * Sets a handler for AuthStateChanged events and calls the _check() method,
  * if the user is authorized.
  * @listens Auth#AuthStateChanged
@@ -108,6 +121,7 @@ CompetitionsXHR.prototype._fetchData = function () {
  */
 CompetitionsXHR.prototype._init = function () {
     this.addMessageListener('AuthStateChanged', function (event) {
+        this._clearAll();
         if (event.data.id) {
             this._check();
         }

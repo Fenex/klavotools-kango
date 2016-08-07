@@ -170,6 +170,20 @@ Competitions.prototype._clearStarted = function () {
 };
 
 /**
+ * Deletes all competitions from the this._hash object.
+ * @private
+ */
+Competitions.prototype._clearAll = function () {
+    for (var id in this._hash) {
+        var competition = this._hash[id];
+        if (competition.notification) {
+            competition.notification.revoke();
+        }
+        delete this._hash[id];
+    }
+};
+
+/**
  * Checks the remaining time before the competition start by its id, creates and saves
  * the new notification instance if needed.
  * @param {number} id An id of the competition
@@ -185,21 +199,15 @@ Competitions.prototype._notify = function (id) {
 };
 
 /**
- * Initialization method to implement.
- * @private
- */
-Competitions.prototype._init = function () {};
-
-
-/**
  * Revokes all deferred notifications on teardown.
  */
 Competitions.prototype.teardown = function () {
     MutableModule.prototype.teardown.apply(this, arguments);
-    for (var id in this._hash) {
-        var competition = this._hash[id];
-        if (competition.notification) {
-            competition.notification.revoke();
-        }
-    }
+    this._clearAll();
 };
+
+/**
+ * Initialization method to implement.
+ * @private
+ */
+Competitions.prototype._init = function () {};

@@ -78,6 +78,7 @@ CompetitionsWS.prototype._processInitList = function (list) {
  */
 CompetitionsWS.prototype._init = function() {
     this.addMessageListener('AuthStateChanged', function (event) {
+        this._clearAll();
         if (event.data.id) {
             this.setMessageListener('SocketConnected', function (event) {
                 event.target.dispatchMessage('SocketSubscribe', {
