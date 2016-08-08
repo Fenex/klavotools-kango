@@ -164,7 +164,8 @@ Socket.prototype._handleMessage = function (deferred, message) {
         try {
             message = JSON.parse(message);
         } catch (err) {
-            kango.console.log('Got bad JSON from the site: ' + err.toString());
+            kango.console.log('Got bad JSON from the site: "' + message + '" ' +
+                err.toString());
         }
 
         if (message && message.length === 2 && this._listeners[message[0]]) {
