@@ -5,6 +5,7 @@
         "klavotools/background/lib/q.js",
         "klavotools/background/lib/xhr.js",
         "klavotools/background/lib/mutable-module.js",
+        "klavotools/background/lib/semver.browser.js",
         "klavotools/background/deferred-notification.js",
         "klavotools/background/competitions.js",
         "klavotools/background/competitions-ws.js",
