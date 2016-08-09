@@ -1,71 +1,20 @@
-function Script (data) {
-    if (!data.updateUrl) {
-        throw new Error('Update URL not specified for the ' + data.name + ' userscript');
-    }
-    this._keys = [];
-    for (var key in data) {
-        this[key] = data[key];
-        this._keys[this._keys.length] = key;
-    }
-    this.includes = [];
-    this.loaded = this.getCode().then(function (code) {
-        if (!this.includes.length) {
-            this._setIncludes(code);
-        }
-    }.bind(this));
-}
-
-Script.prototype._setIncludes = function (code) {
-    var metadata = code.substring(0, code.indexOf('==/UserScript=='));
-    var rx = /@(?:include|match)\s+(\S*)/g;
-    var url;
-    this.includes = [];
-    while ((url = rx.exec(metadata)) !== null) {
-        var re = new RegExp(url[1].replace(/\./g, '\\.').replace(/\*/g, '.*')
-                                .replace(/\?/g, '\\?'));
-        this.includes.push(re);
-    }
-    return Q.resolve(this.includes);
-};
-
-Script.prototype.shouldBeIncluded = function (url) {
-    if (this.disabled) {
-        return false;
-    }
-    return this.includes.some(function (re) {
-        return re.test(url);
-    });
-};
-
-Script.prototype.getCode = function () {
-    if (this.code) {
-        return Q.resolve(this.code);
-    }
-    return this.update();
-};
-
-Script.prototype.update = function () {
-    return xhr(this.updateUrl).then(function (code) {
-        this.code = code;
-        this._setIncludes(code);
-        return code;
-    }.bind(this));
-};
-
-Script.prototype.toJSON = function () {
-    var res = {};
-    this._keys.forEach(function (key) {
-        res[key] = this[key];
-    }, this);
-    return res;
-};
-
-
+/**
+ * @file A module for work with the userscripts.
+ * @author Vitaliy Busko
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
+ * @requires Script
+ * @requires semver
+ */
 function UserJS () {
     this._scripts = {};
     this._init();
 }
 
+/**
+ * Fetches the userscripts configuration from the repository.
+ * @returns {Promise.<Object.<string, UserscriptData>>}
+ * @private
+ */
 UserJS.prototype._fetchConfig = function () {
     var options = {
         url: KlavoTools.const.USERJS_CONFIG_URL,
@@ -91,6 +40,14 @@ UserJS.prototype._fetchConfig = function () {
     });
 };
 
+/**
+ * Applies the old userscripts configuration to the given one and removes old data from
+ * the localStorage.
+ * @deprecated since 3.3.7
+ * @param {Object.<string, UserscriptData>} config Userscripts configuration.
+ * @returns {Promise.<Object>}
+ * @private
+ */
 UserJS.prototype._applyLegacyConfig = function (config) {
     var keys = kango.storage.getKeys();
     keys.forEach(function (key) {
@@ -114,6 +71,12 @@ UserJS.prototype._applyLegacyConfig = function (config) {
     return Q.resolve(config);
 };
 
+/**
+ * Returns a 2d array, containing the data of userscripts, that should be
+ * included on the page, by the given URL string.
+ * @param {string} url The location.href value.
+ * @returns {Array.<string[]>>} Userscripts names and codes.
+ */
 UserJS.prototype.getScriptsForURL = function (url) {
     var res = [];
     for (var name in this._scripts) {
@@ -124,10 +87,19 @@ UserJS.prototype.getScriptsForURL = function (url) {
     return res;
 };
 
+/**
+ * Returns an array of the all registered userscripts.
+ * @returns {Script[]}
+ */
 UserJS.prototype.getAllScripts = function () {
     return this._scripts;
 };
 
+/**
+ * Updates the userscript data by the given name and hash object.
+ * @param {string} name The userscript name.
+ * @param {Object} data A key-value hash object with userscript properties to change.
+ */
 UserJS.prototype.updateScriptData = function (name, data) {
     if (!this._scripts[name]) {
         throw new Error('Userscript ' + name + ' not found');
@@ -139,12 +111,25 @@ UserJS.prototype.updateScriptData = function (name, data) {
     this._saveState();
 };
 
+/**
+ * Sets the initial state of userscripts.
+ * @requires Script
+ * @param {string} name The userscript name.
+ * @param {UserscriptData} data A key-value hash object with userscripts data.
+ * @returns {Promise.<(Object|string)>}
+ * @private
+ */
 UserJS.prototype._addScript = function (name, data) {
     var script = new Script(data);
     this._scripts[name] = script;
     return script.loaded;
 };
 
+/**
+ * Sets the initial state of userscripts.
+ * @returns {Promise.<(Object|Array)>}
+ * @private
+ */
 UserJS.prototype._setState = function (data) {
     if (!(data instanceof Object)) {
         throw new TypeError('Wrong data for the UserJS.prototype._setState method');
@@ -158,6 +143,13 @@ UserJS.prototype._setState = function (data) {
     return Q.all(promises);
 };
 
+/**
+ * Fetches userscripts configuration from the repository, updates the current state if
+ * needed.
+ * @requires semver
+ * @returns {Promise.<(Object|Array)>}
+ * @private
+ */
 UserJS.prototype._syncState = function () {
     return this._fetchConfig().then(function (config) {
         var promises = [];
@@ -180,10 +172,19 @@ UserJS.prototype._syncState = function () {
     }.bind(this));
 };
 
+/**
+ * Saves the current userscripts data to the localStorage.
+ * @private
+ */
 UserJS.prototype._saveState = function () {
     kango.storage.setItem('userscripts_data', this._scripts);
 };
 
+/**
+ * Loads userscripts data, starts check timer.
+ * @returns {Promise.<(Object|Array)>}
+ * @private
+ */
 UserJS.prototype._init = function () {
     this._timer = setInterval(function () {
         this._syncState().then(this._saveState.bind(this));
