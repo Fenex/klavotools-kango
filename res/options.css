@@ -164,11 +164,37 @@ h4 {
 #KTS_notifications > table td > label {
   display: block;
 }
-#KTS_scripts label,
-#KTS_scripts div,
+#KTS_scripts table,
 #KTS_notifications div,
 #KTS_notifications label {
   font: normal 10pt tahoma;
+}
+#KTS_scripts table {
+  margin-top: 1em;
+  border-collapse: collapse;
+}
+#KTS_scripts table td{
+  border: 1px solid #aaa;
+  padding: 1px 0.5em;
+}
+#KTS_scripts table th {
+  font-weight: 700;
+  text-align: left;
+  padding-right: 0.5em;
+}
+#KTS_scripts table tr:nth-child(2n+3) {
+  background-color: #fafafa;
+}
+#KTS_scripts table tr:not(:first-child) {
+  transition: background-color 0.1s linear;
+  cursor: pointer;
+}
+#KTS_scripts table tr:not(:first-child):hover {
+  background-color: #fffce7;
+}
+#KTS_scripts table td:first-child {
+  padding-left: 0;
+  white-space: nowrap;
 }
 .saved {
   color: #000000;

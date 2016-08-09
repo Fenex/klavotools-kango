@@ -129,18 +129,32 @@
     </form>
     <b>Скрипты:</b>
     <form id="KTS_scripts" ng:controller="ScriptCtrl">
-      <table border>
+      <table>
         <tbody>
-          <tr ng:repeat="(script, data) in scripts">
+          <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Авторы</th>
+            <th>Версия</th>
+          </tr>
+          <tr
+            ng-repeat="(name, data) in scripts"
+            ng-if="data.integrated === false"
+            ng-click="toggle(name, $event)"
+            >
             <td>
-              <input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enabled" class="user_set" ng:change="save('{{script}}')" />
+              <input type="checkbox"
+                id="{{name}}"
+                name="{{name}}"
+                class="user_set"
+                negate ng-model="data.disabled"
+                ng-change="save(name)"
+                />
+              {{name}}
             </td>
-            <td>
-              <label for="{{script}}">{{script}}</label>
-            </td>
-            <td>
-              <div>{{data.description}}</div>
-            </td>
+            <td>{{data.description}}</td>
+            <td>{{data.authors.join(', ')}}</td>
+            <td>{{data.version}}</td>
           </tr>
         </tbody>
       </table>

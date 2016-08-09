@@ -4,21 +4,19 @@
 // @include http://klavogonki.ru/*
 // ==/UserScript==
 
-kango.invokeAsync('KlavoTools.UserJS.getScripts', location.href, function(res) {
-    if(document.getElementById('KTS-AUTO')) { return false; }
-    
-    for(var i=0; i<res.length; i++) {
-        (function(i) {
-            try {
-                console.log(i+1, 'of', res.length, res[i].name);
-                eval(res[i].code);
-            } catch (e) {
-                console.log('KlavoTools: error in script #', i+1, e);
-                console.log('code script', res[i]);
-            }
-        })(i);
+kango.invokeAsync('KlavoTools.UserJS.getScriptsForURL', location.href, function(scripts) {
+    if (document.getElementById('KTS-AUTO')) {
+        return false;
     }
-    
+
+    scripts.forEach(function execScript(script, index) {
+        try {
+            eval(script[1]);
+        } catch (error) {
+            console.log('KlavoTools: error in script ', script[0], error);
+        }
+    })
+
     var link = document.createElement('link');
     link.setAttribute('id', 'KTS-AUTO');
     document.head.appendChild(link);

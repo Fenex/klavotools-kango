@@ -1,4 +1,22 @@
 angular.module('klavotools', ['klavotools.joke'])
+.directive('negate', [function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attribute, ngModelController) {
+            ngModelController.$isEmpty = function(value) {
+                return !!value;
+            };
+
+            ngModelController.$formatters.unshift(function (value) {
+                return !value;
+            });
+
+            ngModelController.$parsers.unshift(function (value) {
+                return !value;
+            });
+        }
+    };
+}])
 .controller('KTSVersion', function($scope) {
     kango.invokeAsync('KlavoTools.version', function(ver) {
         $scope.version = ver;
@@ -47,23 +65,20 @@ angular.module('klavotools', ['klavotools.joke'])
     });
 })
 .controller('ScriptCtrl', function($scope) {
-    kango.invokeAsync('KlavoTools.UserJS.getAll', function(scripts) {
-        var tmp = {};
-        for(var i=0; i<scripts.length; i++) {
-            var name = scripts[i].name.match(/^(.+)\.user\.js/)[1];
-            tmp[name] = {
-                enabled: scripts[i].enabled,
-                description: scripts[i].desc
-            }
-        }
-
-        $scope.scripts = tmp;
+    kango.invokeAsync('KlavoTools.UserJS.getAllScripts', function(scripts) {
+        $scope.scripts = scripts;
     });
 
-    $scope.save = function(script) {
-        kango.invokeAsync('KlavoTools.UserJS.set', {
-            id: script+'.user.js',
-            enabled: $scope.scripts[script].enabled
+    $scope.toggle = function (name, event) {
+        if (event.target.id === name) {
+            return false;
+        }
+        $scope.scripts[name].disabled = !$scope.scripts[name].disabled;
+    };
+
+    $scope.save = function (name) {
+        kango.invokeAsync('KlavoTools.UserJS.updateScriptData', name, {
+            disabled: $scope.scripts[name].disabled,
         });
     };
 })
