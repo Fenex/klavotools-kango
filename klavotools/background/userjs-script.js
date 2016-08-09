@@ -35,6 +35,7 @@ function Script (data) {
         if (!this.includes.length) {
             this._setIncludes(code);
         }
+        return code;
     }.bind(this));
 }
 
@@ -74,10 +75,8 @@ Script.prototype.shouldBeIncluded = function (url) {
 };
 
 /**
- * Returns a boolean, representing whether the userscript should be included on the page,
- * by the given URL string.
- * @param {string} url The location.href value
- * @returns {boolean}
+ * Returns a promise to the userscript source code.
+ * @returns {Promise.<(string|Object)>}
  */
 Script.prototype.getCode = function () {
     if (this.code) {
