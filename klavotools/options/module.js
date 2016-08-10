@@ -74,6 +74,30 @@ angular.module('klavotools', ['klavotools.joke'])
             return false;
         }
         $scope.scripts[name].disabled = !$scope.scripts[name].disabled;
+        $scope.onChange(name);
+    };
+
+    $scope.onChange = function (name) {
+        var scripts = $scope.scripts;
+        if (scripts[name].disabled) {
+            return $scope.save(name);
+        }
+
+        var disabled = [];
+        scripts[name].conflicts.forEach(function (conflictName) {
+            if (scripts[conflictName] && !scripts[conflictName].disabled) {
+                disabled.push(conflictName);
+                scripts[conflictName].disabled = true;
+                $scope.save(conflictName);
+            }
+        });
+
+        if (disabled.length > 0) {
+            alert('Следующие скрипты были отключены, т.к. они конфликтуют ' +
+                    'с ' + name + ":\n\n" + disabled.join(', '));
+        }
+
+        $scope.save(name);
     };
 
     $scope.save = function (name) {
