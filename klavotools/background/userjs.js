@@ -35,7 +35,7 @@ UserJS.prototype._fetchConfig = function () {
             script.integrated = script.integrated ? true : false;
             script.disabled = script.disabled ? true : false;
             script.conflicts = script.conflicts ? script.conflicts : [];
-            script.code = null;
+            script._ignoreUpdate = ['disabled'];
             hash[script.name] = script;
         });
         return hash;
@@ -173,12 +173,11 @@ UserJS.prototype._syncState = function () {
             } else {
                 var script = this._scripts[name];
                 var data = config[name];
-                script.version = data.version;
-                script.authors = data.authors;
-                script.tags = data.tags;
-                script.description = data.description;
-                script.conflicts = data.conflicts;
-                script.integrated = data.integrated;
+                for (var key in data) {
+                    if (data._ignoreUpdate.indexOf(key) < 0) {
+                        script[key] = data[key];
+                    }
+                }
             }
         }
 

@@ -30,15 +30,15 @@ describe('userjs module', function () {
       processedConfig.script1.updateUrl = baseUrl + '/script1.user.js'
       processedConfig.script1.disabled = false;
       processedConfig.script1.conflicts = [];
-      processedConfig.script1.code = null;
+      processedConfig.script1._ignoreUpdate = ['disabled'];
       processedConfig.script2.updateUrl = baseUrl + '/script2.user.js'
       processedConfig.script2.integrated = false;
       processedConfig.script2.conflicts = [];
-      processedConfig.script2.code = null;
+      processedConfig.script2._ignoreUpdate = ['disabled'];
       processedConfig.script3.updateUrl = baseUrl + '/script3.user.js'
       processedConfig.script3.disabled = false;
       processedConfig.script3.integrated = false;
-      processedConfig.script3.code = null;
+      processedConfig.script3._ignoreUpdate = ['disabled'];
       processedConfigClone = {};
       for (var key1 in processedConfig) {
         processedConfigClone[key1] = {};
@@ -176,12 +176,12 @@ describe('userjs module', function () {
         expect(userjs._scripts.script1).to.be.undefined;
         expect(userjs._scripts.script2).to.be.instanceof(Script);
         expect(userjs._scripts.script2.update).to.have.been.calledOnce;
-        expect(userjs._scripts.script2.version).to.be.equal(config[0].version);
-        expect(userjs._scripts.script2.authors).to.be.deep.equal(config[0].authors);
-        expect(userjs._scripts.script2.tags).to.be.deep.equal(config[0].tags);
-        expect(userjs._scripts.script2.description).to.be.equal(config[0].description);
-        expect(userjs._scripts.script2.conflicts).to.be.deep.equal(config[0].conflicts);
-        expect(userjs._scripts.script2.integrated).to.be.equal(config[0].integrated);
+        var script2Config = config[0];
+        for (var key in script2Config) {
+          if (script2Config._ignoreUpdate.indexOf(key) < 0) {
+            expect(userjs._scripts.script2[key]).to.be.equal(script2Config[key]);
+          }
+        }
         expect(userjs._scripts.script3).to.be.instanceof(Script);
         expect(userjs._scripts.script3.update).to.have.not.been.called;
         expect(userjs._scripts.script4).to.be.instanceof(Script);
@@ -203,7 +203,7 @@ describe('userjs module', function () {
       sandbox.stub(UserJS.prototype, '_syncState').returns(Q.resolve());
       sandbox.stub(UserJS.prototype, '_fetchConfig');
       sandbox.stub(UserJS.prototype, '_setState');
-      for (var i = 1; i < 100; i++) {
+      for (var i = 1; i < 10; i++) {
         sandbox.clock.tick(15 * 60 * 1000);
         expect(UserJS.prototype._syncState).to.have.callCount(i);
       }
