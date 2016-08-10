@@ -176,6 +176,7 @@ h4 {
 #KTS_scripts table td{
   border: 1px solid #aaa;
   padding: 1px 0.5em;
+  vertical-align: middle;
 }
 #KTS_scripts table th {
   font-weight: 700;
@@ -195,6 +196,9 @@ h4 {
 #KTS_scripts table td:first-child {
   padding-left: 0;
   white-space: nowrap;
+}
+#KTS_scripts table td:first-child input[type="checkbox"] {
+  vertical-align: middle;
 }
 .saved {
   color: #000000;
