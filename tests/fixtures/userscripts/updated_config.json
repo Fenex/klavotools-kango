@@ -1,0 +1,40 @@
+[
+  {
+    "name": "script2",
+    "version": "0.1.1+buildinfo",
+    "authors": [
+      "Fenex",
+      "agile"
+    ],
+    "disabled": true,
+    "tags": [
+      "foo"
+    ],
+    "description": "foo2"
+  },
+  {
+    "name": "script3",
+    "version": "0.1.3",
+    "authors": [
+      "Fenex"
+    ],
+    "tags": [
+      "foobar"
+    ],
+    "conflicts": [
+      "script2"
+    ],
+    "description": "foo3"
+  },
+  {
+    "name": "script4",
+    "version": "1.0.0",
+    "authors": [
+      "agile"
+    ],
+    "tags": [
+      "bar"
+    ],
+    "description": "foo4"
+  }
+]

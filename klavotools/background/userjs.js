@@ -21,6 +21,9 @@ UserJS.prototype._fetchConfig = function () {
         contentType: 'json',
     };
     return xhr(options).then(function (config) {
+        if (!(config instanceof Array) || config.constructor !== Array) {
+            return Q.reject('Got bad userscripts configuration: ' + config.toString());
+        }
         var hash = {};
         config.forEach(function (script) {
             // FIXME: remove this crutch :D
@@ -31,12 +34,14 @@ UserJS.prototype._fetchConfig = function () {
                 KlavoTools.const.USERJS_DIRECTORY_URL + '/' + script.name + '.user.js';
             script.integrated = script.integrated ? true : false;
             script.disabled = script.disabled ? true : false;
+            script.conflicts = script.conflicts ? script.conflicts : [];
             script.code = null;
             hash[script.name] = script;
         });
         return hash;
     }).fail(function (error) {
         kango.console.log('Error while loading userscripts config: ' + error.toString());
+        return Q.reject(error);
     });
 };
 
@@ -131,7 +136,7 @@ UserJS.prototype._addScript = function (name, data) {
  * @private
  */
 UserJS.prototype._setState = function (data) {
-    if (!(data instanceof Object)) {
+    if (!(data instanceof Object) || (data.constructor !== Object)) {
         throw new TypeError('Wrong data for the UserJS.prototype._setState method');
     }
 
@@ -168,7 +173,9 @@ UserJS.prototype._syncState = function () {
             }
         }
 
-        return Q.all(promises);
+        return Q.all(promises).then(function (data) {
+            return Q.resolve(this._scripts)
+        }.bind(this));
     }.bind(this));
 };
 
