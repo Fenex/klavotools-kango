@@ -65,10 +65,18 @@ angular.module('klavotools', ['klavotools.joke'])
     });
 })
 .controller('ScriptCtrl', function($scope) {
+    $scope.tags = {};
     $scope.showIntegrated = false;
 
     kango.invokeAsync('KlavoTools.UserJS.getAllScripts', function(scripts) {
         $scope.scripts = scripts;
+        for (var key in scripts) {
+            scripts[key].tags.forEach(function (tag) {
+                if (!$scope.tags[tag]) {
+                    $scope.tags[tag] = { text: tag, active: false };
+                }
+            });
+        }
     });
 
     $scope.toggle = function (name, event) {
@@ -151,6 +159,31 @@ angular.module('klavotools', ['klavotools.joke'])
         if(typeof b != 'object')
             sendPrefs({delay: parseInt(a)});
     });
+})
+.filter('filterByTags', function () {
+    return function (input, tags) {
+        var active = false;
+        for (var key in tags) {
+            if (tags[key].active) {
+                active = true;
+                break;
+            }
+        }
+
+        if (!active) {
+            return input;
+        }
+
+        var filtered = {};
+        for (var key in input) {
+            input[key].tags.forEach(function (tag) {
+                if (tags[tag].active) {
+                    filtered[key] = input[key];
+                }
+            });
+        }
+        return filtered;
+    }
 })
 .filter('settingDescription', function () {
     return function (input) {

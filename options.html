@@ -129,8 +129,21 @@
     </form>
     <b>Скрипты:</b>
     <form id="KTS_scripts" ng:controller="ScriptCtrl">
-      <input type="checkbox" id="showIntegrated" ng-model="showIntegrated" />
-      <label for="showIntegrated">Показывать скрипты из стандартного набора</label>
+      <div>
+        <input type="checkbox" id="showIntegrated" ng-model="showIntegrated" />
+        <label for="showIntegrated">Показывать скрипты из стандартного набора</label>
+      </div>
+      <br>
+      <div>
+        Фильтровать список по тегам:
+        <label
+          class="tag"
+          ng-repeat="tag in tags"
+          ng-class="{active: tag.active}">
+            <input type="checkbox" ng-model="tag.active"/>
+            <span><span>{{tag.text}}</span></span>
+        </label>
+      </div>
       <table>
         <tbody>
           <tr>
@@ -140,7 +153,7 @@
             <th>Версия</th>
           </tr>
           <tr
-            ng-repeat="(name, data) in scripts"
+            ng-repeat="(name, data) in scripts | filterByTags:tags"
             ng-if="data.integrated === false || showIntegrated === true"
             ng-click="toggle(name, $event)"
             ng-class="{integrated: data.integrated}"

@@ -224,3 +224,32 @@ h4 {
   font-style: italic;
   font-size: 11pt;
 }
+.tag {
+  position: relative;
+  margin-right: 0.5ch;
+  cursor: pointer;
+  color: #555;
+}
+.tag > input[type="checkbox"] {
+  position: absolute;
+  visibility: hidden;
+}
+.tag > span > span {
+  border-bottom: 1px dotted #555;
+}
+.tag > span:before, .tag > span:after {
+  text-decoration: none;
+}
+.tag > span:before {
+  content: "[\00a0";
+}
+.tag > span:after {
+  content: "\00a0]";
+}
+.tag.active {
+  font-weight: 700;
+  color: #000;
+}
+.tag.active > span > span {
+  border-color: #000;
+}
