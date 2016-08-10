@@ -1,4 +1,22 @@
 angular.module('klavotools', ['klavotools.joke'])
+.directive('negate', [function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attribute, ngModelController) {
+            ngModelController.$isEmpty = function(value) {
+                return !!value;
+            };
+
+            ngModelController.$formatters.unshift(function (value) {
+                return !value;
+            });
+
+            ngModelController.$parsers.unshift(function (value) {
+                return !value;
+            });
+        }
+    };
+}])
 .controller('KTSVersion', function($scope) {
     kango.invokeAsync('KlavoTools.version', function(ver) {
         $scope.version = ver;
@@ -47,23 +65,54 @@ angular.module('klavotools', ['klavotools.joke'])
     });
 })
 .controller('ScriptCtrl', function($scope) {
-    kango.invokeAsync('KlavoTools.UserJS.getAll', function(scripts) {
-        var tmp = {};
-        for(var i=0; i<scripts.length; i++) {
-            var name = scripts[i].name.match(/^(.+)\.user\.js/)[1];
-            tmp[name] = {
-                enabled: scripts[i].enabled,
-                description: scripts[i].desc
-            }
-        }
+    $scope.tags = {};
+    $scope.showIntegrated = false;
 
-        $scope.scripts = tmp;
+    kango.invokeAsync('KlavoTools.UserJS.getAllScripts', function(scripts) {
+        $scope.scripts = scripts;
+        for (var key in scripts) {
+            scripts[key].tags.forEach(function (tag) {
+                if (!$scope.tags[tag]) {
+                    $scope.tags[tag] = { text: tag, active: false };
+                }
+            });
+        }
     });
 
-    $scope.save = function(script) {
-        kango.invokeAsync('KlavoTools.UserJS.set', {
-            id: script+'.user.js',
-            enabled: $scope.scripts[script].enabled
+    $scope.toggle = function (name, event) {
+        if (event.target.id === name) {
+            return false;
+        }
+        $scope.scripts[name].disabled = !$scope.scripts[name].disabled;
+        $scope.onChange(name);
+    };
+
+    $scope.onChange = function (name) {
+        var scripts = $scope.scripts;
+        if (scripts[name].disabled) {
+            return $scope.save(name);
+        }
+
+        var disabled = [];
+        scripts[name].conflicts.forEach(function (conflictName) {
+            if (scripts[conflictName] && !scripts[conflictName].disabled) {
+                disabled.push(conflictName);
+                scripts[conflictName].disabled = true;
+                $scope.save(conflictName);
+            }
+        });
+
+        if (disabled.length > 0) {
+            alert('Следующие скрипты были отключены, т.к. они конфликтуют ' +
+                    'с ' + name + ":\n\n" + disabled.join(', '));
+        }
+
+        $scope.save(name);
+    };
+
+    $scope.save = function (name) {
+        kango.invokeAsync('KlavoTools.UserJS.updateScriptData', name, {
+            disabled: $scope.scripts[name].disabled,
         });
     };
 })
@@ -110,6 +159,31 @@ angular.module('klavotools', ['klavotools.joke'])
         if(typeof b != 'object')
             sendPrefs({delay: parseInt(a)});
     });
+})
+.filter('filterByTags', function () {
+    return function (input, tags) {
+        var active = false;
+        for (var key in tags) {
+            if (tags[key].active) {
+                active = true;
+                break;
+            }
+        }
+
+        if (!active) {
+            return input;
+        }
+
+        var filtered = {};
+        for (var key in input) {
+            input[key].tags.forEach(function (tag) {
+                if (tags[tag].active) {
+                    filtered[key] = input[key];
+                }
+            });
+        }
+        return filtered;
+    }
 })
 .filter('settingDescription', function () {
     return function (input) {

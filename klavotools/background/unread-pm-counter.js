@@ -43,7 +43,7 @@ UnreadPMCounter.prototype._check = function () {
  */
 UnreadPMCounter.prototype.teardown = function () {
     MutableModule.prototype.teardown.apply(this, arguments);
-    clearTimeout(this._timer);
+    clearInterval(this._timer);
 };
 
 /**
@@ -52,7 +52,7 @@ UnreadPMCounter.prototype.teardown = function () {
  */
 UnreadPMCounter.prototype._init = function () {
     this.addMessageListener('AuthStateChanged', function (event) {
-        clearTimeout(this._timer);
+        clearInterval(this._timer);
         if (event.data.id) {
             this._timer = setInterval(this._check.bind(this), 60 * 1000);
             this._check();

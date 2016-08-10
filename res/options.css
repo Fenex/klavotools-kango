@@ -164,11 +164,44 @@ h4 {
 #KTS_notifications > table td > label {
   display: block;
 }
-#KTS_scripts label,
-#KTS_scripts div,
+#KTS_scripts table,
 #KTS_notifications div,
 #KTS_notifications label {
   font: normal 10pt tahoma;
+}
+#KTS_scripts table {
+  margin-top: 1em;
+  border-collapse: collapse;
+}
+#KTS_scripts table td{
+  border: 1px solid #aaa;
+  padding: 1px 0.5em;
+  vertical-align: middle;
+}
+#KTS_scripts table th {
+  font-weight: 700;
+  text-align: left;
+  padding-right: 0.5em;
+}
+#KTS_scripts table tr:nth-child(2n+3) {
+  background-color: #fafafa;
+}
+#KTS_scripts table tr.integrated {
+  background-color: #e6ffd9;
+}
+#KTS_scripts table tr:not(:first-child) {
+  transition: background-color 0.1s linear;
+  cursor: pointer;
+}
+#KTS_scripts table tr:not(:first-child):hover {
+  background-color: #fffce7;
+}
+#KTS_scripts table td:first-child {
+  padding-left: 0;
+  white-space: nowrap;
+}
+#KTS_scripts table td:first-child input[type="checkbox"] {
+  vertical-align: middle;
 }
 .saved {
   color: #000000;
@@ -190,4 +223,33 @@ h4 {
   margin: 5px;
   font-style: italic;
   font-size: 11pt;
+}
+.tag {
+  position: relative;
+  margin-right: 0.5ch;
+  cursor: pointer;
+  color: #555;
+}
+.tag > input[type="checkbox"] {
+  position: absolute;
+  visibility: hidden;
+}
+.tag > span > span {
+  border-bottom: 1px dotted #555;
+}
+.tag > span:before, .tag > span:after {
+  text-decoration: none;
+}
+.tag > span:before {
+  content: "[\00a0";
+}
+.tag > span:after {
+  content: "\00a0]";
+}
+.tag.active {
+  font-weight: 700;
+  color: #000;
+}
+.tag.active > span > span {
+  border-color: #000;
 }

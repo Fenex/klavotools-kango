@@ -14,6 +14,10 @@ var KlavoTools = {
         WS_HEARTBEAT_TIMEOUT: 40,
         GAMELIST_DATA_URL: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',
         PM_DATA_URL: 'http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST',
+        USERJS_CONFIG_URL:
+            'https://raw.githubusercontent.com/voidmain02/KgScripts/master/klavotools.json',
+        USERJS_DIRECTORY_URL:
+            'https://raw.githubusercontent.com/voidmain02/KgScripts/master/scripts',
     },
     version: function() {
         return kango.getExtensionInfo().version;

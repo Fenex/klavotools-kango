@@ -129,18 +129,48 @@
     </form>
     <b>Скрипты:</b>
     <form id="KTS_scripts" ng:controller="ScriptCtrl">
-      <table border>
+      <div>
+        <input type="checkbox" id="showIntegrated" ng-model="showIntegrated" />
+        <label for="showIntegrated">Показывать скрипты из стандартного набора</label>
+      </div>
+      <br>
+      <div>
+        Фильтровать список по тегам:
+        <label
+          class="tag"
+          ng-repeat="tag in tags"
+          ng-class="{active: tag.active}">
+            <input type="checkbox" ng-model="tag.active"/>
+            <span><span>{{tag.text}}</span></span>
+        </label>
+      </div>
+      <table>
         <tbody>
-          <tr ng:repeat="(script, data) in scripts">
+          <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Авторы</th>
+            <th>Версия</th>
+          </tr>
+          <tr
+            ng-repeat="(name, data) in scripts | filterByTags:tags"
+            ng-if="data.integrated === false || showIntegrated === true"
+            ng-click="toggle(name, $event)"
+            ng-class="{integrated: data.integrated}"
+            >
             <td>
-              <input type="checkbox" id="{{script}}" name="{{script}}" ng:model="data.enabled" class="user_set" ng:change="save('{{script}}')" />
+              <input type="checkbox"
+                id="{{name}}"
+                name="{{name}}"
+                class="user_set"
+                negate ng-model="data.disabled"
+                ng-change="onChange(name)"
+                />
+              {{name}}
             </td>
-            <td>
-              <label for="{{script}}">{{script}}</label>
-            </td>
-            <td>
-              <div>{{data.description}}</div>
-            </td>
+            <td>{{data.description}}</td>
+            <td>{{data.authors.join(', ')}}</td>
+            <td>{{data.version}}</td>
           </tr>
         </tbody>
       </table>
