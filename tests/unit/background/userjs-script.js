@@ -74,10 +74,10 @@ describe('userjs module', function () {
       var source = fixtures.userscripts.includes;
       var script = new Script({ updateUrl: 'http://klavogonki.ru', code: source });
       return script.loaded.then(function () {
-        expect(script.includes).to.be.deep.equal([
+        expect(script.includes.toString()).to.be.equal([
           /http:\/\/example\.com\/.*/,
           /https:\/\/.*\.example2\.com\/\?somePage=1/,
-        ]);
+        ].toString());
       });
     });
 
