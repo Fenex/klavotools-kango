@@ -65,6 +65,8 @@ angular.module('klavotools', ['klavotools.joke'])
     });
 })
 .controller('ScriptCtrl', function($scope) {
+    $scope.showIntegrated = false;
+
     kango.invokeAsync('KlavoTools.UserJS.getAllScripts', function(scripts) {
         $scope.scripts = scripts;
     });

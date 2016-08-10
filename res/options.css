@@ -186,6 +186,9 @@ h4 {
 #KTS_scripts table tr:nth-child(2n+3) {
   background-color: #fafafa;
 }
+#KTS_scripts table tr.integrated {
+  background-color: #e6ffd9;
+}
 #KTS_scripts table tr:not(:first-child) {
   transition: background-color 0.1s linear;
   cursor: pointer;

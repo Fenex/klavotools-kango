@@ -129,6 +129,8 @@
     </form>
     <b>Скрипты:</b>
     <form id="KTS_scripts" ng:controller="ScriptCtrl">
+      <input type="checkbox" id="showIntegrated" ng-model="showIntegrated" />
+      <label for="showIntegrated">Показывать скрипты из стандартного набора</label>
       <table>
         <tbody>
           <tr>
@@ -139,8 +141,9 @@
           </tr>
           <tr
             ng-repeat="(name, data) in scripts"
-            ng-if="data.integrated === false"
+            ng-if="data.integrated === false || showIntegrated === true"
             ng-click="toggle(name, $event)"
+            ng-class="{integrated: data.integrated}"
             >
             <td>
               <input type="checkbox"
