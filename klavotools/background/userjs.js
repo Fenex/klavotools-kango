@@ -170,6 +170,15 @@ UserJS.prototype._syncState = function () {
         for (var name in config) {
             if (!this._scripts[name]) {
                 promises.push(this._addScript(name, config[name]));
+            } else {
+                var script = this._scripts[name];
+                var data = config[name];
+                script.version = data.version;
+                script.authors = data.authors;
+                script.tags = data.tags;
+                script.description = data.description;
+                script.conflicts = data.conflicts;
+                script.integrated = data.integrated;
             }
         }
 

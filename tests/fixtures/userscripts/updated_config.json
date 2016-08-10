@@ -4,13 +4,16 @@
     "version": "0.1.1+buildinfo",
     "authors": [
       "Fenex",
-      "agile"
+      "agile",
+      "voidmain"
     ],
     "disabled": true,
     "tags": [
-      "foo"
+      "foo",
+      "new tag"
     ],
-    "description": "foo2"
+    "description": "foo2 updated",
+    "integrated": true
   },
   {
     "name": "script3",

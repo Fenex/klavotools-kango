@@ -176,6 +176,12 @@ describe('userjs module', function () {
         expect(userjs._scripts.script1).to.be.undefined;
         expect(userjs._scripts.script2).to.be.instanceof(Script);
         expect(userjs._scripts.script2.update).to.have.been.calledOnce;
+        expect(userjs._scripts.script2.version).to.be.equal(config[0].version);
+        expect(userjs._scripts.script2.authors).to.be.deep.equal(config[0].authors);
+        expect(userjs._scripts.script2.tags).to.be.deep.equal(config[0].tags);
+        expect(userjs._scripts.script2.description).to.be.equal(config[0].description);
+        expect(userjs._scripts.script2.conflicts).to.be.deep.equal(config[0].conflicts);
+        expect(userjs._scripts.script2.integrated).to.be.equal(config[0].integrated);
         expect(userjs._scripts.script3).to.be.instanceof(Script);
         expect(userjs._scripts.script3.update).to.have.not.been.called;
         expect(userjs._scripts.script4).to.be.instanceof(Script);
