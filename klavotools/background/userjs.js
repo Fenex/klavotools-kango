@@ -21,7 +21,7 @@ UserJS.prototype._fetchConfig = function () {
         contentType: 'json',
     };
     return xhr(options).then(function (config) {
-        if (!(config instanceof Array) || config.constructor !== Array) {
+        if (!Array.isArray(config)) {
             return Q.reject('Got bad userscripts configuration: ' + config.toString());
         }
         var hash = {};
@@ -136,7 +136,8 @@ UserJS.prototype._addScript = function (name, data) {
  * @private
  */
 UserJS.prototype._setState = function (data) {
-    if (!(data instanceof Object) || (data.constructor !== Object)) {
+    if (data !== Object(data)
+            || Object.prototype.toString.call(data) !== '[object Object]') {
         throw new TypeError('Wrong data for the UserJS.prototype._setState method');
     }
 
