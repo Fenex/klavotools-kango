@@ -55,6 +55,10 @@ Auth.prototype.getState = function () {
  * @param {number} [madeAttempts=0] The number of already made login attempts.
  */
 Auth.prototype.relogin = function (madeAttempts) {
+    if (this._state.id) {
+        // Force logout:
+        this.logout();
+    }
     madeAttempts = typeof madeAttempts === 'number' ? madeAttempts : 0;
     var attempts = 10;
     if (madeAttempts === attempts) {
