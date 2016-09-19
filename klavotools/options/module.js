@@ -47,6 +47,31 @@ angular.module('klavotools', ['klavotools.joke'])
         kango.invokeAsync('KlavoTools.Settings.set', settings);
     }, true);
 })
+.controller('RaceInvitations', function($scope) {
+    // TODO: remove copy-paste code from the above controller:
+    $scope.settings = [];
+    kango.invokeAsync('KlavoTools.RaceInvitations.getParams', function(data) {
+        var settings = [];
+        for (var key in data) {
+            settings.push({
+                name: key,
+                type: typeof data[key],
+                value: data[key],
+            });
+        }
+        $scope.settings = settings;
+    });
+    $scope.$watch('settings', function(newSettings, oldSettings) {
+        if (!newSettings.length || !oldSettings.length) {
+            return false;
+        }
+        var settings = {};
+        newSettings.forEach(function (setting) {
+            settings[setting.name] = setting.value;
+        });
+        kango.invokeAsync('KlavoTools.RaceInvitations.setParams', settings);
+    }, true);
+})
 .controller('StyleCtrl', function($scope) {
     kango.invokeAsync('KlavoTools.Skin.getAll', function(res) {
         $scope.skins = res;
@@ -189,6 +214,7 @@ angular.module('klavotools', ['klavotools.joke'])
     return function (input) {
         switch (input) {
             case 'useWebSockets': return 'Использовать WebSocket соединение с сайтом.';
+            case 'notifyRaceInvitations': return 'Уведомлять о приглашениях в заезд от друзей';
         }
     }
 })

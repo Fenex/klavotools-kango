@@ -5,10 +5,35 @@
  */
 function RaceInvitations () {
     this._init();
+    var defaultSettings = {
+        notifyRaceInvitations: true,
+    };
+    this._storageId = 'race_invitations_settings';
+    this._settings = kango.storage.getItem(this._storageId) || defaultSettings;
 }
 
 // Adding the teardown() and addMessageListener() methods to the prototype:
 RaceInvitations.prototype.__proto__ = MutableModule.prototype;
+
+/**
+ * Returns a hash object with module settings.
+ * @returns {Object}
+ */
+RaceInvitations.prototype.getParams = function () {
+    return this._settings;
+};
+
+/**
+ * Saves new settings to LocalStorage.
+ * @param {Object} params A hash object with changed settings
+ */
+RaceInvitations.prototype.setParams = function (params) {
+    for (var setting in params) {
+        this._settings[setting] = params[setting];
+    }
+
+    kango.storage.setItem(this._storageId, this._hash);
+};
 
 /**
  * Processes a race invitation (creates a desktop notification).
@@ -17,6 +42,10 @@ RaceInvitations.prototype.__proto__ = MutableModule.prototype;
  * @private
  */
 RaceInvitations.prototype._processInvite = function (game) {
+    if (!this._settings.notifyRaceInvitations) {
+        return false;
+    }
+
     if (!game || !game.invited_by || !game.gametype_html ||
         !game.invited_by.avatar || !game.game_id) {
         throw new TypeError('Wrong data for the _processInvite method');
