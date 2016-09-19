@@ -59,6 +59,7 @@ RaceInvitations.prototype._processInvite = function (game) {
     var notification = new Notification('Приглашение в игру', {
         body: body,
         icon: icon,
+        tag: 'raceInvite' + game.game_id,
     });
 
     notification.onclick = function () {
@@ -66,6 +67,7 @@ RaceInvitations.prototype._processInvite = function (game) {
             url: 'http://klavogonki.ru/g/?gmid=' + game.game_id,
             focused: true,
         });
+        notification.close();
     };
 };
 
