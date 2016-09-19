@@ -28,6 +28,7 @@ KlavoTools.UserJS = new UserJS;
 KlavoTools.Skin = new Skin;
 KlavoTools.ContextMenus = new ContextMenus;
 KlavoTools.Button = new Button;
+KlavoTools.RaceInvitations = new RaceInvitations;
 
 KlavoTools.tabs = {
     create: function(data) {
