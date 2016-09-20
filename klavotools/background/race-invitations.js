@@ -63,9 +63,13 @@ RaceInvitations.prototype._processInvite = function (game) {
     });
 
     notification.onclick = function () {
-        kango.browser.tabs.create({
-            url: 'http://klavogonki.ru/g/?gmid=' + game.game_id,
-            focused: true,
+        var raceUrl = 'http://klavogonki.ru/g/?gmid=' + game.game_id;
+        kango.browser.tabs.getCurrent(function (tab) {
+            if (!tab || tab.getUrl().search(/klavogonki.ru\/g\/\?gmid/) === -1) {
+                kango.browser.tabs.create({ url: raceUrl });
+            } else {
+                tab.navigate(raceUrl);
+            }
         });
         notification.close();
     };
