@@ -114,6 +114,7 @@ Competitions.prototype._createNotification = function (competition, remainingTim
         body: body,
         icon: icon,
         displayTime: displayTime > 0 ? displayTime : void 0,
+        checkUrl: new RegExp('klavogonki.ru/g/\\?gmid=' + competition.id + '$'),
     });
 
     notification.onclick = function () {

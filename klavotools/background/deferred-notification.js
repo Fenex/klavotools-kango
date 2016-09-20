@@ -1,5 +1,6 @@
 /**
  * @file DeferredNotification module.
+ * @requires kango
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  * @example <caption>Example of usage.</caption>
  * var notify = new DeferredNotification('title', {
@@ -16,9 +17,11 @@
 
 /**
  * Notification class constructor. Takes the same arguments, as the
- * window.Notification's constructor, with the addition of an optional parameter:
+ * window.Notification's constructor, with the addition of an optional parameters:
  *
- * {Number} [options.displayTime] Sets the display time for the notification in seconds
+ * @param {Number} [options.displayTime] Sets the display time for the notification in seconds
+ * @param {Object} [options.checkUrl] A RegExp object to search in the URLs of all browser tabs.
+ *  If was found, the notification won't be displayed.
  * @param {string} title
  * @param {Object} options
  * @returns {Object}
@@ -103,5 +106,15 @@ DeferredNotification.prototype.show = function (delay) {
         }
     }
 
-    this._timeout = setTimeout(_show.bind(this), delay * 1000);
+    this._timeout = setTimeout(function () {
+        kango.browser.tabs.getAll(function (tabs) {
+            var found = tabs.some(function (tab) {
+                return tab._tab && tab.getUrl().search(this.options.checkUrl) !== -1;
+            }, this);
+
+            if (!found) {
+                _show.call(this);
+            }
+        }.bind(this));
+    }.bind(this), delay * 1000);
 };
