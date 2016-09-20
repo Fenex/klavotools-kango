@@ -36,21 +36,11 @@ RaceInvitations.prototype.setParams = function (params) {
 };
 
 /**
- * Processes a race invitation (creates a desktop notification).
+ * Creates a race notification.
  * @param {Object} game A hash object with game data.
- * @throws TypeError
  * @private
  */
-RaceInvitations.prototype._processInvite = function (game) {
-    if (!this._settings.notifyRaceInvitations) {
-        return false;
-    }
-
-    if (!game || !game.invited_by || !game.gametype_html ||
-        !game.invited_by.avatar || !game.game_id) {
-        throw new TypeError('Wrong data for the _processInvite method');
-    }
-
+RaceInvitations.prototype._createNotification = function (game) {
     var icon = game.invited_by.avatar.replace('.gif', '_big.gif');
     var body = game.invited_by.login + ' приглашает вас в ' +
         (game.type === 'private' ? 'игру с друзьями' : 'игру') +
@@ -65,14 +55,45 @@ RaceInvitations.prototype._processInvite = function (game) {
     notification.onclick = function () {
         var raceUrl = 'http://klavogonki.ru/g/?gmid=' + game.game_id;
         kango.browser.tabs.getCurrent(function (tab) {
-            if (!tab || tab.getUrl().search(/klavogonki.ru\/g\/\?gmid/) === -1) {
+            // Using private _tab property check because kango .getUrl() method is awful:
+            if (!tab._tab || tab.getUrl().search(/klavogonki.ru\/g\/\?gmid/) === -1) {
                 kango.browser.tabs.create({ url: raceUrl });
             } else {
+                // We are at the race page — navigate to the new one:
                 tab.navigate(raceUrl);
             }
         });
         notification.close();
     };
+};
+
+/**
+ * Processes a race invitation.
+ * @param {Object} game A hash object with game data.
+ * @throws TypeError
+ * @private
+ */
+RaceInvitations.prototype._processInvite = function (game) {
+    if (!this._settings.notifyRaceInvitations) {
+        return false;
+    }
+
+    if (!game || !game.invited_by || !game.gametype_html ||
+        !game.invited_by.avatar || !game.game_id) {
+        throw new TypeError('Wrong data for the _processInvite method');
+    }
+
+    kango.browser.tabs.getAll(function (tabs) {
+        var re = new RegExp('klavogonki.ru/g/\\?gmid=' + game.game_id + '$');
+        // Check if there is already opened tab with this URL:
+        var found = tabs.some(function (tab) {
+            return tab._tab && tab.getUrl().search(re) !== -1
+        });
+
+        if (!found) {
+            this._createNotification(game);
+        }
+    }.bind(this));
 };
 
 /**
