@@ -151,6 +151,9 @@ h4 {
 #KTS_notifications {
   margin-left: 20px;
 }
+#KTS_notifications > table {
+  margin-bottom: 1em;
+}
 #KTS_notifications > table td {
   padding: 0 5px;
   border-right: 1px solid gray;

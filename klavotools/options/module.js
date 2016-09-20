@@ -23,28 +23,52 @@ angular.module('klavotools', ['klavotools.joke'])
         $scope.$apply();
     });
 })
-.controller('GlobalSettings', function($scope) {
-    $scope.settings = [];
-    kango.invokeAsync('KlavoTools.Settings.get', function(data) {
-        var settings = [];
-        for (var key in data) {
-            settings.push({
-                name: key,
-                type: typeof data[key],
-                value: data[key],
+.factory('settings', function ($q) {
+    return {
+        get: function (backgroundGetter) {
+            var deferred = $q.defer();
+            kango.invokeAsync(backgroundGetter, function(data) {
+                var settings = [];
+                for (var key in data) {
+                    settings.push({
+                        name: key,
+                        type: typeof data[key],
+                        value: data[key],
+                    });
+                }
+                deferred.resolve(settings);
             });
-        }
-        $scope.settings = settings;
+            return deferred.promise;
+        },
+
+        set: function (backgroundSetter, newSettings, oldSettings) {
+            if (!newSettings.length || !oldSettings.length) {
+                return false;
+            }
+            var settings = {};
+            newSettings.forEach(function (setting) {
+                settings[setting.name] = setting.value;
+            });
+            kango.invokeAsync(backgroundSetter, settings);
+        },
+    }
+})
+.controller('GlobalSettings', function($scope, settings) {
+    $scope.settings = [];
+    settings.get('KlavoTools.Settings.get').then(function (data) {
+        $scope.settings = data;
     });
     $scope.$watch('settings', function(newSettings, oldSettings) {
-        if (!newSettings.length || !oldSettings.length) {
-            return false;
-        }
-        var settings = {};
-        newSettings.forEach(function (setting) {
-            settings[setting.name] = setting.value;
-        });
-        kango.invokeAsync('KlavoTools.Settings.set', settings);
+        settings.set('KlavoTools.Settings.set', newSettings, oldSettings);
+    }, true);
+})
+.controller('RaceInvitations', function($scope, settings) {
+    $scope.settings = [];
+    settings.get('KlavoTools.RaceInvitations.getParams').then(function (data) {
+        $scope.settings = data;
+    });
+    $scope.$watch('settings', function(newSettings, oldSettings) {
+        settings.set('KlavoTools.RaceInvitations.setParams', newSettings, oldSettings);
     }, true);
 })
 .controller('StyleCtrl', function($scope) {
@@ -189,6 +213,7 @@ angular.module('klavotools', ['klavotools.joke'])
     return function (input) {
         switch (input) {
             case 'useWebSockets': return 'Использовать WebSocket соединение с сайтом.';
+            case 'notifyRaceInvitations': return 'Уведомлять о приглашениях в заезд от друзей';
         }
     }
 })

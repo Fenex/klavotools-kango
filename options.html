@@ -126,6 +126,14 @@
           </td>
         </tr>
       </table>
+      <div id="KTS_raceInvitations" ng:controller="RaceInvitations">
+        <div ng:repeat="setting in settings">
+          <div ng-if="setting.type === 'boolean'">
+            <input type="checkbox" ng-model="setting.value" name="{{setting.name}}" id="KTS_settings_checkbox_{{setting.name}}"/>
+            <label for="KTS_settings_checkbox_{{setting.name}}">{{setting.name | settingDescription}}</label>
+          </div>
+        </div>
+      </div>
     </form>
     <b>Скрипты:</b>
     <form id="KTS_scripts" ng:controller="ScriptCtrl">
