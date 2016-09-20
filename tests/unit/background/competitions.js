@@ -149,6 +149,7 @@ describe('competitions module', function () {
           // TODO: set the stub for the kango.io.getResourceUrl
           icon: undefined,
           displayTime: undefined,
+          checkUrl: new RegExp('klavogonki.ru/g/\\?gmid=1337$'),
         });
       // Default delay is set to 1 minute:
       expect(DeferredNotification.prototype.show)
@@ -170,6 +171,7 @@ describe('competitions module', function () {
           icon: undefined,
           // displayTime == delay:
           displayTime: 60,
+          checkUrl: new RegExp('klavogonki.ru/g/\\?gmid=1337$'),
         });
       // Check the case with a huge delay:
       kango.storage.getItem.withArgs('competition_delay').returns(500);
