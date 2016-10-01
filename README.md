@@ -12,13 +12,13 @@ klavotools-kango
 
 1. Установить Python 2.7 (http://www.python.org/download/).
 2. Установить модуль [doit](https://pypi.python.org/pypi/doit):
-```
-pip install doit
-```
+    ```
+    pip install doit
+    ```
 3. Выполнить в корневой директории проекта команду:
-```
-doit
-```
+    ```
+    doit
+    ```
 
 Если все пройдет успешно, то появится директория `build` с готовыми к установке архивами расширений.
 
