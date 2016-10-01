@@ -3,26 +3,24 @@ klavotools-kango
 
 [![Build Status](https://api.travis-ci.org/Fenex/klavotools-kango.svg?branch=master)](https://travis-ci.org/Fenex/klavotools-kango)
 
-Кроссбраузерное расширение для сайта Клавогонки.ру
+Кроссбраузерное расширение для сайта [www.klavogonki.ru](http://www.klavogonki.ru)
 
 Сборка проекта
 -------------------
 
-###Инструкция
-1. Устанавливаем Python 2.7 (http://www.python.org/download/).
-2. Создаём где-нибудь папку `kango`, в ней папки `framework` и `klavotools`.
-3. Загружаем [отсюда](http://kangoextensions.com/kango/kango-1.7.3-public.zip) архив и распаковываем его в созданную папку `framework`. В папке `framework` должен находиться файл `kango.py`.
-4. Открываем шелл, переходим в созданную на шаге 2 папку `klavotools`.
-5. Создаём проект: `call "../framework/kango.py" create`. Называем его `klavotools`. Если всё прошло успешно, в папке `klavotools` должны быть две папки: `src` и `certificates`.
-6. Клонируем репозиторий `klavotools-kango` в директорию: `%kangodir%/klavotools/src/common/`.
-7. Создаём пакетный файл `build.cmd` в директории `%kangodir%/klavotools/` со содержимым, описанным разделом ниже.
-8. Запускаем файл `build.cmd`. Если всё пройдёт успешно, то появится директория `output`, в ней готовые к установке архивы расширений.
+Для сборки необходимо:
 
-###build.cmd
+1. Установить Python 2.7 (http://www.python.org/download/).
+2. Установить модуль [doit](https://pypi.python.org/pypi/doit):
+```
+pip install doit
+```
+3. Выполнить в корневой директории проекта команду:
+```
+doit
+```
 
-    @echo off
-    set kts=%~d0%~p0
-    call "%kts%\..\framework\kango.py" build .\
+Если все пройдет успешно, то появится директория `build` с готовыми к установке архивами расширений.
 
 Userstyles
 ----------
