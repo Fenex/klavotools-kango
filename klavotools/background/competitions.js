@@ -1,6 +1,8 @@
 /**
  * @file Competitions Module. The module checks for new open competitions and shows
  *  notifications to user.
+ * @requires DeferredNotification
+ * @requires Q
  * @author Vitaliy Busko
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
@@ -114,7 +116,6 @@ Competitions.prototype._createNotification = function (competition, remainingTim
         body: body,
         icon: icon,
         displayTime: displayTime > 0 ? displayTime : void 0,
-        checkUrl: new RegExp('klavogonki.ru/g/\\?gmid=' + competition.id + '$'),
     });
 
     notification.onclick = function () {
@@ -123,6 +124,18 @@ Competitions.prototype._createNotification = function (competition, remainingTim
             focused: true,
         });
         notification.revoke();
+    };
+
+    notification.before = function () {
+        var deferred = Q.defer();
+        var re = new RegExp('klavogonki.ru/g/\\?gmid=' + competition.id + '$');
+        kango.browser.tabs.getAll(function (tabs) {
+            var found = tabs.some(function (tab) {
+                return tab._tab && tab.getUrl().search(re) !== -1;
+            });
+            Q.resolve(!found);
+        });
+        return deferred.promise;
     };
 
     notification.show(showDelay);
