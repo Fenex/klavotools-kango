@@ -5,6 +5,7 @@ from tempfile import mkstemp, mkdtemp
 from subprocess import Popen, PIPE
 from shutil import rmtree, copytree, move, ignore_patterns
 from os import path, close, remove, listdir, makedirs
+import sass
 
 KANGO_ARCHIVE_URL = 'http://kangoextensions.com/kango/kango-framework-latest.zip'
 KANGO_DIR = 'kango'
@@ -15,6 +16,7 @@ BUILD_IGNORE = (
     '.*',
     '*.py',
     '*.pyc',
+    '*.scss',
     'kango',
     'build',
     'package.json',
@@ -36,7 +38,10 @@ def bootstrapProject(kango, bootstrapDir):
     pipe = Popen(['python', kango, 'create'], stdout=PIPE, stdin=PIPE, cwd=bootstrapDir)
     pipe.communicate('TemporaryProject\0')
 
-def buildProject(kango, targetDir, outputDir):
+def compileSass(srcDir, destDir):
+    sass.compile(dirname=(srcDir, destDir), output_style='compressed')
+
+def buildProject(kango, targetDir):
     pipe = Popen(['python', kango, 'build', '.'], cwd=targetDir)
     pipe.communicate(None)
 
@@ -76,7 +81,8 @@ def task_buildExtension():
         'actions': [(removeDirectory, [tempDir]),
                     (copyFiles, [BOOTSTRAP_DIR, tempDir]),
                     (removeDirectory, [targetDir]),
-                    (copyFiles, ['.', targetDir, BUILD_IGNORE])],
+                    (copyFiles, ['.', targetDir, BUILD_IGNORE]),
+                    (compileSass, ['.', targetDir])],
         'task_dep': ['buildExtension:bootstrap'],
     }
     yield {
