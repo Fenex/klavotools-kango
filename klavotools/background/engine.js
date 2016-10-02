@@ -7,9 +7,9 @@
 var KlavoTools = {
     const: {
         BUTTON_BADGE_COLOR: [255, 0, 0, 255],
-        ICON_DEFAULT: 'icons/digits.png',
-        ICON_AUTH: 'icons/normal.png',
-        ICON_UNREAD: 'icons/dic.png',
+        ICON_DEFAULT: 'icons/button_default.png',
+        ICON_AUTH: 'icons/button_auth.png',
+        ICON_UNREAD: 'icons/button_unread.png',
         WS_BASE_URL: 'ws://klavogonki.ru/ws',
         WS_HEARTBEAT_TIMEOUT: 40,
         GAMELIST_DATA_URL: 'http://klavogonki.ru/gamelist.data?KTS_REQUEST',

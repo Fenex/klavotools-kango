@@ -32,7 +32,7 @@
     "version": "3.3.9",
     "browser_button": {
         "caption": "KlavoTools",
-        "icon": "icons/button.png",
+        "icon": "icons/button_default.png",
         "tooltipText": "KlavoTools",
         "popup": {
             "url": "popup.html",
