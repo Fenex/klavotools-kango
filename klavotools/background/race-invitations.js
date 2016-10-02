@@ -44,7 +44,9 @@ RaceInvitations.prototype._createNotification = function (game) {
     var icon = game.invited_by.avatar.replace('.gif', '_big.gif');
     var body = game.invited_by.login + ' приглашает вас в ' +
         (game.type === 'private' ? 'игру с друзьями' : 'игру') +
-        ' ' + game.gametype_html.replace(/<(?:.|\n)*?>/gm, '');
+        ' ' + game.gametype_html.replace(/<(?:.|\n)*?>/gm, '')
+                .replace(/&laquo;/g, '«')
+                .replace(/&raquo;/g, '»');
 
     var notification = new Notification('Приглашение в игру', {
         body: body,
