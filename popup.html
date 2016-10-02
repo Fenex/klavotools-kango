@@ -68,7 +68,7 @@
       <div>
         <a class="login" ng:path ng:path:str="/u/#/{{message.respondent_id}}/" ng:bind="Mail.data.users[message.respondent_id].login"></a>
         <span class="date" ng:bind="message.date.sec * 1000 | date"></span>
-        <a class="read" href="#" ng:path ng:path:str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">Диалог >></a>
+        <a class="read" ng:path ng:path:str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">Диалог >></a>
       </div>
       <div class="text" ng:bind="message.text"></div>
     </div>

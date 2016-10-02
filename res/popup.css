@@ -155,6 +155,7 @@ form {
 .mail .read {
   font-size: 10px;
   margin-left: 10px;
+  cursor: pointer;
 }
 .mail .read:hover,
 .mail .login:hover {
