@@ -87,7 +87,7 @@ def task_buildExtension():
     }
     yield {
         'name': 'build',
-        'actions': [(buildProject, [KANGO_BIN, tempDir, outputDir])],
+        'actions': [(buildProject, [KANGO_BIN, tempDir])],
         'task_dep': ['buildExtension:prepare'],
     }
     yield {
