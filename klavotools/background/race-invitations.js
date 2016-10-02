@@ -32,7 +32,7 @@ RaceInvitations.prototype.setParams = function (params) {
         this._settings[setting] = params[setting];
     }
 
-    kango.storage.setItem(this._storageId, this._hash);
+    kango.storage.setItem(this._storageId, this._settings);
 };
 
 /**
