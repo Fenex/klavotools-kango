@@ -10,6 +10,7 @@ KANGO_ARCHIVE_URL = 'http://kangoextensions.com/kango/kango-framework-latest.zip
 KANGO_DIR = 'kango'
 KANGO_BIN = path.abspath(path.join(KANGO_DIR, 'kango.py'))
 BUILD_DIR = 'build'
+BOOTSTRAP_DIR = path.abspath(path.join(BUILD_DIR, 'bootstrap'))
 BUILD_IGNORE = (
     '.*',
     '*.py',
@@ -30,24 +31,26 @@ def installKango(url, targetDir):
     close(handle)
     remove(tempName)
 
-def bootstrapProject(kango, buildDir):
-    pipe = Popen(['python', kango, 'create'], stdout=PIPE, stdin=PIPE, cwd=buildDir)
+def bootstrapProject(kango, bootstrapDir):
+    createDirIfNotExists(bootstrapDir)
+    pipe = Popen(['python', kango, 'create'], stdout=PIPE, stdin=PIPE, cwd=bootstrapDir)
     pipe.communicate('TemporaryProject\0')
-
-def prepareProjectFiles(targetDir, ignore=()):
-    """Replaces targetDir directory contents with project files for building"""
-    removeDirectory(targetDir) # Clean the existing target directory first
-    copytree('.', targetDir, ignore=ignore_patterns(*ignore))
 
 def buildProject(kango, targetDir, outputDir):
     pipe = Popen(['python', kango, 'build', '.'], cwd=targetDir)
     pipe.communicate(None)
 
+def createDirIfNotExists(targetDir):
+    if not path.exists(targetDir):
+        makedirs(targetDir)
+
+def copyFiles(srcDir, destDir, ignore=()):
+    copytree(srcDir, destDir, ignore=ignore_patterns(*ignore))
+
 def moveFiles(srcDir, destDir):
     """Moves files from srcDir to destDir. Replaces existing files"""
     files = listdir(srcDir)
-    if not path.exists(destDir):
-        makedirs(destDir)
+    createDirIfNotExists(destDir)
     for fileName in files:
         pathName = path.join(srcDir, fileName)
         if path.isfile(pathName):
@@ -63,12 +66,17 @@ def task_buildExtension():
     outputDir = path.join(tempDir, 'output')
     yield {
         'name': 'bootstrap',
-        'actions': [(bootstrapProject, [KANGO_BIN, tempDir])],
+        'actions': [(bootstrapProject, [KANGO_BIN, BOOTSTRAP_DIR])],
         'task_dep': ['installKangoFramework'],
+        'targets': [path.join(BOOTSTRAP_DIR, 'src', 'common', 'extension_info.json')],
+        'uptodate': [run_once],
     }
     yield {
         'name': 'prepare',
-        'actions': [(prepareProjectFiles, [targetDir, BUILD_IGNORE])],
+        'actions': [(removeDirectory, [tempDir]),
+                    (copyFiles, [BOOTSTRAP_DIR, tempDir]),
+                    (removeDirectory, [targetDir]),
+                    (copyFiles, ['.', targetDir, BUILD_IGNORE])],
         'task_dep': ['buildExtension:bootstrap'],
     }
     yield {
