@@ -101,7 +101,7 @@ angular.module('popup', [
     }
 })
 
-.controller('popup:SearchUser', function($scope, $http) {
+.controller('popup:SearchUser', function ($scope, $http, $q) {
     var ctrl = this;
 
     ctrl.login = '';
@@ -111,10 +111,44 @@ angular.module('popup', [
     ctrl.search = function() {
         ctrl.loading = true;
         ctrl.id = 0;
+        ctrl.actualLogin = '';
+        ctrl.totalRacesCount = '';
+        ctrl.friendsCount = '';
+        ctrl.recordDefault = '';
+        ctrl.blocked = false;
+
+        function getSummary (userId) {
+            return $http.get('http://klavogonki.ru/api/profile/get-summary', {
+                params: { id: userId },
+            });
+        }
+
+        function getIndexData (userId) {
+            return $http.get('http://klavogonki.ru/api/profile/get-index-data', {
+                params: { userId: userId },
+            });
+        }
 
         $http.post('http://klavogonki.ru/.fetchuser?KTS_REQUEST', {login: ctrl.login})
-        .then(function(res) {
+        .then(function (res) {
             ctrl.id = res.data.id;
+            return $q.all([getSummary(ctrl.id), getIndexData(ctrl.id)]);
+        })
+        .then(function (res) {
+            // TODO: write decorator $q.spread?
+            var summary = res[0];
+            var index = res[1];
+            ctrl.actualLogin = summary.data.user.login;
+            ctrl.rank = summary.data.level;
+            ctrl.blocked = summary.data.blocked;
+            ctrl.achievementsCount = index.data.stats.achieves_cnt;
+            ctrl.totalRacesCount = index.data.stats.total_num_races;
+            ctrl.friendsCount = index.data.stats.friends_cnt;
+            ctrl.recordDefault = index.data.stats.best_speed;
+            ctrl.loading = false;
+        })
+        .catch(function (err) {
+            console.error(err);
             ctrl.loading = false;
         });
     };

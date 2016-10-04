@@ -22,22 +22,25 @@
         <span ng-if="SearchUser.loading">Поиск...</span>
     </button>
 
-    <span ng:if="SearchUser.id===false">не найден</span>
-    <span ng:if="SearchUser.id!=0" class="get-id-links">
-      ID: {{SearchUser.id}} |
-      <a title="Профиль">
-        <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/" src="icons/profile.png" />
-      </a>
-      <a title="Статистика">
-        <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/stats/" src="icons/sprint.png" />
-      </a>
-      <a title="Бортжурнал">
-        <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/journal/" src="icons/usefuladdons.png" />
-      </a>
-      <!--
-        TODO: add links to achievements and friends.
-      -->
-    </span>
+    <div ng-if="SearchUser.id===false" class="user-data">Игрок не найден.</div>
+    <div ng-if="SearchUser.id!=0" class="user-data">
+      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/"
+        ng-class="'rank' + SearchUser.rank" title="Профиль">
+          <span ng-class="{'blocked': SearchUser.blocked}">{{SearchUser.actualLogin}}</span></a>
+      <span class="hash">{{SearchUser.id}}</span>
+      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/stats/" title="Статистика">
+        <img src="icons/context_statistics.png" /><span
+          title="Рекорд в Обычном">{{SearchUser.recordDefault}}</span></a>
+      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/journal/" title="Бортжурнал">
+        <img src="icons/context_logbook.png" /><span
+          title="Общее число заездов">{{SearchUser.totalRacesCount}}</span></a>
+      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/achievements/" title="Достижения">
+        <img src="icons/context_achievements.png" /><span
+          title="Число полученных достижений">{{SearchUser.achievementsCount}}</span></a>
+      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/friends/" title="Друзья">
+        <img src="icons/context_friends.png" /><span
+          title="Число друзей">{{SearchUser.friendsCount}}</span></a>
+    </div>
   </form>
 
   <!-- Mail -->

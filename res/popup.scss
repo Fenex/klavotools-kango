@@ -101,4 +101,32 @@ html, body {
       background-color: darken($kts-light-gray, 15%);
     }
   }
+  .user-data {
+    padding: $popup-base-indent;
+    > a {
+      cursor: pointer;
+      @extend %rank-label;
+
+      > img {
+        vertical-align: text-bottom;
+        margin-right: 2px;
+      }
+      > span {
+        text-decoration: underline;
+        &.blocked {
+          text-decoration: underline line-through;
+        }
+      }
+      &:hover > img {
+        -webkit-filter: contrast(25%);
+        filter: contrast(25%);
+      }
+      &:hover > img + span {
+        color: $kts-dark-gray;
+      }
+    }
+    .hash:before {
+      content: "#";
+    }
+  }
 }

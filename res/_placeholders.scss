@@ -4,8 +4,11 @@
 /// @author Daniil Filippov <filippovdaniil@gmail.com>
 ////
 
+@import "colors";
+
 /// A placeholder for adding dotted bottom border to text labels.
 /// Should be replaced with text-decoration-style in the future.
+/// @group helpers
 %dotted-underline {
   position: relative;
 
@@ -17,5 +20,17 @@
     height: 0;
     border-bottom: 1px dotted;
     content: "";
+  }
+}
+
+/// A placeholder for creating rank-colored text labels.
+/// @group helpers
+%rank-label {
+  $i: 1;
+  @each $color in $kts-rank-colors {
+    &.rank#{$i} {
+      color: $color;
+      $i: $i + 1;
+    }
   }
 }
