@@ -103,9 +103,8 @@ html, body {
   }
   .user-data {
     padding: $popup-base-indent;
-    > a {
+    a {
       cursor: pointer;
-      @extend %rank-label;
 
       > img {
         vertical-align: text-bottom;
@@ -117,11 +116,16 @@ html, body {
           text-decoration: underline line-through;
         }
       }
+    }
+    > a {
+      @extend %rank-label;
+    }
+    .user-links > a {
       &:hover > img {
         -webkit-filter: contrast(25%);
         filter: contrast(25%);
       }
-      &:hover > img + span {
+      &:hover {
         color: $kts-dark-gray;
       }
     }

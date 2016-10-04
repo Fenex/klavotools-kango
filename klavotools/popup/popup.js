@@ -115,6 +115,7 @@ angular.module('popup', [
         ctrl.totalRacesCount = '';
         ctrl.friendsCount = '';
         ctrl.recordDefault = '';
+        ctrl.avatar = null;
         ctrl.blocked = false;
 
         function getSummary (userId) {
@@ -139,6 +140,7 @@ angular.module('popup', [
             var summary = res[0];
             var index = res[1];
             ctrl.actualLogin = summary.data.user.login;
+            ctrl.avatar = summary.data.user.avatar;
             ctrl.rank = summary.data.level;
             ctrl.blocked = summary.data.blocked;
             ctrl.achievementsCount = index.data.stats.achieves_cnt;

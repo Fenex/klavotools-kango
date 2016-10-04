@@ -26,20 +26,26 @@
     <div ng-if="SearchUser.id!=0" class="user-data">
       <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/"
         ng-class="'rank' + SearchUser.rank" title="Профиль">
-          <span ng-class="{'blocked': SearchUser.blocked}">{{SearchUser.actualLogin}}</span></a>
+        <img ng-if="!!SearchUser.actualLogin && SearchUser.avatar === null"
+          src="http://klavogonki.ru/img/avatar_dummy_16.png" alt=""
+        /><img ng-if="SearchUser.avatar !== null"
+          ng-src="http://img.klavogonki.ru/avatars/{{SearchUser.id}}.gif" alt=""
+        /><span ng-class="{'blocked': SearchUser.blocked}">{{SearchUser.actualLogin}}</span></a>
       <span class="hash">{{SearchUser.id}}</span>
-      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/stats/" title="Статистика">
-        <img src="icons/context_statistics.png" /><span
-          title="Рекорд в Обычном">{{SearchUser.recordDefault}}</span></a>
-      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/journal/" title="Бортжурнал">
-        <img src="icons/context_logbook.png" /><span
-          title="Общее число заездов">{{SearchUser.totalRacesCount}}</span></a>
-      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/achievements/" title="Достижения">
-        <img src="icons/context_achievements.png" /><span
-          title="Число полученных достижений">{{SearchUser.achievementsCount}}</span></a>
-      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/friends/" title="Друзья">
-        <img src="icons/context_friends.png" /><span
-          title="Число друзей">{{SearchUser.friendsCount}}</span></a>
+      <span class="user-links">
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/stats/" title="Статистика">
+          <img src="icons/context_statistics.png"
+          /><span title="Рекорд в Обычном">{{SearchUser.recordDefault}}</span></a>
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/journal/" title="Бортжурнал">
+          <img src="icons/context_logbook.png"
+          /><span title="Общее число заездов">{{SearchUser.totalRacesCount}}</span></a>
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/achievements/" title="Достижения">
+          <img src="icons/context_achievements.png"
+          /><span title="Число полученных достижений">{{SearchUser.achievementsCount}}</span></a>
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/friends/" title="Друзья">
+          <img src="icons/context_friends.png"
+          /><span title="Число друзей">{{SearchUser.friendsCount}}</span></a>
+      </span>
     </div>
   </form>
 
