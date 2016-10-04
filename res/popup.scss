@@ -1,0 +1,87 @@
+////
+/// Styles for the extension popup.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "settings";
+@import "colors";
+@import "reset";
+
+html, body {
+  width: $popup-width;
+  min-height: $popup-min-height;
+  font-family: $font-family;
+  font-size: $font-size;
+}
+
+#menu {
+  > ul > li {
+    display: inline-block;
+    position: relative;
+  }
+  > ul > li > ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    background: #fff;
+    white-space: nowrap;
+    z-index: 1;
+    box-shadow: 1px 3px 3px rgba($kts-dark-gray, 0.3);
+  }
+  > ul > li:hover > ul {
+    display: block;
+  }
+  a {
+    display: block;
+    padding: $popup-base-indent;
+    cursor: pointer;
+    text-decoration: underline;
+    background-color: #fff;
+    transition: $transition-background-color;
+  }
+  a:hover, > ul > li:hover > a {
+    background-color: $kts-light-gray;
+  }
+  li.icon > a {
+    $padding-icon: ($popup-base-indent * 2 + $font-size - 16px) / 2;
+    padding: $padding-icon $popup-base-indent;
+
+    > img {
+      vertical-align: text-bottom;
+      &:not(:only-child) {
+        margin-right: 1ch;
+      }
+    }
+  }
+}
+
+.search-user {
+  > input, button {
+    padding: $popup-base-indent;
+    border: 1px solid $kts-medium-gray;
+    border-radius: 0;
+  }
+  > input:focus, > button:focus {
+    border-color: darken($kts-medium-gray, 10%);
+  }
+  > input:focus + button {
+    border-left-color: darken($kts-medium-gray, 10%);
+  }
+  > input {
+    width: 80%;
+    border-width: 1px 0 1px 1px;
+  }
+  > button {
+    width: 20%;
+    background-color: $kts-light-gray;
+    transition: $transition-background-color;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($kts-light-gray, 10%);
+    }
+    &:active {
+      background-color: darken($kts-light-gray, 15%);
+    }
+  }
+}

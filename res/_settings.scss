@@ -1,0 +1,30 @@
+////
+/// Global variables.
+/// @access public
+/// @group global
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+/// Extension popup width.
+/// @type Length
+$popup-width: 425px;
+
+/// Extension popup min-height.
+/// @type Length
+$popup-min-height: 300px;
+
+/// Base indent for elements in the extension popup.
+/// @type Length
+$popup-base-indent: 7px;
+
+/// font-family property value for extension pages.
+/// @type List
+$font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+/// font-size property value for extension pages
+/// @type Length
+$font-size: 14px;
+
+/// transition property value for GUI elements backgrounds.
+/// @type List
+$transition-background-color: background-color 0.1s linear;

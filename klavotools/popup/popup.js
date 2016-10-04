@@ -4,9 +4,10 @@ angular.module('popup', [
     'popup.fl-editor',
     'fnx.kango-q'
 ])
-.config(function($httpProvider) {
+.config(function($httpProvider, $compileProvider) {
     // Use x-www-form-urlencoded Content-Type
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|chrome|chrome-extension):/);
 
     /**
      * The workhorse; converts an object to x-www-form-urlencoded serialization.
@@ -78,20 +79,20 @@ angular.module('popup', [
     }
 })
 
-.directive('uiCssMenu', function() {
+.directive('mainMenu', function() {
     return {
         restrict: 'A',
-        templateUrl: 'uiCssMenu_Template',
+        templateUrl: 'mainMenuTemplate',
         replace: false,
         controller: function($scope, MenuTree) {
             $scope.menu = MenuTree;
-            
+
             $scope.openEditor = function() {
                 $scope.$broadcast('open-editor');
             };
-            
+
             $scope.$on('save-links', loadFL);
-            
+
             function loadFL() {
                 $scope.links = kango.storage.getItem('fast-links') || [];
             }
@@ -102,15 +103,15 @@ angular.module('popup', [
 
 .controller('popup:SearchUser', function($scope, $http) {
     var ctrl = this;
-    
+
     ctrl.login = '';
     ctrl.id = 0;
     ctrl.loading = false;
-    
+
     ctrl.search = function() {
         ctrl.loading = true;
         ctrl.id = 0;
-        
+
         $http.post('http://klavogonki.ru/.fetchuser?KTS_REQUEST', {login: ctrl.login})
         .then(function(res) {
             ctrl.id = res.data.id;
@@ -121,9 +122,9 @@ angular.module('popup', [
 
 .controller('popup:Mail', function($http) {
     var ctrl = this;
-    
+
     ctrl.data = {};
-    
+
     $http.get('http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
     .then(function(res) {
         if(res.status == 200)
@@ -132,5 +133,11 @@ angular.module('popup', [
 });
 
 KangoAPI.onReady(function() {
+    function resize () {
+        KangoAPI.resizeWindow(document.documentElement.scrollWidth, document.documentElement.scrollHeight)
+    }
+    // Fix for the FireFox:
+    resize();
+    window.addEventListener('overflow', resize, false);
     angular.bootstrap(document.body, ['popup']);
 });

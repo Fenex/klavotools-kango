@@ -2,39 +2,25 @@
 <head>
   <title>KlavoTools - Popup</title>
   <link href="res/popup.css" type="text/css" rel="stylesheet" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <script src="kango-ui/kango_api.js"></script>
-  <script src="klavotools/foreground/lib/angular.min.js"></script>
-  <script src="klavotools/foreground/lib/kango-q.js"></script>
-  <script src="klavotools/popup/popup.js"></script>
-  <script src="klavotools/popup/popup.menutree.js"></script>
-  <script src="klavotools/popup/popup.redirect.js"></script>
-  <script src="klavotools/popup/popup.fl-editor.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
 </head>
-<body style="height:130px;width: 520px;">
-  <div id="cssmenu" ui:css:menu>
-    Menu loading...
-  </div>
+<body>
+  <nav id="menu" main-menu>Menu loading...</nav>
 
-  <!-- Search user form -->
-  <form
-    class="userline"
-    ng:controller="popup:SearchUser as SearchUser"
-    ng:submit="SearchUser.search()">
-
-    <img ng:if="SearchUser.loading" src="http://klavogonki.ru/img/small_loading.gif" />
-    <img ng:if="SearchUser.id!==0" src="http://klavogonki.ru/img/ok.gif" />
-
-    <input
+  <!-- User search form -->
+  <form class="search-user" ng-controller="popup:SearchUser as SearchUser">
+    <input autofocus
       type="text"
       tabindex="1"
-      ng:model="SearchUser.login" />
-
-    <input
-      type="button"
-      value="→"
-      tabindex="2"
-      ng:click="SearchUser.search()" />
+      ng-model="SearchUser.login"
+      placeholder="Поиск игрока по нику" /><button tabindex="2"
+        ng-click="SearchUser.search()"
+      ng-disabled="SearchUser.loading"
+      ng-class="{'loading': SearchUser.loading}">
+        <span ng-if="!SearchUser.loading">Найти</span>
+        <span ng-if="SearchUser.loading">Поиск...</span>
+    </button>
 
     <span ng:if="SearchUser.id===false">не найден</span>
     <span ng:if="SearchUser.id!=0" class="get-id-links">
@@ -100,31 +86,38 @@
     </table>
   </div>
 
-  <script type="text/ng-template" id="uiCssMenu_Template">
+  <script type="text/ng-template" id="mainMenuTemplate">
     <ul>
-      <li ng:repeat="m in menu" ng:class="{'has-sub': m.sub}" ng:hide="m.hidden">
-        <a ng:style="{color: m.color}" ng:path="m.path">{{m.title}}</a>
+      <li ng-repeat="m in menu">
+        <a ng-path="m.path">{{m.title}}</a>
         <ul>
-          <li ng:repeat="sub in m.sub">
-            <a ng:path="sub.path">{{sub.title}}</a>
+          <li ng-repeat="sub in m.sub" ng-class="{'icon': sub.icon}">
+            <a ng-path="sub.path"><img ng-if="!!sub.icon" ng-src="{{sub.icon}}" alt=""><span>{{sub.title}}</span></a>
           </li>
         </ul>
-      </li>
-      <li class="has-sub">
+      </li><li>
         <a>Ссылки</a>
         <ul>
           <li>
-            <a ng:click="openEditor()"><i>{{links.length ? "Изменить" : "Добавить"}}</i></a>
+            <a ng-click="openEditor()"><i>{{links.length ? "Изменить" : "Добавить"}}</i></a>
           </li>
-          <li ng:repeat="fl in links">
-            <a ng:path="fl.url">{{fl.title}}</a>
+          <li ng-repeat="fl in links">
+            <a ng-path="fl.url">{{fl.title}}</a>
           </li>
         </ul>
-      </li>
-      <li>
-        <a style="color:green;" ng:path ng:path:str="__EXTENSION_OPTIONS__">Настройки</a>
+      </li><li class="icon">
+        <a ng-path ng-path-str="__EXTENSION_OPTIONS__" title="Настройки KlavoTools">
+          <img src="icons/button.png" alt="">
+        </a>
       </li>
     </ul>
   </script>
+  <script src="kango-ui/kango_api.js"></script>
+  <script src="klavotools/foreground/lib/angular.min.js"></script>
+  <script src="klavotools/foreground/lib/kango-q.js"></script>
+  <script src="klavotools/popup/popup.js"></script>
+  <script src="klavotools/popup/popup.menutree.js"></script>
+  <script src="klavotools/popup/popup.redirect.js"></script>
+  <script src="klavotools/popup/popup.fl-editor.js"></script>
 </body>
 </html>

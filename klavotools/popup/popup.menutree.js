@@ -7,35 +7,43 @@ angular.module('popup.menutree', [])
             sub: [
                 {
                     title: 'Сводка',
-                    path: '/u/'
+                    path: '/u/',
+                    icon: 'icons/context_summary.png',
                 },
                 {
                     title: 'Статистика',
-                    path: '/u/#/__USERID__/stats/'
+                    path: '/u/#/__USERID__/stats/',
+                    icon: 'icons/context_statistics.png',
+                },
+                {
+                    title: 'Лента друзей',
+                    path: '/u/#/__USERID__/friends/feed/',
+                    icon: 'icons/context_friends.png',
+                },
+                {
+                    title: 'Бортжурнал',
+                    path: '/u/#/__USERID__/journal/',
+                    icon: 'icons/context_logbook.png',
+                },
+                {
+                    title: 'Сообщения',
+                    path: '/u/#/__USERID__/messages/contacts/',
+                    icon: 'icons/context_messages.png',
                 },
                 {
                     title: 'Достижения',
                     path: '/u/#/__USERID__/achievements/',
+                    icon: 'icons/context_achievements.png',
                 },
                 {
                     title: 'Гараж',
-                    path: '/u/#/__USERID__/car/'
-                },
-                {
-                    title: 'Бортжурнал',
-                    path: '/u/#/__USERID__/journal/'
-                },
-                {
-                    title: 'Лента друзей',
-                    path: '/u/#/__USERID__/friends/feed/'
-                },
-                {
-                    title: 'Почта',
-                    path: '/u/#/__USERID__/messages/contacts/'
+                    path: '/u/#/__USERID__/car/',
+                    icon: 'icons/context_garage.png',
                 },
                 {
                     title: 'Настройки',
-                    path: '/u/#/__USERID__/prefs/'
+                    path: '/u/#/__USERID__/prefs/',
+                    icon: 'icons/context_settings.png',
                 }
             ]
         },
@@ -139,17 +147,5 @@ angular.module('popup.menutree', [])
                 },
             ]
         },
-        {
-            title: 'Настройки',
-            path: '__EXTENSION_OPTIONS__',
-            color: 'green',
-            hidden: true
-        },
-        {
-            title: 'F1',
-            path: '__EXTENSION__KG/help.html',
-            color: 'green',
-            hidden: true
-        }
     ];
 })
