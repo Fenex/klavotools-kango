@@ -6,6 +6,7 @@
 @import "settings";
 @import "colors";
 @import "reset";
+@import "placeholders";
 
 html, body {
   width: $popup-width;
@@ -15,32 +16,48 @@ html, body {
 }
 
 #menu {
-  > ul > li {
-    display: inline-block;
-    position: relative;
-  }
-  > ul > li > ul {
-    display: none;
-    position: absolute;
-    top: 100%;
-    background: #fff;
-    white-space: nowrap;
-    z-index: 1;
-    box-shadow: 1px 3px 3px rgba($kts-dark-gray, 0.3);
-  }
-  > ul > li:hover > ul {
-    display: block;
+  > ul {
+    > li {
+      display: inline-block;
+      position: relative;
+    }
+    > li > ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      background: #fff;
+      white-space: nowrap;
+      z-index: 1;
+      box-shadow: 1px 3px 3px rgba($kts-dark-gray, 0.3);
+    }
+    > li:hover > ul {
+      display: block;
+    }
+    > li.drop-left:hover > ul {
+      right: 0;
+    }
   }
   a {
     display: block;
     padding: $popup-base-indent;
     cursor: pointer;
-    text-decoration: underline;
     background-color: #fff;
     transition: $transition-background-color;
   }
   a:hover, > ul > li:hover > a {
     background-color: $kts-light-gray;
+  }
+  a {
+    text-decoration: underline;
+  }
+  a.internal {
+    text-decoration: none;
+    > span {
+      @extend %dotted-underline;
+    }
+  }
+  li > span {
+    border-bottom: 1px dotted inherit;
   }
   li.icon > a {
     $padding-icon: ($popup-base-indent * 2 + $font-size - 16px) / 2;

@@ -95,12 +95,9 @@
             <a ng-path="sub.path"><img ng-if="!!sub.icon" ng-src="{{sub.icon}}" alt=""><span>{{sub.title}}</span></a>
           </li>
         </ul>
-      </li><li>
-        <a>Ссылки</a>
+      </li><li class="drop-left">
+        <a class="internal" ng-click="openEditor()"><span>Ссылки</span></a>
         <ul>
-          <li>
-            <a ng-click="openEditor()"><i>{{links.length ? "Изменить" : "Добавить"}}</i></a>
-          </li>
           <li ng-repeat="fl in links">
             <a ng-path="fl.url">{{fl.title}}</a>
           </li>
