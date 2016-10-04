@@ -1,0 +1,258 @@
+#footer {
+  font: normal 13px tahoma, sans-serif;
+}
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+}
+body,
+input,
+select,
+textarea {
+  font: normal 10pt tahoma;
+}
+input,
+textarea {
+  padding: 1px 3px 1px 3px;
+}
+dl,
+dt,
+dd {
+  padding: 0;
+  margin: 0;
+}
+a {
+  color: #144E9D;
+}
+a:visited {
+  color: #144E9D;
+  border-color: #144E9D!important;
+}
+a:hover,
+.dashed:hover {
+  color: #b20;
+  border-color: #b20!important;
+}
+.dashed {
+  font-weight: normal;
+  text-decoration: none;
+  border-bottom: 1px dashed #144E9D;
+}
+form {
+  padding: 0px 0px 25px 0px;
+  margin: 0;
+}
+h1 {
+  margin: 0;
+}
+img {
+  border: 0;
+}
+ins {
+  text-decoration: none;
+}
+#footer {
+  clear: both;
+  background-color: #fff;
+  text-align: right;
+}
+#footer #copyright {
+  padding-right: 20px;
+  font: normal 10pt tahoma;
+}
+#footer #links {
+  color: #aaa;
+  font: normal 10pt tahoma;
+}
+#head.green-back {
+  background: white url(http://klavogonki.ru/img/top_back.gif) repeat-x 0 0;
+}
+#head {
+  position: relative;
+}
+#head #logo {
+  padding: 13px 0 13px 30px;
+  float: left;
+}
+#head .right {
+  text-align: right;
+  position: relative;
+  padding: 20px 0 0 0;
+}
+#head .right .menu {
+  margin: 15px 10px 0 0;
+}
+#head .right .menu a {
+  color: #46810b;
+  font-size: 17px;
+  float: right;
+  position: relative;
+  display: block;
+  width: 91px;
+  height: 35px;
+  text-align: center;
+  margin-right: 10px;
+}
+#head .right .menu a:hover {
+  color: #b20;
+}
+#head .right .name {
+  font-size: 1.2em;
+}
+.bar {
+  clear: both;
+  width: 100%;
+  background: transparent url(http://klavogonki.ru/img/graydots2.gif) repeat-x;
+  height: 3px;
+}
+#content {
+  padding: 15px 30px 0 30px;
+  min-height: 600px;
+}
+* html #content {
+  padding-left: 940px;
+}
+* html .minwidth {
+  height: 0;
+}
+* html .minwidth_container {
+  margin-left: -910px;
+  position: relative;
+  height: 0;
+}
+#line {
+  clear: both;
+  background: white url('http://klavogonki.ru/img/line.gif') repeat-x top;
+  height: 19px;
+}
+.KTS_bottom {
+  font: normal 10pt tahoma;
+}
+h4 {
+  font-size: 22px;
+  text-align: center;
+  margin: 7px;
+  font-weight: normal;
+}
+h3,
+h4 {
+  color: #444;
+}
+#KTS_scripts div {
+  color: #555555;
+}
+#KTS_style {
+  margin-left: 20px;
+}
+#KTS_scripts {
+  margin-left: 20px;
+}
+#KTS_notifications {
+  margin-left: 20px;
+}
+#KTS_notifications > table {
+  margin-bottom: 1em;
+}
+#KTS_notifications > table td {
+  padding: 0 5px;
+  border-right: 1px solid gray;
+}
+#KTS_notifications > table td:first-child {
+  padding-left: 0;
+}
+#KTS_notifications > table td:last-child {
+  border-right: none;
+}
+#KTS_notifications > table td > label {
+  display: block;
+}
+#KTS_scripts table,
+#KTS_notifications div,
+#KTS_notifications label {
+  font: normal 10pt tahoma;
+}
+#KTS_scripts table {
+  margin-top: 1em;
+  border-collapse: collapse;
+}
+#KTS_scripts table td{
+  border: 1px solid #aaa;
+  padding: 1px 0.5em;
+  vertical-align: middle;
+}
+#KTS_scripts table th {
+  font-weight: 700;
+  text-align: left;
+  padding-right: 0.5em;
+}
+#KTS_scripts table tr:nth-child(2n+3) {
+  background-color: #fafafa;
+}
+#KTS_scripts table tr.integrated {
+  background-color: #e6ffd9;
+}
+#KTS_scripts table tr:not(:first-child) {
+  transition: background-color 0.1s linear;
+  cursor: pointer;
+}
+#KTS_scripts table tr:not(:first-child):hover {
+  background-color: #fffce7;
+}
+#KTS_scripts table td:first-child {
+  padding-left: 0;
+  white-space: nowrap;
+}
+#KTS_scripts table td:first-child input[type="checkbox"] {
+  vertical-align: middle;
+}
+.saved {
+  color: #000000;
+}
+#risovalka {
+  width: 256px;
+  float: right;
+  padding: 10px;
+  border-left: 1px gray solid;
+  text-align: center;
+  margin: 5px;
+}
+#risovalka .author {
+  color: #555555;
+  border-bottom: 1px dashed grey;
+  margin: 5px;
+}
+#risovalka .title {
+  margin: 5px;
+  font-style: italic;
+  font-size: 11pt;
+}
+.tag {
+  position: relative;
+  margin-right: 0.5ch;
+  cursor: pointer;
+  color: #555;
+}
+.tag > input[type="checkbox"] {
+  position: absolute;
+  visibility: hidden;
+}
+.tag > span > span {
+  border-bottom: 1px dotted #555;
+}
+.tag > span:before, .tag > span:after {
+  text-decoration: none;
+}
+.tag > span:before {
+  content: "[\00a0";
+}
+.tag > span:after {
+  content: "\00a0]";
+}
+.tag.active {
+  font-weight: 700;
+  color: #000;
+}
+.tag.active > span > span {
+  border-color: #000;
+}

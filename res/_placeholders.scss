@@ -1,0 +1,21 @@
+////
+/// Reusable placeholder styles.
+/// @access public
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+/// A placeholder for adding dotted bottom border to text labels.
+/// Should be replaced with text-decoration-style in the future.
+%dotted-underline {
+  position: relative;
+
+  &:after {
+    position: absolute;
+    bottom: 0.1em;
+    left: 0;
+    right: 0;
+    height: 0;
+    border-bottom: 1px dotted;
+    content: "";
+  }
+}
