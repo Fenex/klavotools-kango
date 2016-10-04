@@ -87,8 +87,8 @@ angular.module('popup', [
         controller: function($scope, MenuTree) {
             $scope.menu = MenuTree;
 
-            $scope.openEditor = function() {
-                $scope.$broadcast('open-editor');
+            $scope.toggleEditor = function() {
+                $scope.$broadcast('toggle-editor');
             };
 
             $scope.$on('save-links', loadFL);
