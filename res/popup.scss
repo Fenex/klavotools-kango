@@ -43,7 +43,7 @@ html, body {
     padding: $popup-base-indent;
     cursor: pointer;
     background-color: #fff;
-    transition: $transition-background-color;
+    transition: background-color $transition-settings;
   }
   a:hover, > ul > li:hover > a {
     background-color: $kts-light-gray;
@@ -92,7 +92,7 @@ html, body {
   > button {
     width: 20%;
     background-color: $kts-light-gray;
-    transition: $transition-background-color;
+    transition: background-color $transition-settings;
     cursor: pointer;
 
     &:hover {
@@ -142,7 +142,8 @@ html, body {
     @include checkbox-option ($checkbox-size: 18px) {
       border: 1px solid $kts-medium-gray;
       border-radius: 3px;
-      transition: border-color 0.1s linear, $transition-background-color;
+      transition: border-color $transition-settings,
+        background-color $transition-settings;
     }
     > label:hover:before {
       border-color: darken($kts-medium-gray, 10%);
@@ -165,7 +166,7 @@ html, body {
       border-radius: inherit;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      transition: filter 0.1s linear;
+      transition: filter $transition-settings;
     }
     .message {
       position: relative;
@@ -211,8 +212,12 @@ html, body {
       pointer-events: none;
     }
     > li {
-      transition: $transition-background-color;
+      transition: background-color $transition-settings;
       cursor: pointer;
+
+      &.unread {
+        background-color: $kts-light-blue;
+      }
     }
     > li:hover, > li:focus {
       background-color: $kts-light-gray;

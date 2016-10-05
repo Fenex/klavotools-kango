@@ -55,7 +55,7 @@
     </div>
     <ul class="messages-list">
       <li ng-if="message.unread || !Mail.HideReadMsg" ng-repeat="message in Mail.messages" tabindex="0" keyboard-controlled-list
-        ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">
+        ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}" ng-class="{'unread': message.unread}">
         <div class="avatar-wrapper"><img class="avatar" ng-src="{{message.respondent_id | avatar: message.hasAvatar:'big'}}" alt=""
         /></div><div class="message">
           <a ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">{{message.respondentLogin}}</a>

@@ -25,6 +25,7 @@ $font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 /// @type Length
 $font-size: 14px;
 
-/// transition property value for GUI elements backgrounds.
+/// Default transition-duration and transition-timing-function properties
+/// values for GUI elements.
 /// @type List
-$transition-background-color: background-color 0.1s linear;
+$transition-settings: 0.1s linear;
