@@ -1,0 +1,33 @@
+////
+/// Extension popup styles for the links editor form.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "../settings";
+@import "../colors";
+
+.links-editor {
+  textarea, input[type="text"], button {
+    @extend %input-base;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    resize: vertical;
+  }
+  > div {
+    padding: $popup-base-indent;
+  }
+  input[type="text"] {
+    width: 100%;
+  }
+  input[type="text"]:first-of-type {
+    border-bottom-width: 0;
+    &:focus + input[type="text"] {
+      border-top-color: darken($kts-medium-gray, 10%);
+    }
+  }
+  button {
+    @extend %button-base;
+  }
+}

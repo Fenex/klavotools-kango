@@ -1,0 +1,60 @@
+////
+/// KlavoTools colors.
+/// @access public
+/// @group colors
+/// @type Color
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+/// Used in the extenstion popup menu.
+$kts-light-gray: #f0f0f0;
+
+/// Used in the form inputs.
+$kts-medium-gray: #c1c1c1;
+
+/// Used in the extension popup menu.
+$kts-dark-gray: #555;
+
+// Unread messages background color.
+$kts-light-blue: #e8efff;
+
+/// "Новичок" rank color.
+$kts-rank1: #8d8d8d;
+
+/// "Любитель" rank color.
+$kts-rank2: #4f9a97;
+
+/// "Таксист" rank color.
+$kts-rank3: #187818;
+
+/// "Профи" rank color.
+$kts-rank4: #8c8100;
+
+/// "Гонщик" rank color.
+$kts-rank5: #ba5800;
+
+/// "Маньяк" rank color.
+$kts-rank6: #bc0143;
+
+/// "Супермен" rank color.
+$kts-rank7: #5e0b9e;
+
+/// "Кибергонщик" rank color.
+$kts-rank8: #2e32ce;
+
+/// "Экстракибер" rank color.
+$kts-rank9: #061956;
+
+/// A list with all rank colors.
+/// @type List
+$kts-rank-colors: (
+  $kts-rank1,
+  $kts-rank2,
+  $kts-rank3,
+  $kts-rank4,
+  $kts-rank5,
+  $kts-rank6,
+  $kts-rank7,
+  $kts-rank8,
+  $kts-rank9
+);

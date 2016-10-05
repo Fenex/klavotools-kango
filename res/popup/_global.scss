@@ -1,0 +1,15 @@
+////
+/// Extension popup global styles.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "../reset";
+@import "../settings";
+@import "../placeholders";
+
+html, body {
+  width: $popup-width;
+  min-height: $popup-min-height;
+  font-family: $font-family;
+  font-size: $font-size;
+}

@@ -1,6 +1,5 @@
 /**
  * @file DeferredNotification module.
- * @requires kango
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  * @example <caption>Example of usage.</caption>
  * var notify = new DeferredNotification('title', {
@@ -20,8 +19,6 @@
  * window.Notification's constructor, with the addition of an optional parameters:
  *
  * @param {Number} [options.displayTime] Sets the display time for the notification in seconds
- * @param {Object} [options.checkUrl] A RegExp object to search in the URLs of all browser tabs.
- *  If was found, the notification won't be displayed.
  * @param {string} title
  * @param {Object} options
  * @returns {Object}
@@ -66,6 +63,12 @@ DeferredNotification.prototype.revoke = function () {
 };
 
 /**
+ * User-defined function which performs some action just before notification is shown.
+ * @returns {Promise.<boolean>} Whether the notification should be shown
+ */
+DeferredNotification.prototype.before = undefined;
+
+/**
  * Create the Notification after the certain delay.
  * @param {number} [delay=0] Delay in seconds
  */
@@ -107,14 +110,15 @@ DeferredNotification.prototype.show = function (delay) {
     }
 
     this._timeout = setTimeout(function () {
-        kango.browser.tabs.getAll(function (tabs) {
-            var found = tabs.some(function (tab) {
-                return tab._tab && tab.getUrl().search(this.options.checkUrl) !== -1;
-            }, this);
-
-            if (!found) {
-                _show.call(this);
-            }
-        }.bind(this));
+        if (typeof this.before === 'function') {
+            this.before.call(this).then(function (res) {
+                if (res === false) {
+                    return false;
+                }
+                _show.bind(this);
+            });
+        } else {
+            _show.call(this);
+        }
     }.bind(this), delay * 1000);
 };

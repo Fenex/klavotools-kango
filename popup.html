@@ -2,7 +2,105 @@
 <head>
   <title>KlavoTools - Popup</title>
   <link href="res/popup.css" type="text/css" rel="stylesheet" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+  <nav id="menu" main-menu>Menu loading...</nav>
+
+  <!-- User search form -->
+  <form class="search-user" ng-controller="popup:SearchUser as SearchUser">
+    <input autofocus
+      type="text"
+      tabindex="1"
+      ng-model="SearchUser.login"
+      placeholder="Поиск игрока по нику" /><button tabindex="2"
+        ng-click="SearchUser.search()"
+      ng-disabled="SearchUser.loading"
+      ng-class="{'loading': SearchUser.loading}">
+        <span ng-if="!SearchUser.loading">Найти</span>
+        <span ng-if="SearchUser.loading">Поиск...</span>
+    </button>
+
+    <div ng-if="SearchUser.id===false" class="user-data">Игрок не найден.</div>
+    <div ng-if="SearchUser.id!=0" class="user-data">
+      <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/"
+        ng-class="'rank' + SearchUser.rank" title="Профиль">
+        <img ng-if="SearchUser.hasAvatar !== undefined"
+          ng-src="{{SearchUser.id | avatar: SearchUser.hasAvatar:'small'}}" alt=""
+        /><span ng-class="{'blocked': SearchUser.blocked}">{{SearchUser.actualLogin}}</span></a>
+      <span class="hash">{{SearchUser.id}}</span>
+      <span class="user-links">
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/stats/" title="Статистика">
+          <img src="icons/context_statistics.png"
+          /><span title="Рекорд в Обычном">{{SearchUser.recordDefault}}</span></a>
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/journal/" title="Бортжурнал">
+          <img src="icons/context_road.png"
+          /><span title="Общее число заездов">{{SearchUser.totalRacesCount}}</span></a>
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/achievements/" title="Достижения">
+          <img src="icons/context_achievements.png"
+          /><span title="Число полученных достижений">{{SearchUser.achievementsCount}}</span></a>
+        <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/friends/" title="Друзья">
+          <img src="icons/context_friends.png"
+          /><span title="Число друзей">{{SearchUser.friendsCount}}</span></a>
+      </span>
+    </div>
+  </form>
+
+  <!-- Mail -->
+  <div class="mail" ng-controller="popup:Mail as Mail">
+    <div class="mail-settings">
+      <input id="hideReadMessages" type="checkbox" ng-model="hideReadMessages" ng-change="saveSettings('hideReadMessages')" />
+      <label for="hideReadMessages">Скрывать прочитанные сообщения</label>
+    </div>
+    <ul class="messages-list">
+      <li ng-if="message.unread || !hideReadMessages" ng-repeat="message in Mail.messages" tabindex="0" keyboard-controlled-list
+        ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}" ng-class="{'unread': message.unread}">
+        <div class="avatar-wrapper"><img class="avatar" ng-src="{{message.respondent_id | avatar: message.hasAvatar:'big'}}" alt=""
+        /></div><div class="message">
+          <a ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">{{message.respondentLogin}}</a>
+          <time>{{message.date.sec * 1000 | prettyDateTime}}</time>
+          <div><span ng-if="message.folder === 'out'">Вы:&nbsp;</span>{{message.text}}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Fast links editor -->
+  <div class="links-editor" ng-controller="popup:FastLinks as FastLinks" ng-show="FastLinks.visible">
+    <textarea ng-model="FastLinks.txtlinks"></textarea>
+    <div class="note">«<b>__USERID__</b>» будет заменяться на ID активного аккаунта.</div>
+    <input type="text" ng-model="FastLinks.title" placeholder="Введите текст ссылки" />
+    <input type="text" ng-model="FastLinks.url" placeholder="Введите адрес ссылки" />
+    <div>
+      <button ng-click="FastLinks.add()">Добавить ссылку</button>
+      <button ng-click="FastLinks.save()">Сохранить</button>
+    </div>
+  </div>
+
+  <script type="text/ng-template" id="mainMenuTemplate">
+    <ul>
+      <li ng-repeat="m in menu">
+        <a ng-path="m.path">{{m.title}}</a>
+        <ul>
+          <li ng-repeat="sub in m.sub" ng-class="{'icon': sub.icon}">
+            <a ng-path="sub.path"><img ng-if="!!sub.icon" ng-src="{{sub.icon}}" alt=""><span>{{sub.title}}</span></a>
+          </li>
+        </ul>
+      </li><li class="drop-left">
+        <a class="internal" ng-click="toggleEditor()"><span>Ссылки</span></a>
+        <ul>
+          <li ng-repeat="fl in links">
+            <a ng-path="fl.url">{{fl.title}}</a>
+          </li>
+        </ul>
+      </li><li class="icon">
+        <a ng-path ng-path-str="__EXTENSION_OPTIONS__" title="Настройки KlavoTools">
+          <img src="icons/button.png" alt="">
+        </a>
+      </li>
+    </ul>
+  </script>
   <script src="kango-ui/kango_api.js"></script>
   <script src="klavotools/foreground/lib/angular.min.js"></script>
   <script src="klavotools/foreground/lib/kango-q.js"></script>
@@ -10,121 +108,5 @@
   <script src="klavotools/popup/popup.menutree.js"></script>
   <script src="klavotools/popup/popup.redirect.js"></script>
   <script src="klavotools/popup/popup.fl-editor.js"></script>
-</head>
-<body style="height:130px;width: 520px;">
-  <div id="cssmenu" ui:css:menu>
-    Menu loading...
-  </div>
-
-  <!-- Search user form -->
-  <form
-    class="userline"
-    ng:controller="popup:SearchUser as SearchUser"
-    ng:submit="SearchUser.search()">
-
-    <img ng:if="SearchUser.loading" src="http://klavogonki.ru/img/small_loading.gif" />
-    <img ng:if="SearchUser.id!==0" src="http://klavogonki.ru/img/ok.gif" />
-
-    <input
-      type="text"
-      tabindex="1"
-      ng:model="SearchUser.login" />
-
-    <input
-      type="button"
-      value="→"
-      tabindex="2"
-      ng:click="SearchUser.search()" />
-
-    <span ng:if="SearchUser.id===false">не найден</span>
-    <span ng:if="SearchUser.id!=0" class="get-id-links">
-      ID: {{SearchUser.id}} |
-      <a title="Профиль">
-        <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/" src="icons/profile.png" />
-      </a>
-      <a title="Статистика">
-        <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/stats/" src="icons/sprint.png" />
-      </a>
-      <a title="Бортжурнал">
-        <img ng:path ng:path:str="/u/#/{{SearchUser.id}}/journal/" src="icons/usefuladdons.png" />
-      </a>
-      <!--
-        TODO: add links to achievements and friends.
-      -->
-    </span>
-  </form>
-
-  <!-- Mail -->
-  <div class="mail" ng:controller="popup:Mail as Mail">
-    <div ng:init="Mail.HideReadMsg = true" ng:click="Mail.HideReadMsg = !Mail.HideReadMsg">
-      <input type="checkbox" title="Скрыть прочитанные" ng:model="Mail.HideReadMsg" /> Сообщения:
-    </div>
-    <div
-      ng:repeat="message in Mail.data.messages"
-      ng:if="message.unread || !Mail.HideReadMsg"
-      class="message"
-      style="background: transparent url(http://img.klavogonki.ru/avatars/{{message.respondent_id}}_big.gif) no-repeat">
-
-      <div>
-        <a class="login" ng:path ng:path:str="/u/#/{{message.respondent_id}}/" ng:bind="Mail.data.users[message.respondent_id].login"></a>
-        <span class="date" ng:bind="message.date.sec * 1000 | date"></span>
-        <a class="read" href="#" ng:path ng:path:str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">Диалог >></a>
-      </div>
-      <div class="text" ng:bind="message.text"></div>
-    </div>
-  </div>
-
-  <!-- Fast links editor -->
-  <div class="editor" ng:controller="popup:FastLinks as FastLinks" ng:show="FastLinks.visible">
-    <textarea ng:model="FastLinks.txtlinks"></textarea>
-    <div class="note">* <b>"__USERID__"</b> будет заменяться на ID активного аккаунта</div>
-    <table>
-      <tr>
-        <td>Текст:</td>
-        <td class="td-center">
-          <input tabindex='3' type="text" ng:model="FastLinks.title" />
-        </td>
-        <td class="td-right">
-          <input tabindex='5' type="button" value="Добавить" ng:click="FastLinks.add()" />
-        </td>
-      </tr>
-      <tr>
-        <td>Ссылка:</td>
-        <td class="td-center">
-          <input tabindex='4' type="text" ng:model="FastLinks.url" />
-        </td>
-        <td class="td-right">
-          <input tabindex='6' type="button" value="Сохранить" ng:click="FastLinks.save()" />
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <script type="text/ng-template" id="uiCssMenu_Template">
-    <ul>
-      <li ng:repeat="m in menu" ng:class="{'has-sub': m.sub}" ng:hide="m.hidden">
-        <a ng:style="{color: m.color}" ng:path="m.path">{{m.title}}</a>
-        <ul>
-          <li ng:repeat="sub in m.sub">
-            <a ng:path="sub.path">{{sub.title}}</a>
-          </li>
-        </ul>
-      </li>
-      <li class="has-sub">
-        <a>Ссылки</a>
-        <ul>
-          <li>
-            <a ng:click="openEditor()"><i>{{links.length ? "Изменить" : "Добавить"}}</i></a>
-          </li>
-          <li ng:repeat="fl in links">
-            <a ng:path="fl.url">{{fl.title}}</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a style="color:green;" ng:path ng:path:str="__EXTENSION_OPTIONS__">Настройки</a>
-      </li>
-    </ul>
-  </script>
 </body>
 </html>

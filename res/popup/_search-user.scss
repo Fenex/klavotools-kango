@@ -1,0 +1,56 @@
+////
+/// Extension popup styles for the user search form.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "../settings";
+@import "../colors";
+
+.search-user {
+  > input, button {
+    @extend %input-base;
+  }
+  > input:focus + button {
+    border-left-color: darken($kts-medium-gray, 10%);
+  }
+  > input {
+    width: 80%;
+    border-width: 1px 0 1px 1px;
+  }
+  > button {
+    @extend %button-base;
+    width: 20%;
+  }
+  .user-data {
+    padding: $popup-base-indent;
+    a {
+      cursor: pointer;
+
+      > img {
+        vertical-align: text-bottom;
+        margin-right: 2px;
+      }
+      > span {
+        text-decoration: underline;
+        &.blocked {
+          text-decoration: underline line-through;
+        }
+      }
+    }
+    > a {
+      @extend %rank-label;
+    }
+    .user-links > a {
+      &:hover > img {
+        -webkit-filter: contrast(25%);
+        filter: contrast(25%);
+      }
+      &:hover {
+        color: $kts-dark-gray;
+      }
+    }
+    .hash:before {
+      content: "#";
+    }
+  }
+}

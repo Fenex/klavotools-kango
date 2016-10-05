@@ -1,0 +1,106 @@
+////
+/// Extension popup styles for the PM list.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "../settings";
+@import "../colors";
+@import "../mixins";
+
+.mail {
+  .mail-settings {
+    padding: $popup-base-indent;
+    @include checkbox-option ($checkbox-size: 18px) {
+      border: 1px solid $kts-medium-gray;
+      border-radius: 3px;
+      transition: border-color $transition-settings,
+        background-color $transition-settings;
+    }
+    > label:hover:before,
+    > input[type="checkbox"]:focus + label:before {
+      border-color: darken($kts-medium-gray, 10%);
+    }
+    > label:active:before {
+      border-color: darken($kts-medium-gray, 15%);
+      background-color: $kts-light-gray;
+    }
+  }
+  .messages-list {
+    .avatar-wrapper {
+      @extend %image-bevel;
+      left: 2px;
+      border-radius: 3px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      border-radius: inherit;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      transition: filter $transition-settings;
+    }
+    .message {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      width: calc(100% - 40px);
+      height: 50px;
+      padding: $popup-base-indent / 2 #{$popup-base-indent};
+
+      > a {
+        text-decoration: underline;
+      }
+      > time {
+        position: absolute;
+        top: $popup-base-indent / 2;
+        right: $popup-base-indent;
+        color: $kts-medium-gray;
+      }
+      > time:first-letter {
+        text-transform: capitalize;
+      }
+      > div {
+        margin-top: $popup-base-indent;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      > div > span:first-child {
+        color: lighten($kts-dark-gray, 15%);
+      }
+
+      &:before {
+        position: absolute;
+        top: 0;
+        left: $popup-base-indent;
+        right: $popup-base-indent;
+        border-top: 1px solid rgba($kts-medium-gray, 0.2);
+        border-bottom: 1px solid rgba($kts-light-gray, 0.2);
+        content: "";
+      }
+    }
+    .avatar, .message > div, .message > time {
+      pointer-events: none;
+    }
+    > li {
+      transition: background-color $transition-settings;
+      cursor: pointer;
+
+      &.unread {
+        background-color: $kts-light-blue;
+      }
+    }
+    > li:hover, > li:focus {
+      background-color: $kts-light-gray;
+      outline: none;
+
+      .avatar {
+        filter: contrast(125%);
+      }
+    }
+    > li:active {
+      background-color: darken($kts-light-gray, 5%);
+    }
+  }
+}
