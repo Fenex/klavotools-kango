@@ -27,7 +27,7 @@ html, body {
       top: 100%;
       background: #fff;
       white-space: nowrap;
-      z-index: 1;
+      z-index: 2;
       box-shadow: 1px 3px 3px rgba($kts-dark-gray, 0.3);
     }
     > li:hover > ul {
@@ -178,7 +178,7 @@ html, body {
         text-overflow: ellipsis;
       }
       > div > span:first-child {
-        color: $kts-dark-gray;
+        color: lighten($kts-dark-gray, 15%);
       }
 
       &:before {
@@ -198,8 +198,9 @@ html, body {
       transition: $transition-background-color;
       cursor: pointer;
     }
-    > li:hover {
+    > li:hover, > li:focus {
       background-color: $kts-light-gray;
+      outline: none;
 
       .avatar {
         filter: contrast(125%);

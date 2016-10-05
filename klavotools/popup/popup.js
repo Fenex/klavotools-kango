@@ -80,6 +80,37 @@ angular.module('popup', [
     }
 })
 
+.directive('keyboardControlledList', function () {
+    function sibling (dir, element) {
+        var res = element[dir + 'Sibling'];
+        while(res && res.nodeType != 1) {
+            res = res[dir + 'Sibling'];
+        }
+        return res || element;
+    }
+    return {
+        restrict: 'A',
+        link: function (scope, element) {
+            var active = null;
+            element.on('focus', function (event) { active = this; });
+            element.on('keydown', function (event) {
+                // Up arrow:
+                if (event.keyCode === 38) {
+                    return sibling('previous', active).focus();
+                }
+                // Down arrow:
+                if (event.keyCode === 40) {
+                    return sibling('next', active).focus();
+                }
+                // Enter or Space:
+                if (event.keyCode === 13 || event.keyCode === 32) {
+                    return active.click();
+                }
+            });
+        }
+    }
+})
+
 .directive('mainMenu', function() {
     return {
         restrict: 'A',

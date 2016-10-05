@@ -53,7 +53,7 @@
       <input type="checkbox" title="Скрыть прочитанные" ng-model="Mail.HideReadMsg" /> Сообщения:
     </div>
     <ul class="messages-list">
-      <li ng-if="message.unread || !Mail.HideReadMsg" ng-repeat="message in Mail.messages"
+      <li ng-if="message.unread || !Mail.HideReadMsg" ng-repeat="message in Mail.messages" tabindex="0" keyboard-controlled-list
         ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">
         <div class="avatar-wrapper"><img class="avatar" ng-src="{{message.respondent_id | avatar: message.hasAvatar:'big'}}" alt=""
         /></div><div class="message">
@@ -63,19 +63,6 @@
         </div>
       </li>
     </ul>
-    <!--<div
-      ng:repeat="message in Mail.data.messages"
-      ng:if="message.unread || !Mail.HideReadMsg"
-      class="message"
-      style="background: transparent url(http://img.klavogonki.ru/avatars/{{message.respondent_id}}_big.gif) no-repeat">
-
-      <div>
-        <a class="login" ng:path ng:path:str="/u/#/{{message.respondent_id}}/" ng:bind="Mail.data.users[message.respondent_id].login"></a>
-        <span class="date" ng:bind="message.date.sec * 1000 | date"></span>
-        <a class="read" ng:path ng:path:str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">Диалог >></a>
-      </div>
-      <div class="text" ng:bind="message.text"></div>
-    </div>-->
   </div>
 
   <!-- Fast links editor -->
