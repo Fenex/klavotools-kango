@@ -8,12 +8,7 @@
 
 .search-user {
   > input, button {
-    padding: $popup-base-indent;
-    border: 1px solid $kts-medium-gray;
-    border-radius: 0;
-  }
-  > input:focus, > button:focus {
-    border-color: darken($kts-medium-gray, 10%);
+    @extend %input-base;
   }
   > input:focus + button {
     border-left-color: darken($kts-medium-gray, 10%);
@@ -23,17 +18,8 @@
     border-width: 1px 0 1px 1px;
   }
   > button {
+    @extend %button-base;
     width: 20%;
-    background-color: $kts-light-gray;
-    transition: background-color $transition-settings;
-    cursor: pointer;
-
-    &:hover {
-      background-color: darken($kts-light-gray, 10%);
-    }
-    &:active {
-      background-color: darken($kts-light-gray, 15%);
-    }
   }
   .user-data {
     padding: $popup-base-indent;

@@ -16,7 +16,8 @@
       transition: border-color $transition-settings,
         background-color $transition-settings;
     }
-    > label:hover:before {
+    > label:hover:before,
+    > input[type="checkbox"]:focus + label:before {
       border-color: darken($kts-medium-gray, 10%);
     }
     > label:active:before {

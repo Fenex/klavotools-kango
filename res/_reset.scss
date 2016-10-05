@@ -61,7 +61,7 @@ button {
     border: 0;
   }
 }
-input, button {
+input, button, textarea {
   &:focus {
     outline: none;
   }

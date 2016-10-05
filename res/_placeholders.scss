@@ -35,7 +35,37 @@
   }
 }
 
+/// A placeholder for text inputs and buttons base styles.
+/// @group gui
+%input-base {
+  padding: $popup-base-indent;
+  border: 1px solid $kts-medium-gray;
+  transition: border-color $transition-settings;
+
+  &:focus {
+    border-color: darken($kts-medium-gray, 10%);
+  }
+}
+
+/// A placeholder for buttons base styles.
+/// @group gui
+%button-base {
+  background-color: $kts-light-gray;
+  transition: background-color $transition-settings;
+  cursor: pointer;
+
+  &:hover {
+    &:hover {
+      background-color: darken($kts-light-gray, 10%);
+    }
+    &:active {
+      background-color: darken($kts-light-gray, 15%);
+    }
+  }
+}
+
 /// A placeholder for adding beautiful bevel to <img> elements.
+/// @group helpers
 /// @example html - required layout
 /// <div class="image-wrapper">
 ///   <img src="..." alt="...">
@@ -72,6 +102,7 @@
 }
 
 /// A placeholder for styling checkbox + label pairs.
+/// @group helpers
 /// @example html - layout example
 /// <div class="input-row">
 ///   <input id="myCheckbox" type="checkbox">
