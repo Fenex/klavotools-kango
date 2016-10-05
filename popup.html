@@ -26,10 +26,8 @@
     <div ng-if="SearchUser.id!=0" class="user-data">
       <a ng-path ng-path-str="/u/#/{{SearchUser.id}}/"
         ng-class="'rank' + SearchUser.rank" title="Профиль">
-        <img ng-if="!!SearchUser.actualLogin && SearchUser.avatar === null"
-          src="http://klavogonki.ru/img/avatar_dummy_16.png" alt=""
-        /><img ng-if="SearchUser.avatar !== null"
-          ng-src="http://img.klavogonki.ru/avatars/{{SearchUser.id}}.gif" alt=""
+        <img ng-if="SearchUser.hasAvatar !== undefined"
+          ng-src="{{SearchUser.id | avatar: SearchUser.hasAvatar:'small'}}" alt=""
         /><span ng-class="{'blocked': SearchUser.blocked}">{{SearchUser.actualLogin}}</span></a>
       <span class="hash">{{SearchUser.id}}</span>
       <span class="user-links">
@@ -50,11 +48,22 @@
   </form>
 
   <!-- Mail -->
-  <div class="mail" ng:controller="popup:Mail as Mail">
-    <div ng:init="Mail.HideReadMsg = true" ng:click="Mail.HideReadMsg = !Mail.HideReadMsg">
-      <input type="checkbox" title="Скрыть прочитанные" ng:model="Mail.HideReadMsg" /> Сообщения:
+  <div class="mail" ng-controller="popup:Mail as Mail">
+    <div ng-init="Mail.HideReadMsg = true" ng-click="Mail.HideReadMsg = !Mail.HideReadMsg">
+      <input type="checkbox" title="Скрыть прочитанные" ng-model="Mail.HideReadMsg" /> Сообщения:
     </div>
-    <div
+    <ul class="messages-list">
+      <li ng-if="message.unread || !Mail.HideReadMsg" ng-repeat="message in Mail.messages"
+        ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">
+        <div class="avatar-wrapper"><img class="avatar" ng-src="{{message.respondent_id | avatar: message.hasAvatar:'big'}}" alt=""
+        /></div><div class="message">
+          <a ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">{{message.respondentLogin}}</a>
+          <time>{{message.date.sec * 1000 | prettyDateTime}}</time>
+          <div><span ng-if="message.folder === 'out'">Вы:&nbsp;</span>{{message.text}}</div>
+        </div>
+      </li>
+    </ul>
+    <!--<div
       ng:repeat="message in Mail.data.messages"
       ng:if="message.unread || !Mail.HideReadMsg"
       class="message"
@@ -66,7 +75,7 @@
         <a class="read" ng:path ng:path:str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}">Диалог >></a>
       </div>
       <div class="text" ng:bind="message.text"></div>
-    </div>
+    </div>-->
   </div>
 
   <!-- Fast links editor -->

@@ -50,25 +50,26 @@ angular.module('popup', [
     }];
 })
 
-.directive('ngPath', function(Redirect, RedirectMode, $timeout) {
+.directive('ngPath', function (Redirect, RedirectMode, $timeout) {
     return {
         restrict: 'A',
         scope: {
             ngPath: '='
         },
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             var url = scope.ngPath || attrs.ngPathStr;
             var mode = RedirectMode.UNDEFINED;
             var timer = null;
-            element.on('click', function(event) {
-                if(event.button==1) {
+            element.on('click', function (event) {
+                event.stopPropagation();
+                if (event.button==1) {
                     mode = RedirectMode.UNDEFINED;
                     Redirect(url, RedirectMode.BACKGROUND);
                     return;
                 }
                 mode++;
-                if(!timer) {
-                    timer = $timeout(function() {
+                if (!timer) {
+                    timer = $timeout(function () {
                         Redirect(url, mode);
                         mode = RedirectMode.UNDEFINED;
                         timer = null;
@@ -101,6 +102,44 @@ angular.module('popup', [
     }
 })
 
+.filter('prettyDateTime', function () {
+    return function (seconds) {
+        var date = new Date(seconds);
+        var diff = (Date.now() - seconds) / 1000;
+        var day_diff = Math.floor(diff / 86400);
+
+        var time = date.toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        var dayOfWeek = date.toLocaleString('ru-RU', { weekday: 'short' });
+        var dayMonth = date.toLocaleString('ru-RU', { day: 'numeric', month: 'short' });
+        var year = date.getFullYear();
+
+        if (day_diff === 0) {
+            return timeFormatted;
+        }
+        if (day_diff === 1) {
+            return 'Вчера, ' + time;
+        }
+        if (day_diff < 7) {
+            return dayOfWeek + ', ' + time;
+        }
+        return dayMonth + (year === (new Date()).getFullYear() ? '' : year) + ', ' + time;
+    };
+})
+
+.filter('avatar', function () {
+    return function (id, hasAvatar, size) {
+        var url;
+        if (hasAvatar) {
+            url = 'http://img.klavogonki.ru/avatars/' + id;
+            url += size === 'small' ? '.gif' : '_big.gif';
+        } else {
+            url = 'http://klavogonki.ru/img/';
+            url += size === 'small' ? 'avatar_dummy_16.png' : 'avatar_dummy.gif';
+        }
+        return url;
+    };
+})
+
 .controller('popup:SearchUser', function ($scope, $http, $q) {
     var ctrl = this;
 
@@ -115,7 +154,7 @@ angular.module('popup', [
         ctrl.totalRacesCount = '';
         ctrl.friendsCount = '';
         ctrl.recordDefault = '';
-        ctrl.avatar = null;
+        ctrl.hasAvatar = undefined;
         ctrl.blocked = false;
 
         function getSummary (userId) {
@@ -140,7 +179,7 @@ angular.module('popup', [
             var summary = res[0];
             var index = res[1];
             ctrl.actualLogin = summary.data.user.login;
-            ctrl.avatar = summary.data.user.avatar;
+            ctrl.hasAvatar = !!summary.data.user.avatar;
             ctrl.rank = summary.data.level;
             ctrl.blocked = summary.data.blocked;
             ctrl.achievementsCount = index.data.stats.achieves_cnt;
@@ -158,13 +197,18 @@ angular.module('popup', [
 
 .controller('popup:Mail', function($http) {
     var ctrl = this;
-
     ctrl.data = {};
 
     $http.get('http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
-    .then(function(res) {
-        if(res.status == 200)
-            ctrl.data = res.data;
+    .then(function (res) {
+        if (res.status == 200) {
+            var messages = res.data.messages.map(function (message) {
+                message.respondentLogin = res.data.users[message.respondent_id].login;
+                message.hasAvatar = !!res.data.users[message.respondent_id].avatar;
+                return message;
+            });
+            ctrl.messages = messages;
+        }
     });
 });
 

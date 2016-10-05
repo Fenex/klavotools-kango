@@ -134,3 +134,79 @@ html, body {
     }
   }
 }
+
+.mail {
+  .messages-list {
+    .avatar-wrapper {
+      @extend %image-bevel;
+      left: 2px;
+      border-radius: 3px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      border-radius: inherit;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      transition: filter 0.1s linear;
+    }
+    .message {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      width: calc(100% - 40px);
+      height: 50px;
+      padding: $popup-base-indent / 2 #{$popup-base-indent};
+
+      > a {
+        text-decoration: underline;
+      }
+      > time {
+        position: absolute;
+        top: $popup-base-indent / 2;
+        right: $popup-base-indent;
+        color: $kts-medium-gray;
+      }
+      > time:first-letter {
+        text-transform: capitalize;
+      }
+      > div {
+        margin-top: $popup-base-indent;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      > div > span:first-child {
+        color: $kts-dark-gray;
+      }
+
+      &:before {
+        position: absolute;
+        top: 0;
+        left: $popup-base-indent;
+        right: $popup-base-indent;
+        border-top: 1px solid rgba($kts-medium-gray, 0.2);
+        border-bottom: 1px solid rgba($kts-light-gray, 0.2);
+        content: "";
+      }
+    }
+    .avatar, .message > div, .message > time {
+      pointer-events: none;
+    }
+    > li {
+      transition: $transition-background-color;
+      cursor: pointer;
+    }
+    > li:hover {
+      background-color: $kts-light-gray;
+
+      .avatar {
+        filter: contrast(125%);
+      }
+    }
+    > li:active {
+      background-color: darken($kts-light-gray, 5%);
+    }
+  }
+}
