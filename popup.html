@@ -67,29 +67,15 @@
   </div>
 
   <!-- Fast links editor -->
-  <div class="editor" ng:controller="popup:FastLinks as FastLinks" ng:show="FastLinks.visible">
-    <textarea ng:model="FastLinks.txtlinks"></textarea>
-    <div class="note">* <b>"__USERID__"</b> будет заменяться на ID активного аккаунта</div>
-    <table>
-      <tr>
-        <td>Текст:</td>
-        <td class="td-center">
-          <input tabindex='3' type="text" ng:model="FastLinks.title" />
-        </td>
-        <td class="td-right">
-          <input tabindex='5' type="button" value="Добавить" ng:click="FastLinks.add()" />
-        </td>
-      </tr>
-      <tr>
-        <td>Ссылка:</td>
-        <td class="td-center">
-          <input tabindex='4' type="text" ng:model="FastLinks.url" />
-        </td>
-        <td class="td-right">
-          <input tabindex='6' type="button" value="Сохранить" ng:click="FastLinks.save()" />
-        </td>
-      </tr>
-    </table>
+  <div class="links-editor" ng-controller="popup:FastLinks as FastLinks" ng-show="FastLinks.visible">
+    <textarea ng-model="FastLinks.txtlinks"></textarea>
+    <div class="note">«<b>__USERID__</b>» будет заменяться на ID активного аккаунта.</div>
+    <input type="text" ng-model="FastLinks.title" placeholder="Введите текст ссылки" />
+    <input type="text" ng-model="FastLinks.url" placeholder="Введите адрес ссылки" />
+    <div>
+      <button ng-click="FastLinks.add()">Добавить ссылку</button>
+      <button ng-click="FastLinks.save()">Сохранить</button>
+    </div>
   </div>
 
   <script type="text/ng-template" id="mainMenuTemplate">
