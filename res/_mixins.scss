@@ -1,0 +1,38 @@
+////
+/// KlavoTools mixins.
+/// @access public
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "colors";
+
+/// A mixin for styling checkbox + label pairs.
+/// @param {Length} $checkbox-size [16px] - width and height of the pseudo
+///   checkbox.
+/// @param {Length} $checkbox-indent [0.5em] - an indent after the checkbox.
+/// @param {Color} $checkbox-tick-color [$kts-dark-gray] - checkbox tick color.
+/// @content provides pseudo-checkbox element.
+@mixin checkbox-option (
+  $checkbox-size: 16px,
+  $checkbox-indent: 0.5em,
+  $checkbox-tick-color: $kts-dark-gray
+) {
+  @extend %checkbox-option;
+
+  > label:before {
+    width: $checkbox-size;
+    height: $checkbox-size;
+    margin-right: $checkbox-indent;
+    @content;
+  }
+  > label:after {
+    $width: round($checkbox-size / 2);
+    // Some magic number, yes :)
+    $height: round($width * 0.605110158);
+    width: $width;
+    height: $height;
+    top: calc(50% - #{$checkbox-size / 4});
+    left: round($checkbox-size / 4);
+    border-color: $checkbox-tick-color;
+  }
+}

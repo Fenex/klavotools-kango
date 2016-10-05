@@ -6,6 +6,7 @@
 @import "settings";
 @import "colors";
 @import "reset";
+@import "mixins";
 @import "placeholders";
 
 html, body {
@@ -136,6 +137,21 @@ html, body {
 }
 
 .mail {
+  .mail-settings {
+    padding: $popup-base-indent;
+    @include checkbox-option ($checkbox-size: 18px) {
+      border: 1px solid $kts-medium-gray;
+      border-radius: 3px;
+      transition: border-color 0.1s linear, $transition-background-color;
+    }
+    > label:hover:before {
+      border-color: darken($kts-medium-gray, 10%);
+    }
+    > label:active:before {
+      border-color: darken($kts-medium-gray, 15%);
+      background-color: $kts-light-gray;
+    }
+  }
   .messages-list {
     .avatar-wrapper {
       @extend %image-bevel;

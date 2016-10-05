@@ -70,3 +70,41 @@
     border-top: 1px solid rgba(#fff, 0.4);
   }
 }
+
+/// A placeholder for styling checkbox + label pairs.
+/// @example html - layout example
+/// <div class="input-row">
+///   <input id="myCheckbox" type="checkbox">
+///   <label for="myCheckbox">Нажми меня</label>
+///   ...
+/// </div>
+/// @example scss
+/// .input-row {
+///   @extend %checkbox-option;
+/// }
+%checkbox-option {
+  > input[type="checkbox"] {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    opacity: 0;
+  }
+  > label {
+    position: relative;
+    cursor: pointer;
+
+    &:before {
+      display: inline-block;
+      vertical-align: text-bottom;
+      content: "";
+    }
+
+  }
+  > input[type="checkbox"]:checked + label:after {
+    position: absolute;
+    -webkit-transform: rotate(-50deg);
+    transform: rotate(-50deg);
+    border-style: solid;
+    border-width: 0 0 2px 2px;
+    content: "";
+  }
+}
