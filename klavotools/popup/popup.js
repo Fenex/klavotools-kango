@@ -226,9 +226,15 @@ angular.module('popup', [
     };
 })
 
-.controller('popup:Mail', function($http) {
+.controller('popup:Mail', function ($scope, $http) {
     var ctrl = this;
     ctrl.data = {};
+    var hide = kango.storage.getItem('popup_hideReadMessages');
+    hide = typeof hide === 'boolean' ? hide : true;
+    $scope.hideReadMessages = hide;
+    $scope.saveSettings = function (name) {
+        kango.storage.setItem('popup_' + name, $scope[name]);
+    };
 
     $http.get('http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
     .then(function (res) {

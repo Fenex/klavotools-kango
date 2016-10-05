@@ -49,12 +49,12 @@
 
   <!-- Mail -->
   <div class="mail" ng-controller="popup:Mail as Mail">
-    <div class="mail-settings" ng-init="Mail.HideReadMsg = true">
-      <input id="hideReadMessages" type="checkbox" ng-model="Mail.HideReadMsg" />
+    <div class="mail-settings">
+      <input id="hideReadMessages" type="checkbox" ng-model="hideReadMessages" ng-change="saveSettings('hideReadMessages')" />
       <label for="hideReadMessages">Скрывать прочитанные сообщения</label>
     </div>
     <ul class="messages-list">
-      <li ng-if="message.unread || !Mail.HideReadMsg" ng-repeat="message in Mail.messages" tabindex="0" keyboard-controlled-list
+      <li ng-if="message.unread || !hideReadMessages" ng-repeat="message in Mail.messages" tabindex="0" keyboard-controlled-list
         ng-path ng-path-str="/u/#/{{message.user_id}}/messages/{{message.respondent_id}}" ng-class="{'unread': message.unread}">
         <div class="avatar-wrapper"><img class="avatar" ng-src="{{message.respondent_id | avatar: message.hasAvatar:'big'}}" alt=""
         /></div><div class="message">
