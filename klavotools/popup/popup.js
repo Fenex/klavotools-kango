@@ -145,7 +145,7 @@ angular.module('popup', [
         var year = date.getFullYear();
 
         if (day_diff === 0) {
-            return timeFormatted;
+            return time;
         }
         if (day_diff === 1) {
             return 'Вчера, ' + time;
