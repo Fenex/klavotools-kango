@@ -1,3 +1,32 @@
+/**
+ *
+ * @author Vitaliy Busko
+ * 
+ * An AngularJS wrapper for async kango framework methods:
+ * invokeAsync, invokeAsyncCallback, addMessageListener.
+ * Supports promises.
+ * 
+ * Snippets below the same and output in the console:
+ * >> "3.4.0"
+ * >> ["3", "4", "0"]
+ * 
+ * KangoQ.invokeAsync('kango.getExtensionInfo', function(res) {
+ *     console.log(res.version);
+ *     return res.version.split('.');
+ * }).then(function(res) {
+ *     console.log(res);
+ * });
+ * 
+ * KangoQ.invokeAsync('kango.getExtensionInfo')
+ * .then(function(res) {
+ *     console.log(res.version);
+ *     return res.version.split('.');
+ * }).then(function(res) {
+ *     console.log(res);
+ * });
+ * 
+ */
+ 
 angular.module('fnx.kango-q', [])
 
 .factory('KangoQ', function($q) {
@@ -10,9 +39,10 @@ angular.module('fnx.kango-q', [])
             __callback = args.pop();
 
         args.push(function() {
+            var arg = arguments[0];
             if(__callback)
-                __callback(arguments[0]);
-            defer.resolve(arguments[0]);
+                arg = __callback(arg);
+            defer.resolve(arg);
         });
 
         return {

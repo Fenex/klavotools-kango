@@ -256,3 +256,9 @@ h4 {
 .tag.active > span > span {
   border-color: #000;
 }
+.version {
+  position:relative;
+  right:150px;
+  bottom:10px;
+  font-size:10px;
+}

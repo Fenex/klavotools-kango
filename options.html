@@ -6,6 +6,7 @@
   <title>Настройки KlavoTools</title>
   <script type="text/javascript" src="kango-ui/kango_api.js"></script>
   <script type="text/javascript" src="klavotools/foreground/lib/angular.min.js"></script>
+  <script type="text/javascript" src="klavotools/foreground/lib/kango-q.js"></script>
   <script type="text/javascript" src="klavotools/options/module.js"></script>
   <script type="text/javascript" src="klavotools/options/ng-joke.js"></script>
 </head>
@@ -16,7 +17,9 @@
 
         <div id="logo">
           <img src="icons/klavotools_logo.png" alt="KlavoTools Logo" title="KlavoTools" />
-          <span style="position:relative;right:150px;bottom:10px;font-size:10px;">Версия: <span ng:controller="KTSVersion">{{version}}</span></span>
+          <span class="version">
+            Версия: <kts:version />
+          </span>
         </div>
 
         <div class="right">

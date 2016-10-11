@@ -1,4 +1,4 @@
-angular.module('klavotools', ['klavotools.joke'])
+angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
 .directive('negate', [function () {
     return {
         require: 'ngModel',
@@ -17,17 +17,22 @@ angular.module('klavotools', ['klavotools.joke'])
         }
     };
 }])
-.controller('KTSVersion', function($scope) {
-    kango.invokeAsync('KlavoTools.version', function(ver) {
-        $scope.version = ver;
-        $scope.$apply();
-    });
+.directive('ktsVersion', function(KangoQ) {
+    return {
+        restrict: 'E',
+        link: function(scope, element, attrs) {
+            KangoQ.invokeAsync('KlavoTools.version')
+            .then(function(ver) {
+                element.html(ver);
+            });
+        }
+    }
 })
-.factory('settings', function ($q) {
+.factory('settings', function (KangoQ) {
     return {
         get: function (backgroundGetter) {
-            var deferred = $q.defer();
-            kango.invokeAsync(backgroundGetter, function(data) {
+            return KangoQ.invokeAsync(backgroundGetter)
+            .then(function(data) {
                 var settings = [];
                 for (var key in data) {
                     settings.push({
@@ -36,9 +41,8 @@ angular.module('klavotools', ['klavotools.joke'])
                         value: data[key],
                     });
                 }
-                deferred.resolve(settings);
+                return settings;
             });
-            return deferred.promise;
         },
 
         set: function (backgroundSetter, newSettings, oldSettings) {
