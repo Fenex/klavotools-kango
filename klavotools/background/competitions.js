@@ -133,7 +133,7 @@ Competitions.prototype._createNotification = function (competition, remainingTim
             var found = tabs.some(function (tab) {
                 return tab._tab && tab.getUrl().search(re) !== -1;
             });
-            Q.resolve(!found);
+            deferred.resolve(!found);
         });
         return deferred.promise;
     };
