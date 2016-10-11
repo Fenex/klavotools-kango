@@ -115,8 +115,8 @@ DeferredNotification.prototype.show = function (delay) {
                 if (res === false) {
                     return false;
                 }
-                _show.bind(this);
-            });
+                _show.call(this);
+            }.bind(this));
         } else {
             _show.call(this);
         }
