@@ -92,7 +92,7 @@ describe('competitions module', function () {
       expect(kango.storage.setItem)
         .to.have.been.calledWithExactly('competition_delay', 15)
         .to.have.been.calledWithExactly('competition_rates', [1, 2, 3, 5])
-        .to.have.been.calledWithExactly('competition_displayTime', 5);
+        .to.have.been.calledWithExactly('competition_displayTime', 5)
         .to.have.been.calledWithExactly('competition_audio', false);
     });
 
