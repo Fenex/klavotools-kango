@@ -57,7 +57,7 @@ describe('competitions module', function () {
       kango.storage.getItem.withArgs('competition_rates').returns([1, 2, 3, 5]);
       kango.storage.getItem.withArgs('competition_delay').returns(15);
       kango.storage.getItem.withArgs('competition_displayTime').returns(5);
-      kango.storage.getItem.withArgs('competition_audio').returns(false));
+      kango.storage.getItem.withArgs('competition_audio').returns(false);
       competitions = new Competitions;
       expect(competitions.getParams()).to.be.deep.equal({
         rates: [1, 2, 3, 5],
