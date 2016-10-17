@@ -11,6 +11,7 @@ var Competitions = function() {
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
     this.displayTime = kango.storage.getItem('competition_displayTime');
+    this.audio = !!kango.storage.getItem('competition_audio');
     if (typeof this.delay != 'number') {
         // 1 minute:
         this.delay = 60;
@@ -52,6 +53,7 @@ Competitions.prototype.getParams = function() {
         rates: this.rates,
         delay: this.delay,
         displayTime: this.displayTime,
+        audio: this.audio
     };
 };
 
@@ -61,6 +63,8 @@ Competitions.prototype.getParams = function() {
  */
 Competitions.prototype.setParams = function (param) {
     this.rates = param.rates || this.rates;
+    this.audio = param.audio != void 0 ? !!param.audio : this.audio;
+
     if (typeof param.displayTime === 'number' && param.displayTime >= 0) {
         this.displayTime = param.displayTime;
     }
@@ -72,6 +76,8 @@ Competitions.prototype.setParams = function (param) {
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
     kango.storage.setItem('competition_displayTime', this.displayTime);
+    kango.storage.setItem('competition_audio', this.audio);
+
     this._updateNotifications();
 };
 
@@ -139,6 +145,8 @@ Competitions.prototype._createNotification = function (competition, remainingTim
     };
 
     notification.show(showDelay);
+    this.audio && new Audio('/klavotools/competition.ogg').play();
+
     return notification;
 };
 
