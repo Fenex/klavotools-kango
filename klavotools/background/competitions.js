@@ -27,7 +27,8 @@ var Competitions = function() {
      * @property {number} id An id of the competition.
      * @property {number} ratingValue A rating value of the competition (1, 2, 3, or 5).
      * @property {beginTime} beginTime A string in the ISO 8601 format, or an unix
-     *  timestamp.
+     * timestamp.
+     * @property {boolean} audio Switch sound notification.
      */
 
     /**

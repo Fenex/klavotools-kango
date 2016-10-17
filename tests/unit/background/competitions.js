@@ -47,6 +47,7 @@ describe('competitions module', function () {
       expect(competitions.rates).to.be.deep.equal([3, 5]);
       expect(competitions.delay).to.be.equal(60);
       expect(competitions.displayTime).to.be.equal(0);
+      expect(competitions.audio).to.be.equal(false);
     });
 
     /**
@@ -56,11 +57,13 @@ describe('competitions module', function () {
       kango.storage.getItem.withArgs('competition_rates').returns([1, 2, 3, 5]);
       kango.storage.getItem.withArgs('competition_delay').returns(15);
       kango.storage.getItem.withArgs('competition_displayTime').returns(5);
+      kango.storage.getItem.withArgs('competition_audio').returns(false));
       competitions = new Competitions;
       expect(competitions.getParams()).to.be.deep.equal({
         rates: [1, 2, 3, 5],
         delay: 15,
         displayTime: 5,
+        audio: false
       });
     });
 
@@ -73,6 +76,7 @@ describe('competitions module', function () {
         delay: null,
         rates: null,
         displayTime: null,
+        audio: null
       });
       // sinon-chai doesn't support neverCalledWithMatch :(
       sinon
@@ -83,11 +87,13 @@ describe('competitions module', function () {
         delay: 15,
         rates: [1, 2, 3, 5],
         displayTime: 5,
+        audio: false
       });
       expect(kango.storage.setItem)
         .to.have.been.calledWithExactly('competition_delay', 15)
         .to.have.been.calledWithExactly('competition_rates', [1, 2, 3, 5])
         .to.have.been.calledWithExactly('competition_displayTime', 5);
+        .to.have.been.calledWithExactly('competition_audio', false);
     });
 
     it('should call the _updateNotifications() method within ' +
