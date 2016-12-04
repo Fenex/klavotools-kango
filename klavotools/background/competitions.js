@@ -137,16 +137,18 @@ Competitions.prototype._createNotification = function (competition, remainingTim
         var deferred = Q.defer();
         var re = new RegExp('klavogonki.ru/g/\\?gmid=' + competition.id + '$');
         kango.browser.tabs.getAll(function (tabs) {
+            // Check if we are already at the competition page:
             var found = tabs.some(function (tab) {
                 return tab._tab && tab.getUrl().search(re) !== -1;
             });
+            // Play an audio notification if needed:
+            !found && this.audio && new Audio('/klavotools/competition.ogg').play();
             deferred.resolve(!found);
-        });
+        }.bind(this));
         return deferred.promise;
-    };
+    }.bind(this);
 
     notification.show(showDelay);
-    this.audio && new Audio('/klavotools/competition.ogg').play();
 
     return notification;
 };
