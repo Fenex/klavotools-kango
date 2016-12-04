@@ -142,7 +142,8 @@ Competitions.prototype._createNotification = function (competition, remainingTim
                 return tab._tab && tab.getUrl().search(re) !== -1;
             });
             // Play an audio notification if needed:
-            !found && this.audio && new Audio('/klavotools/competition.ogg').play();
+            var audioUrl = kango.io.getResourceUrl('res/competition.ogg');
+            !found && this.audio && new Audio(audioUrl).play();
             deferred.resolve(!found);
         }.bind(this));
         return deferred.promise;
