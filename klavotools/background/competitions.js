@@ -11,6 +11,7 @@ var Competitions = function() {
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
     this.displayTime = kango.storage.getItem('competition_displayTime');
+    this.audio = !!kango.storage.getItem('competition_audio');
     if (typeof this.delay != 'number') {
         // 1 minute:
         this.delay = 60;
@@ -26,7 +27,8 @@ var Competitions = function() {
      * @property {number} id An id of the competition.
      * @property {number} ratingValue A rating value of the competition (1, 2, 3, or 5).
      * @property {beginTime} beginTime A string in the ISO 8601 format, or an unix
-     *  timestamp.
+     * timestamp.
+     * @property {boolean} audio Switch sound notification.
      */
 
     /**
@@ -52,6 +54,7 @@ Competitions.prototype.getParams = function() {
         rates: this.rates,
         delay: this.delay,
         displayTime: this.displayTime,
+        audio: this.audio
     };
 };
 
@@ -61,6 +64,8 @@ Competitions.prototype.getParams = function() {
  */
 Competitions.prototype.setParams = function (param) {
     this.rates = param.rates || this.rates;
+    this.audio = param.audio != void 0 ? !!param.audio : this.audio;
+
     if (typeof param.displayTime === 'number' && param.displayTime >= 0) {
         this.displayTime = param.displayTime;
     }
@@ -72,6 +77,8 @@ Competitions.prototype.setParams = function (param) {
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
     kango.storage.setItem('competition_displayTime', this.displayTime);
+    kango.storage.setItem('competition_audio', this.audio);
+
     this._updateNotifications();
 };
 
@@ -130,15 +137,20 @@ Competitions.prototype._createNotification = function (competition, remainingTim
         var deferred = Q.defer();
         var re = new RegExp('klavogonki.ru/g/\\?gmid=' + competition.id + '$');
         kango.browser.tabs.getAll(function (tabs) {
+            // Check if we are already at the competition page:
             var found = tabs.some(function (tab) {
                 return tab._tab && tab.getUrl().search(re) !== -1;
             });
+            // Play an audio notification if needed:
+            var audioUrl = kango.io.getResourceUrl('res/competition.ogg');
+            !found && this.audio && new Audio(audioUrl).play();
             deferred.resolve(!found);
-        });
+        }.bind(this));
         return deferred.promise;
-    };
+    }.bind(this);
 
     notification.show(showDelay);
+
     return notification;
 };
 

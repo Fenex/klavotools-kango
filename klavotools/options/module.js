@@ -147,6 +147,7 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
 .controller('CompetitionCtrl', function($scope) {
     $scope.delay = null;
     $scope.displayTime = null;
+    $scope.audio = null;
 
     $scope.rates = {
         x1: false,
@@ -158,6 +159,7 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
     kango.invokeAsync('KlavoTools.Competitions.getParams', function(res) {
         $scope.delay = res.delay;
         $scope.displayTime = res.displayTime;
+        $scope.audio = res.audio;
         for(var i=0; i<res.rates.length; i++) {
             if(typeof $scope.rates['x'+res.rates[i]] == 'boolean') {
                 $scope.rates['x'+res.rates[i]] = true;
@@ -186,6 +188,11 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
     $scope.$watch('delay', function(a, b) {
         if(typeof b != 'object')
             sendPrefs({delay: parseInt(a)});
+    });
+
+    $scope.$watch('audio', function(a) {
+        if(typeof b != 'object')
+            sendPrefs({audio: a});
     });
 })
 .filter('filterByTags', function () {
