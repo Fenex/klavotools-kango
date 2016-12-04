@@ -11,7 +11,7 @@ klavotools-kango
 Для сборки необходимо:
 
 1. Установить Python 2.7 (http://www.python.org/download/).
-2. Установить модуль [doit](https://pypi.python.org/pypi/doit): `pip install doit`
+2. Установить модуль [doit](https://pypi.python.org/pypi/doit): `pip install doit==0.29.0`
 3. Установить модуль [libsass](https://pypi.python.org/pypi/libsass): `pip install libsass`
 4. Выполнить в корневой директории проекта команду: `doit`
 
