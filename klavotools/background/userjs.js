@@ -46,37 +46,6 @@ UserJS.prototype._fetchConfig = function () {
 };
 
 /**
- * Applies the old userscripts configuration to the given one and removes old data from
- * the localStorage.
- * @deprecated since 3.3.7
- * @param {Object.<string, UserscriptData>} config Userscripts configuration.
- * @returns {Promise.<Object>}
- * @private
- */
-UserJS.prototype._applyLegacyConfig = function (config) {
-    var keys = kango.storage.getKeys();
-    keys.forEach(function (key) {
-        var name = key.match(/^userjs_(\S+)$/);
-        if (name) {
-            try {
-                var oldData = JSON.parse(kango.storage.getItem('userjs_' + name[1]));
-                var actualName = name[1].replace('.user.js', '');
-                var data = config[actualName];
-            } catch (error) {
-                kango.console.log('Old UserJS data load error: ' + error.toString());
-            }
-
-            if (typeof data !== 'undefined') {
-                config[actualName].disabled = !oldData.enabled;
-            }
-            // Deleting old data:
-            kango.storage.removeItem('userjs_' + name[1]);
-        }
-    }, this);
-    return Q.resolve(config);
-};
-
-/**
  * Returns a 2d array, containing the data of userscripts, that should be
  * included on the page, by the given URL string.
  * @param {string} url The location.href value.
@@ -209,7 +178,6 @@ UserJS.prototype._init = function () {
     var data = kango.storage.getItem('userscripts_data');
     if (!data) {
         return this._fetchConfig()
-            .then(this._applyLegacyConfig.bind(this))
             .then(this._setState.bind(this))
             .then(this._saveState.bind(this));
     }
