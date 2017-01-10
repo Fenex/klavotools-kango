@@ -108,7 +108,7 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
     });
 
     $scope.toggle = function (name, event) {
-        if (event.target.id === name) {
+        if (event.target.id === name || $scope.scripts[name].broken) {
             return false;
         }
         $scope.scripts[name].disabled = !$scope.scripts[name].disabled;

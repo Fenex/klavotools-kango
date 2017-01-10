@@ -28,6 +28,7 @@ UserJS.prototype._fetchConfig = function () {
         config.forEach(function (script) {
             script.updateUrl =
                 KlavoTools.const.USERJS_DIRECTORY_URL + '/' + script.name + '.user.js';
+            script.broken = script.broken ? true : false;
             script.integrated = script.integrated ? true : false;
             script.disabled = script.disabled ? true : false;
             script.conflicts = script.conflicts ? script.conflicts : [];

@@ -29,14 +29,17 @@ describe('userjs module', function () {
       processedConfig = { script1: json[0], script2: json[1], script3: json[2] };
       processedConfig.script1.updateUrl = baseUrl + '/script1.user.js'
       processedConfig.script1.disabled = false;
+      processedConfig.script1.broken = true;
       processedConfig.script1.conflicts = [];
       processedConfig.script1._ignoreUpdate = ['disabled'];
       processedConfig.script2.updateUrl = baseUrl + '/script2.user.js'
+      processedConfig.script2.broken = false;
       processedConfig.script2.integrated = false;
       processedConfig.script2.conflicts = [];
       processedConfig.script2._ignoreUpdate = ['disabled'];
       processedConfig.script3.updateUrl = baseUrl + '/script3.user.js'
       processedConfig.script3.disabled = false;
+      processedConfig.script3.broken = false;
       processedConfig.script3.integrated = false;
       processedConfig.script3._ignoreUpdate = ['disabled'];
       processedConfigClone = {};
