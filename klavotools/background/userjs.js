@@ -26,10 +26,6 @@ UserJS.prototype._fetchConfig = function () {
         }
         var hash = {};
         config.forEach(function (script) {
-            // FIXME: remove this crutch :D
-            if (script.name === 'chat2BBcode') {
-                script.name = 'chat2BBCode';
-            }
             script.updateUrl =
                 KlavoTools.const.USERJS_DIRECTORY_URL + '/' + script.name + '.user.js';
             script.integrated = script.integrated ? true : false;
