@@ -129,7 +129,7 @@ UserJS.prototype._syncState = function () {
         for (var name in this._scripts) {
             if (!config[name]) {
                 delete this._scripts[name];
-            } else if (semver.gt(config[name].version, this._scripts[name].version)) {
+            } else if (semver.neq(config[name].version, this._scripts[name].version)) {
                 promises.push(this._scripts[name].update());
             }
         }
