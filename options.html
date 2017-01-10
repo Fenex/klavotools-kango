@@ -174,7 +174,8 @@
             ng-repeat="(name, data) in scripts | filterByTags:tags"
             ng-if="data.integrated === false || showIntegrated === true"
             ng-click="toggle(name, $event)"
-            ng-class="{integrated: data.integrated}"
+            ng-class="{integrated: data.integrated, broken: data.broken}"
+            title="{{data.broken ? 'Скрипт в нерабочем состоянии.' : ''}}"
             >
             <td>
               <input type="checkbox"
@@ -182,6 +183,7 @@
                 name="{{name}}"
                 class="user_set"
                 negate ng-model="data.disabled"
+                ng-disabled="data.broken"
                 ng-change="onChange(name)"
                 />
               {{name}}

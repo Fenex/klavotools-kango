@@ -26,12 +26,9 @@ UserJS.prototype._fetchConfig = function () {
         }
         var hash = {};
         config.forEach(function (script) {
-            // FIXME: remove this crutch :D
-            if (script.name === 'chat2BBcode') {
-                script.name = 'chat2BBCode';
-            }
             script.updateUrl =
                 KlavoTools.const.USERJS_DIRECTORY_URL + '/' + script.name + '.user.js';
+            script.broken = script.broken ? true : false;
             script.integrated = script.integrated ? true : false;
             script.disabled = script.disabled ? true : false;
             script.conflicts = script.conflicts ? script.conflicts : [];
@@ -43,37 +40,6 @@ UserJS.prototype._fetchConfig = function () {
         kango.console.log('Error while loading userscripts config: ' + error.toString());
         return Q.reject(error);
     });
-};
-
-/**
- * Applies the old userscripts configuration to the given one and removes old data from
- * the localStorage.
- * @deprecated since 3.3.7
- * @param {Object.<string, UserscriptData>} config Userscripts configuration.
- * @returns {Promise.<Object>}
- * @private
- */
-UserJS.prototype._applyLegacyConfig = function (config) {
-    var keys = kango.storage.getKeys();
-    keys.forEach(function (key) {
-        var name = key.match(/^userjs_(\S+)$/);
-        if (name) {
-            try {
-                var oldData = JSON.parse(kango.storage.getItem('userjs_' + name[1]));
-                var actualName = name[1].replace('.user.js', '');
-                var data = config[actualName];
-            } catch (error) {
-                kango.console.log('Old UserJS data load error: ' + error.toString());
-            }
-
-            if (typeof data !== 'undefined') {
-                config[actualName].disabled = !oldData.enabled;
-            }
-            // Deleting old data:
-            kango.storage.removeItem('userjs_' + name[1]);
-        }
-    }, this);
-    return Q.resolve(config);
 };
 
 /**
@@ -163,7 +129,7 @@ UserJS.prototype._syncState = function () {
         for (var name in this._scripts) {
             if (!config[name]) {
                 delete this._scripts[name];
-            } else if (semver.gt(config[name].version, this._scripts[name].version)) {
+            } else if (semver.neq(config[name].version, this._scripts[name].version)) {
                 promises.push(this._scripts[name].update());
             }
         }
@@ -209,7 +175,6 @@ UserJS.prototype._init = function () {
     var data = kango.storage.getItem('userscripts_data');
     if (!data) {
         return this._fetchConfig()
-            .then(this._applyLegacyConfig.bind(this))
             .then(this._setState.bind(this))
             .then(this._saveState.bind(this));
     }

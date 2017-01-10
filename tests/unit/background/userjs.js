@@ -29,14 +29,17 @@ describe('userjs module', function () {
       processedConfig = { script1: json[0], script2: json[1], script3: json[2] };
       processedConfig.script1.updateUrl = baseUrl + '/script1.user.js'
       processedConfig.script1.disabled = false;
+      processedConfig.script1.broken = true;
       processedConfig.script1.conflicts = [];
       processedConfig.script1._ignoreUpdate = ['disabled'];
       processedConfig.script2.updateUrl = baseUrl + '/script2.user.js'
+      processedConfig.script2.broken = false;
       processedConfig.script2.integrated = false;
       processedConfig.script2.conflicts = [];
       processedConfig.script2._ignoreUpdate = ['disabled'];
       processedConfig.script3.updateUrl = baseUrl + '/script3.user.js'
       processedConfig.script3.disabled = false;
+      processedConfig.script3.broken = false;
       processedConfig.script3.integrated = false;
       processedConfig.script3._ignoreUpdate = ['disabled'];
       processedConfigClone = {};
@@ -64,38 +67,6 @@ describe('userjs module', function () {
       var config = fixtures.userscripts.config;
       sandbox.stub(kango.xhr, 'send').yields({ response: config, status: 200 });
       return expect(userjs._fetchConfig()).to.be.rejected;
-    });
-
-    it('should correctly apply the old configuration from the localStorage', function () {
-      sandbox.stub(kango.storage, 'getKeys')
-        .returns(['userjs_script1.user.js', 'userjs_script2.user.js']);
-      sandbox.stub(kango.storage, 'getItem')
-        .withArgs('userjs_script1.user.js')
-          .returns(JSON.stringify({
-            name: 'script1.user.js',
-            enabled: false,
-          }))
-        .withArgs('userjs_script2.user.js')
-          .returns(JSON.stringify({
-            name: 'script2.user.js',
-            enabled: true,
-          }));
-      processedConfigClone.script1.disabled = true;
-      processedConfigClone.script2.disabled = false;
-      return expect(userjs._applyLegacyConfig(processedConfig))
-        .to.be.eventually.deep.equal(processedConfigClone);
-    });
-
-    it('should delete old userscripts configuration data from ' +
-        'the localStorage', function () {
-      sandbox.stub(kango.storage, 'getKeys')
-        .returns(['userjs_script1.user.js', 'userjs_script2.user.js']);
-      sandbox.spy(kango.storage, 'removeItem');
-      userjs._applyLegacyConfig(processedConfig);
-      expect(kango.storage.removeItem)
-        .to.have.been.calledTwice
-        .to.have.been.calledWithExactly('userjs_script1.user.js')
-        .to.have.been.calledWithExactly('userjs_script2.user.js');
     });
 
     it('should return correct userscripts for the given URL', function () {

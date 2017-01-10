@@ -66,7 +66,7 @@ Script.prototype._setIncludes = function (code) {
  * @returns {boolean}
  */
 Script.prototype.shouldBeIncluded = function (url) {
-    if (this.disabled) {
+    if (this.disabled || this.broken) {
         return false;
     }
     return this.includes.some(function (re) {

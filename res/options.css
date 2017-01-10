@@ -192,6 +192,9 @@ h4 {
 #KTS_scripts table tr.integrated {
   background-color: #e6ffd9;
 }
+#KTS_scripts table tr.broken {
+  background-color: #ffd4d4;
+}
 #KTS_scripts table tr:not(:first-child) {
   transition: background-color 0.1s linear;
   cursor: pointer;
