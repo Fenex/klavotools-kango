@@ -93,14 +93,17 @@ Socket.prototype._subscribe = function (message) {
  */
 Socket.prototype._onHeartbeat = function () {
     clearTimeout(this._heartbeatTimer);
-    this._heartbeatTimer = setTimeout(function () {
-        this._ws.dispatchEvent(new CustomEvent('error', {
-            detail: {
-                code: 4000,
-                reason: 'Connection closed by client due to server inactivity.',
-            }
-        }));
-    }.bind(this), KlavoTools.const.WS_HEARTBEAT_TIMEOUT * 1000);
+    // FIXME: after the last site update, server doesn't send heartbeat frames
+    // anymore (maybe a bug?). Needs additional investigation.
+    //
+    // this._heartbeatTimer = setTimeout(function () {
+    //     this._ws.dispatchEvent(new CustomEvent('error', {
+    //         detail: {
+    //             code: 4000,
+    //             reason: 'Connection closed by client due to server inactivity.',
+    //         }
+    //     }));
+    // }.bind(this), KlavoTools.const.WS_HEARTBEAT_TIMEOUT * 1000);
 };
 
 /**
