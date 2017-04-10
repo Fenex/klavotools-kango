@@ -161,7 +161,7 @@ describe('socket module', function () {
       });
     });
 
-    it('should raise a WebSocket error, if the heartbeat frame was not received after ' +
+    it.skip('should raise a WebSocket error, if the heartbeat frame was not received after ' +
         '40 seconds', function () {
       socket.connect(1337, '1337');
       socket._ws.onopen();
