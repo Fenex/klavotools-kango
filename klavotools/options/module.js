@@ -186,13 +186,15 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
     };
 
     $scope.$watch('delay', function(a, b) {
-        if(typeof b != 'object')
+        if (typeof b != 'object') {
             sendPrefs({delay: parseInt(a)});
+        }
     });
 
-    $scope.$watch('audio', function(a) {
-        if(typeof b != 'object')
+    $scope.$watch('audio', function(a, b) {
+        if (typeof b != 'object') {
             sendPrefs({audio: a});
+        }
     });
 })
 .filter('filterByTags', function () {
