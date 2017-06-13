@@ -60,7 +60,7 @@ angular.module('popup', [
             var url = scope.ngPath || attrs.ngPathStr;
             var mode = RedirectMode.UNDEFINED;
             var timer = null;
-            element.on('click', function (event) {
+            element.on('click auxclick', function(event) {
                 event.stopPropagation();
                 if (event.button==1) {
                     mode = RedirectMode.UNDEFINED;
