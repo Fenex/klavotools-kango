@@ -58,23 +58,9 @@ angular.module('popup', [
         },
         link: function (scope, element, attrs) {
             var url = scope.ngPath || attrs.ngPathStr;
-            var mode = RedirectMode.UNDEFINED;
-            var timer = null;
             element.on('click auxclick', function(event) {
                 event.stopPropagation();
-                if (event.button==1) {
-                    mode = RedirectMode.UNDEFINED;
-                    Redirect(url, RedirectMode.BACKGROUND);
-                    return;
-                }
-                mode++;
-                if (!timer) {
-                    timer = $timeout(function () {
-                        Redirect(url, mode);
-                        mode = RedirectMode.UNDEFINED;
-                        timer = null;
-                    }, 300);
-                }
+                return event.button === 1 ? Redirect(url, RedirectMode.BACKGROUND) : Redirect(url);
             });
         }
     }
