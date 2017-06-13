@@ -161,8 +161,8 @@ angular.module('popup', [
     return function (id, hasAvatar, size) {
         var url;
         if (hasAvatar) {
-            url = 'http://img.klavogonki.ru/avatars/' + id;
-            url += size === 'small' ? '.gif' : '_big.gif';
+            url = 'http://i.klavogonki.ru/avatars/' + id;
+            url += size === 'small' ? '.gif' : '_big.png';
         } else {
             url = 'http://klavogonki.ru/img/';
             url += size === 'small' ? 'avatar_dummy_16.png' : 'avatar_dummy.gif';
