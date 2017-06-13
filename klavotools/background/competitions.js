@@ -128,16 +128,20 @@ Competitions.prototype._createNotification = function (competition, remainingTim
     notification.onclick = function () {
         var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + competition.id;
         // TODO: refactor navigate/tabs.create check:
-        kango.browser.tabs.getCurrent(function (tab) {
-            // Using private _tab property check because kango .getUrl() method is awful:
-            if (!tab._tab || tab.getUrl().search(/klavogonki.ru/) === -1) {
+        kango.browser.tabs.getAll(function (tabs) {
+            var foundTab = tabs.find(function (tab) {
+                return tab._tab && tab.getUrl().search(/klavogonki.ru/) !== -1;
+            });
+            if (!foundTab) {
                 kango.browser.tabs.create({
                     url: competitionUrl,
                     focused: true,
                 });
             } else {
                 // Navigate to the competition page without creating new tab:
-                tab.navigate(competitionUrl);
+                foundTab.navigate(competitionUrl);
+                // Set the focus on this tab:
+                foundTab.activate();
             }
         });
         notification.revoke();
