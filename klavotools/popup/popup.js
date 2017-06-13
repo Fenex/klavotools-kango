@@ -162,7 +162,7 @@ angular.module('popup', [
         var url;
         if (hasAvatar) {
             url = 'http://i.klavogonki.ru/avatars/' + id;
-            url += size === 'small' ? '.gif' : '_big.png';
+            url += size === 'small' ? '.png' : '_big.png';
         } else {
             url = 'http://klavogonki.ru/img/';
             url += size === 'small' ? 'avatar_dummy_16.png' : 'avatar_dummy.gif';
