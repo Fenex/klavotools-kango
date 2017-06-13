@@ -56,12 +56,13 @@ RaceInvitations.prototype._createNotification = function (game) {
 
     notification.onclick = function () {
         var raceUrl = 'http://klavogonki.ru/g/?gmid=' + game.game_id;
+        // TODO: refactor navigate/tabs.create check:
         kango.browser.tabs.getCurrent(function (tab) {
             // Using private _tab property check because kango .getUrl() method is awful:
-            if (!tab._tab || tab.getUrl().search(/klavogonki.ru\/g\/\?gmid/) === -1) {
+            if (!tab._tab || tab.getUrl().search(/klavogonki.ru/) === -1) {
                 kango.browser.tabs.create({ url: raceUrl });
             } else {
-                // We are at the race page — navigate to the new one:
+                // Navigate to the race page without creating new tab:
                 tab.navigate(raceUrl);
             }
         });

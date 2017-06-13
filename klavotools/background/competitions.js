@@ -126,9 +126,19 @@ Competitions.prototype._createNotification = function (competition, remainingTim
     });
 
     notification.onclick = function () {
-        kango.browser.tabs.create({
-            url: 'http://klavogonki.ru/g/?gmid=' + competition.id,
-            focused: true,
+        var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + competition.id;
+        // TODO: refactor navigate/tabs.create check:
+        kango.browser.tabs.getCurrent(function (tab) {
+            // Using private _tab property check because kango .getUrl() method is awful:
+            if (!tab._tab || tab.getUrl().search(/klavogonki.ru/) === -1) {
+                kango.browser.tabs.create({
+                    url: competitionUrl,
+                    focused: true,
+                });
+            } else {
+                // Navigate to the competition page without creating new tab:
+                tab.navigate(competitionUrl);
+            }
         });
         notification.revoke();
     };

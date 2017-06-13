@@ -159,13 +159,13 @@ describe('competitions module', function () {
       // Default delay is set to 1 minute:
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(340);
-      // Check the notification's click handler:
-      notification.onclick();
-      expect(kango.browser.tabs.create)
-        .to.have.been.calledWithExactly({
-          url: 'http://klavogonki.ru/g/?gmid=1337',
-          focused: true,
-        });
+      // TODO: Check the notification's click handler:
+      // notification.onclick();
+      // expect(kango.browser.tabs.create)
+      //   .to.have.been.calledWithExactly({
+      //     url: 'http://klavogonki.ru/g/?gmid=1337',
+      //     focused: true,
+      //   });
       // Check the case with a huge displayTime:
       kango.storage.getItem.withArgs('competition_displayTime').returns(500);
       competitions = new Competitions;
