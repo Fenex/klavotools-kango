@@ -38,6 +38,34 @@ KlavoTools.tabs = {
         kango.browser.tabs.getCurrent(function(tab) {
             tab.navigate(url);
         });
+    },
+    createOrNavigateExisting: function(url) {
+        var re = /klavogonki.ru/;
+        kango.browser.tabs.getAll(function (tabs) {
+            // Using private _tab property check because kango .getUrl() method is awful:
+            var foundTab = tabs.find(function (tab) {
+                return tab._tab && tab.getUrl().search(re) !== -1;
+            });
+            var foundCurrentTab = tabs.find(function (tab) {
+                return tab._tab && tab.isActive() && tab.getUrl().search(re) !== -1;
+            });
+
+            if (foundCurrentTab) {
+                foundTab = foundCurrentTab;
+            }
+
+            if (!foundTab) {
+                kango.browser.tabs.create({
+                    url: url,
+                    focused: true,
+                });
+            } else {
+                // Navigate to the given URL without creating new tab:
+                foundTab.navigate(url);
+                // Set the focus on this tab:
+                foundTab.activate();
+            }
+        });
     }
 };
 

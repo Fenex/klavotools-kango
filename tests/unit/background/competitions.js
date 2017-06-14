@@ -23,7 +23,8 @@ describe('competitions module', function () {
       sandbox.stub(kango.storage, 'getItem');
       sandbox.stub(kango.xhr, 'send');
       sandbox.spy(kango.storage, 'setItem');
-      sandbox.spy(kango.browser.tabs, 'create');
+
+      sandbox.stub(KlavoTools.tabs, 'createOrNavigateExisting');
       sandbox.spy(Competitions.prototype, '_updateNotifications');
       sandbox.spy(Competitions.prototype, '_createNotification');
       // Setting up a spy for the DeferredNotification class constructor:
@@ -159,13 +160,10 @@ describe('competitions module', function () {
       // Default delay is set to 1 minute:
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(340);
-      // TODO: Check the notification's click handler:
-      // notification.onclick();
-      // expect(kango.browser.tabs.create)
-      //   .to.have.been.calledWithExactly({
-      //     url: 'http://klavogonki.ru/g/?gmid=1337',
-      //     focused: true,
-      //   });
+      // Check the notification's click handler:
+      notification.onclick();
+      expect(KlavoTools.tabs.createOrNavigateExisting)
+        .to.have.been.calledWithExactly('http://klavogonki.ru/g/?gmid=1337');
       // Check the case with a huge displayTime:
       kango.storage.getItem.withArgs('competition_displayTime').returns(500);
       competitions = new Competitions;
