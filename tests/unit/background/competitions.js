@@ -64,7 +64,9 @@ describe('competitions module', function () {
         rates: [1, 2, 3, 5],
         delay: 15,
         displayTime: 5,
-        audio: false
+        audio: false,
+        onlyWithPlayers: false,
+        minimalPlayersNumber: 2,
       });
     });
 
@@ -156,6 +158,7 @@ describe('competitions module', function () {
           // TODO: set the stub for the kango.io.getResourceUrl
           icon: undefined,
           displayTime: undefined,
+          audio: false,
         });
       // Default delay is set to 1 minute:
       expect(DeferredNotification.prototype.show)
@@ -174,6 +177,7 @@ describe('competitions module', function () {
           icon: undefined,
           // displayTime == delay:
           displayTime: 60,
+          audio: false,
         });
       // Check the case with a huge delay:
       kango.storage.getItem.withArgs('competition_delay').returns(500);
