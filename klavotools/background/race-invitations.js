@@ -56,14 +56,30 @@ RaceInvitations.prototype._createNotification = function (game) {
 
     notification.onclick = function () {
         var raceUrl = 'http://klavogonki.ru/g/?gmid=' + game.game_id;
+        var re = /klavogonki.ru/;
         // TODO: refactor navigate/tabs.create check:
-        kango.browser.tabs.getCurrent(function (tab) {
-            // Using private _tab property check because kango .getUrl() method is awful:
-            if (!tab._tab || tab.getUrl().search(/klavogonki.ru/) === -1) {
-                kango.browser.tabs.create({ url: raceUrl });
+        kango.browser.tabs.getAll(function (tabs) {
+            var foundTab = tabs.find(function (tab) {
+                return tab._tab && tab.getUrl().search(re) !== -1;
+            });
+            var foundCurrentTab = tabs.find(function (tab) {
+                return tab._tab && tab.isActive() && tab.getUrl().search(re) !== -1;
+            });
+
+            if (foundCurrentTab) {
+                foundTab = foundCurrentTab;
+            }
+
+            if (!foundTab) {
+                kango.browser.tabs.create({
+                    url: raceUrl,
+                    focused: true,
+                });
             } else {
                 // Navigate to the race page without creating new tab:
-                tab.navigate(raceUrl);
+                foundTab.navigate(raceUrl);
+                // Set the focus on this tab:
+                foundTab.activate();
             }
         });
         notification.close();

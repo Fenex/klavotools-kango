@@ -127,11 +127,20 @@ Competitions.prototype._createNotification = function (competition, remainingTim
 
     notification.onclick = function () {
         var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + competition.id;
+        var re = /klavogonki.ru/;
         // TODO: refactor navigate/tabs.create check:
         kango.browser.tabs.getAll(function (tabs) {
             var foundTab = tabs.find(function (tab) {
-                return tab._tab && tab.getUrl().search(/klavogonki.ru/) !== -1;
+                return tab._tab && tab.getUrl().search(re) !== -1;
             });
+            var foundCurrentTab = tabs.find(function (tab) {
+                return tab._tab && tab.isActive() && tab.getUrl().search(re) !== -1;
+            });
+
+            if (foundCurrentTab) {
+                foundTab = foundCurrentTab;
+            }
+
             if (!foundTab) {
                 kango.browser.tabs.create({
                     url: competitionUrl,
