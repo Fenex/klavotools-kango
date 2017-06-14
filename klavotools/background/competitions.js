@@ -8,10 +8,14 @@
  */
 var Competitions = function() {
     // Set default values:
+    // TODO: move these options to a hash object:
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
     this.displayTime = kango.storage.getItem('competition_displayTime');
     this.audio = !!kango.storage.getItem('competition_audio');
+    this.onlyWithPlayers = kango.storage.getItem('competition_onlyWithPlayers') || false;
+    this.minimalPlayersNumber = kango.storage.getItem('competition_minimalPlayersNumber') || 2;
+
     if (typeof this.delay != 'number') {
         // 1 minute:
         this.delay = 60;
@@ -54,7 +58,9 @@ Competitions.prototype.getParams = function() {
         rates: this.rates,
         delay: this.delay,
         displayTime: this.displayTime,
-        audio: this.audio
+        audio: this.audio,
+        onlyWithPlayers: this.onlyWithPlayers,
+        minimalPlayersNumber: this.minimalPlayersNumber,
     };
 };
 
@@ -74,10 +80,20 @@ Competitions.prototype.setParams = function (param) {
         this.delay = param.delay;
     }
 
+    if (typeof param.onlyWithPlayers === 'boolean') {
+        this.onlyWithPlayers = param.onlyWithPlayers;
+    }
+
+    if (typeof param.minimalPlayersNumber === 'number') {
+        this.minimalPlayersNumber = param.minimalPlayersNumber;
+    }
+
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
     kango.storage.setItem('competition_displayTime', this.displayTime);
     kango.storage.setItem('competition_audio', this.audio);
+    kango.storage.setItem('competition_onlyWithPlayers', this.onlyWithPlayers);
+    kango.storage.setItem('competition_minimalPlayersNumber', this.minimalPlayersNumber);
 
     this._updateNotifications();
 };
@@ -96,6 +112,49 @@ Competitions.prototype._updateNotifications = function () {
             this._notify(id);
         }
     }
+}
+
+/**
+ * Fetches the number of active players in the given competition, with their logins list.
+ * @param {CompetitionData} competition A hash object with competition data
+ * @returns {Promise.<Object>} A promise to a hash object with number and logins fields
+ */
+Competitions.prototype._fetchPlayersData = function (competition) {
+    function processGamelistData(data) {
+        if (!Array.isArray(data.gamelist)) {
+            throw new Error('Competitions._checkPlayersNumber: data.gamelist not found.');
+        }
+
+        var found = data.gamelist.find(function(game) {
+            return game.id === competition.id;
+        });
+
+        if (!found) {
+            throw new Error('Competitions._checkPlayersNumber: ' +
+                'Competition #' + competition.id + ' not found.');
+        }
+
+        if (!Array.isArray(found.players)) {
+            throw new Error('Competitions._checkPlayersNumber: players array not available.');
+        }
+
+        var activePlayers = found.players.filter(function(player) {
+            return !player.leave;
+        });
+
+        return {
+            number: activePlayers.length,
+            logins: activePlayers.map(function (player) {
+                return player.name || '';
+            }),
+        };
+    }
+
+    return fetch(KlavoTools.const.GAMELIST_DATA_URL)
+        .then(function(response) {
+            return response.ok ? response.json() : Q.reject(response.json());
+        })
+        .then(processGamelistData.bind(this));
 };
 
 /**
@@ -120,35 +179,60 @@ Competitions.prototype._createNotification = function (competition, remainingTim
     }
 
     var notification = new DeferredNotification(title, {
+        audio: this.audio,
         body: body,
         icon: icon,
         displayTime: displayTime > 0 ? displayTime : void 0,
     });
 
     notification.onclick = function () {
-        kango.browser.tabs.create({
-            url: 'http://klavogonki.ru/g/?gmid=' + competition.id,
-            focused: true,
-        });
+        var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + competition.id;
+        KlavoTools.tabs.createOrNavigateExisting(competitionUrl);
         notification.revoke();
     };
 
-    notification.before = function () {
+    // Check if we are already at the competition page:
+    function checkPresence(competition) {
         var deferred = Q.defer();
         var re = new RegExp('klavogonki.ru/g/\\?gmid=' + competition.id + '$');
         kango.browser.tabs.getAll(function (tabs) {
-            // Check if we are already at the competition page:
-            var found = tabs.some(function (tab) {
+            deferred.resolve(tabs.some(function (tab) {
                 return tab._tab && tab.getUrl().search(re) !== -1;
-            });
-            // Play an audio notification if needed:
-            var audioUrl = kango.io.getResourceUrl('res/competition.ogg');
-            !found && this.audio && new Audio(audioUrl).play();
-            deferred.resolve(!found);
-        }.bind(this));
+            }));
+        });
         return deferred.promise;
-    }.bind(this);
+    }
 
+    function finalChecks(competition, notification) {
+        var deferred = Q.defer();
+
+        if (this.onlyWithPlayers) {
+            checkPresence(competition).then(function(alreadyThere) {
+                if (alreadyThere) {
+                    deferred.resolve(false);
+                }
+            }).then(this._fetchPlayersData.bind(this, competition))
+            .then(function(notification, data) {
+                // Updating the notification body:
+                if (data.number === 0) {
+                    notification.options.body += '\n(Нет активных участников)';
+                } else {
+                    notification.options.body += '\nУчастники (' + data.number + '): ' +
+                        data.logins.join(', ');
+                }
+
+                deferred.resolve(this.minimalPlayersNumber <= data.number);
+            }.bind(this, notification));
+        } else {
+            checkPresence(competition).then(function(alreadyThere) {
+                deferred.resolve(!alreadyThere);
+            });
+        }
+
+        return deferred.promise;
+    }
+
+    notification.before = finalChecks.bind(this, competition, notification);
     notification.show(showDelay);
 
     return notification;

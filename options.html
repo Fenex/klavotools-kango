@@ -136,6 +136,14 @@
           </td>
         </tr>
       </table>
+      <div>
+        <label>
+          <input type="checkbox" ng-model="onlyWithPlayers"/>
+          Уведомлять о рейтинговом соревновании только при наличии
+          <input type="number" min="0" ng-model="minimalPlayersNumber" class="number-input" ng-disabled="!onlyWithPlayers"/>
+          и более участников
+        </label>
+      </div>
       <div id="KTS_raceInvitations" ng:controller="RaceInvitations">
         <div ng:repeat="setting in settings">
           <div ng-if="setting.type === 'boolean'">

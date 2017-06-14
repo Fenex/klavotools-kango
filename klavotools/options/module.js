@@ -148,6 +148,8 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
     $scope.delay = null;
     $scope.displayTime = null;
     $scope.audio = null;
+    $scope.onlyWithPlayers = null;
+    $scope.minimalPlayersNumber = null;
 
     $scope.rates = {
         x1: false,
@@ -160,6 +162,8 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
         $scope.delay = res.delay;
         $scope.displayTime = res.displayTime;
         $scope.audio = res.audio;
+        $scope.onlyWithPlayers = res.onlyWithPlayers;
+        $scope.minimalPlayersNumber = res.minimalPlayersNumber;
         for(var i=0; i<res.rates.length; i++) {
             if(typeof $scope.rates['x'+res.rates[i]] == 'boolean') {
                 $scope.rates['x'+res.rates[i]] = true;
@@ -185,14 +189,26 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
         sendPrefs({ displayTime: parseInt($scope.displayTime) });
     };
 
+    // TODO: refactor this ugly code:
     $scope.$watch('delay', function(a, b) {
-        if(typeof b != 'object')
-            sendPrefs({delay: parseInt(a)});
+        if (typeof b != 'object') {
+            sendPrefs({ delay: parseInt(a) });
+        }
     });
-
-    $scope.$watch('audio', function(a) {
-        if(typeof b != 'object')
-            sendPrefs({audio: a});
+    $scope.$watch('audio', function(a, b) {
+        if (typeof b != 'object') {
+            sendPrefs({ audio: a });
+        }
+    });
+    $scope.$watch('onlyWithPlayers', function(a, b) {
+        if (typeof b != 'object') {
+            sendPrefs({ onlyWithPlayers: !!a });
+        }
+    });
+    $scope.$watch('minimalPlayersNumber', function(a, b) {
+        if (typeof b != 'object') {
+            sendPrefs({ minimalPlayersNumber: parseInt(a) });
+        }
     });
 })
 .filter('filterByTags', function () {

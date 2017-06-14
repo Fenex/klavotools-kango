@@ -230,6 +230,9 @@ h4 {
   font-style: italic;
   font-size: 11pt;
 }
+.number-input {
+  width: 4.5em;
+}
 .tag {
   position: relative;
   margin-right: 0.5ch;

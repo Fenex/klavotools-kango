@@ -6,6 +6,7 @@
  *     body: 'Hello, world!',
  *     icon: 'http://example.com/img.png',
  *     displayTime: 10, // Hide the notification after 10 seconds
+ *     audio: true, // Play sound
  * });
  * notify.show(5); // Show the notification after 5 seconds
  * notify.onclick = function() {
@@ -19,6 +20,7 @@
  * window.Notification's constructor, with the addition of an optional parameters:
  *
  * @param {Number} [options.displayTime] Sets the display time for the notification in seconds
+ * @param {Boolean} [options.audio] Whether the sound notification is needed.
  * @param {string} title
  * @param {Object} options
  * @returns {Object}
@@ -80,6 +82,12 @@ DeferredNotification.prototype.show = function (delay) {
         // check whether the close event was triggered by user — saving the current timestamp:
         var timestamp = Date.now();
         var notification = new Notification(this.title, this.options);
+
+        // Play a sound if needed:
+        if (this.options.audio) {
+            new Audio(kango.io.getResourceUrl('res/competition.ogg')).play();
+        }
+
         this._notification = notification;
 
         // Proxing methods to the Notification instance object:

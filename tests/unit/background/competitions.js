@@ -23,7 +23,8 @@ describe('competitions module', function () {
       sandbox.stub(kango.storage, 'getItem');
       sandbox.stub(kango.xhr, 'send');
       sandbox.spy(kango.storage, 'setItem');
-      sandbox.spy(kango.browser.tabs, 'create');
+
+      sandbox.stub(KlavoTools.tabs, 'createOrNavigateExisting');
       sandbox.spy(Competitions.prototype, '_updateNotifications');
       sandbox.spy(Competitions.prototype, '_createNotification');
       // Setting up a spy for the DeferredNotification class constructor:
@@ -63,7 +64,9 @@ describe('competitions module', function () {
         rates: [1, 2, 3, 5],
         delay: 15,
         displayTime: 5,
-        audio: false
+        audio: false,
+        onlyWithPlayers: false,
+        minimalPlayersNumber: 2,
       });
     });
 
@@ -155,17 +158,15 @@ describe('competitions module', function () {
           // TODO: set the stub for the kango.io.getResourceUrl
           icon: undefined,
           displayTime: undefined,
+          audio: false,
         });
       // Default delay is set to 1 minute:
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(340);
       // Check the notification's click handler:
       notification.onclick();
-      expect(kango.browser.tabs.create)
-        .to.have.been.calledWithExactly({
-          url: 'http://klavogonki.ru/g/?gmid=1337',
-          focused: true,
-        });
+      expect(KlavoTools.tabs.createOrNavigateExisting)
+        .to.have.been.calledWithExactly('http://klavogonki.ru/g/?gmid=1337');
       // Check the case with a huge displayTime:
       kango.storage.getItem.withArgs('competition_displayTime').returns(500);
       competitions = new Competitions;
@@ -176,6 +177,7 @@ describe('competitions module', function () {
           icon: undefined,
           // displayTime == delay:
           displayTime: 60,
+          audio: false,
         });
       // Check the case with a huge delay:
       kango.storage.getItem.withArgs('competition_delay').returns(500);
