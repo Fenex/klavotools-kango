@@ -49,7 +49,7 @@ function DeferredNotification (id, options) {
  */
 DeferredNotification.prototype.revoke = function () {
     clearTimeout(this._timeout);
-    browser.notifications.clear(this.id);
+    chrome.notifications.clear(this.id);
 };
 
 /**
@@ -65,7 +65,7 @@ DeferredNotification.prototype.before = undefined;
 DeferredNotification.prototype.show = function (delay) {
     delay = delay || 0;
     function _show () {
-        browser.notifications.create(this.id, {
+        chrome.notifications.create(this.id, {
             type: 'basic',
             title: this.options.title,
             message: this.options.message,

@@ -39,7 +39,7 @@ var Competitions = function() {
     // A server time delta in milliseconds. Should be set by the implementing class:
     this._timeCorrection = null;
     // A global notification click handler:
-    browser.notifications.onClicked.addListener(function (id) {
+    chrome.notifications.onClicked.addListener(function (id) {
         if (id in this._hash) {
             var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + id;
             KlavoTools.tabs.createOrNavigateExisting(competitionUrl);
