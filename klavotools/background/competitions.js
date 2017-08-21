@@ -11,7 +11,6 @@ var Competitions = function() {
     // TODO: move these options to a hash object:
     this.rates = kango.storage.getItem('competition_rates') || [3, 5]; //x3, x5
     this.delay = kango.storage.getItem('competition_delay');
-    this.displayTime = kango.storage.getItem('competition_displayTime');
     this.audio = !!kango.storage.getItem('competition_audio');
     this.onlyWithPlayers = kango.storage.getItem('competition_onlyWithPlayers') || false;
     this.minimalPlayersNumber = kango.storage.getItem('competition_minimalPlayersNumber') || 2;
@@ -19,10 +18,6 @@ var Competitions = function() {
     if (typeof this.delay != 'number') {
         // 1 minute:
         this.delay = 60;
-    }
-    if (typeof this.displayTime != 'number') {
-        // Default time:
-        this.displayTime = 0;
     }
 
     /**
@@ -57,7 +52,6 @@ Competitions.prototype.getParams = function() {
     return {
         rates: this.rates,
         delay: this.delay,
-        displayTime: this.displayTime,
         audio: this.audio,
         onlyWithPlayers: this.onlyWithPlayers,
         minimalPlayersNumber: this.minimalPlayersNumber,
@@ -74,10 +68,6 @@ Competitions.prototype.setParams = function (params) {
     this.rates = p.rates || this.rates;
     this.audio = p.audio != void 0 ? !!p.audio : this.audio;
 
-    if (typeof p.displayTime === 'number' && p.displayTime >= 0) {
-        this.displayTime = p.displayTime;
-    }
-
     if (typeof p.delay === 'number' && p.delay >= 0) {
         this.delay = p.delay;
     }
@@ -92,7 +82,6 @@ Competitions.prototype.setParams = function (params) {
 
     kango.storage.setItem('competition_delay', this.delay);
     kango.storage.setItem('competition_rates', this.rates);
-    kango.storage.setItem('competition_displayTime', this.displayTime);
     kango.storage.setItem('competition_audio', this.audio);
     kango.storage.setItem('competition_onlyWithPlayers', this.onlyWithPlayers);
     kango.storage.setItem('competition_minimalPlayersNumber', this.minimalPlayersNumber);
@@ -175,16 +164,10 @@ Competitions.prototype._createNotification = function (competition, remainingTim
         showDelay = 0;
     }
 
-    var displayTime = this.displayTime;
-    if (displayTime > remainingTime - showDelay) {
-        displayTime = remainingTime - showDelay;
-    }
-
     var notification = new DeferredNotification(title, {
         audio: this.audio,
         body: body,
         icon: icon,
-        displayTime: displayTime > 0 ? displayTime : void 0,
     });
 
     notification.onclick = function () {

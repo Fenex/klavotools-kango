@@ -117,19 +117,6 @@
             </select>
           </td>
           <td>
-            <label for="KTS_notification_display_time">Показывать уведомление:</label>
-            <select id="KTS_notification_display_time"
-              ng-model="displayTime"
-              convert-to-number
-              ng-change="setDisplayTime()"
-              ng-disabled="delay == 0">
-              <option value="0">Время, установленное браузером</option>
-              <option value="5">5 сек</option>
-              <option value="10">10 сек</option>
-              <option value="999">До начала соревнования</option>
-            </select>
-          </td>
-          <td>
             <label>
               <input type="checkbox" ng:model="audio" />
               Звуковое оповещение

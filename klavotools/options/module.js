@@ -159,7 +159,6 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
 })
 .controller('CompetitionCtrl', function($scope) {
     $scope.delay = null;
-    $scope.displayTime = null;
     $scope.audio = null;
     $scope.onlyWithPlayers = null;
     $scope.minimalPlayersNumber = null;
@@ -173,7 +172,6 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
 
     kango.invokeAsync('KlavoTools.Competitions.getParams', function(res) {
         $scope.delay = res.delay;
-        $scope.displayTime = res.displayTime;
         $scope.audio = res.audio;
         $scope.onlyWithPlayers = res.onlyWithPlayers;
         $scope.minimalPlayersNumber = res.minimalPlayersNumber;
@@ -197,10 +195,6 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
 
         sendPrefs({rates: arr});
     }
-
-    $scope.setDisplayTime = function () {
-        sendPrefs({ displayTime: parseInt($scope.displayTime) });
-    };
 
     // TODO: refactor this ugly code:
     $scope.$watch('delay', function(a, b) {
