@@ -66,26 +66,28 @@ Competitions.prototype.getParams = function() {
 
 /**
  * Save new parameters got from the options page.
- * @param {Object} param A hash object with new parameters,
+ * @param {Object} params A hash object with new parameters.
  */
-Competitions.prototype.setParams = function (param) {
-    this.rates = param.rates || this.rates;
-    this.audio = param.audio != void 0 ? !!param.audio : this.audio;
+Competitions.prototype.setParams = function (params) {
+    // Preventing dead objects to appear in FF:
+    var p = JSON.parse(JSON.stringify(params))
+    this.rates = p.rates || this.rates;
+    this.audio = p.audio != void 0 ? !!p.audio : this.audio;
 
-    if (typeof param.displayTime === 'number' && param.displayTime >= 0) {
-        this.displayTime = param.displayTime;
+    if (typeof p.displayTime === 'number' && p.displayTime >= 0) {
+        this.displayTime = p.displayTime;
     }
 
-    if (typeof param.delay === 'number' && param.delay >= 0) {
-        this.delay = param.delay;
+    if (typeof p.delay === 'number' && p.delay >= 0) {
+        this.delay = p.delay;
     }
 
-    if (typeof param.onlyWithPlayers === 'boolean') {
-        this.onlyWithPlayers = param.onlyWithPlayers;
+    if (typeof p.onlyWithPlayers === 'boolean') {
+        this.onlyWithPlayers = p.onlyWithPlayers;
     }
 
-    if (typeof param.minimalPlayersNumber === 'number') {
-        this.minimalPlayersNumber = param.minimalPlayersNumber;
+    if (typeof p.minimalPlayersNumber === 'number') {
+        this.minimalPlayersNumber = p.minimalPlayersNumber;
     }
 
     kango.storage.setItem('competition_delay', this.delay);
