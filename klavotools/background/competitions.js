@@ -38,6 +38,14 @@ var Competitions = function() {
     this._hash = {};
     // A server time delta in milliseconds. Should be set by the implementing class:
     this._timeCorrection = null;
+    // A global notification click handler:
+    browser.notifications.onClicked.addListener(function (id) {
+        if (id in this._hash) {
+            var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + id;
+            KlavoTools.tabs.createOrNavigateExisting(competitionUrl);
+            browser.notifications.clear(id);
+        }
+    }.bind(this));
     this._init();
 };
 
@@ -164,17 +172,12 @@ Competitions.prototype._createNotification = function (competition, remainingTim
         showDelay = 0;
     }
 
-    var notification = new DeferredNotification(title, {
-        audio: this.audio,
-        body: body,
-        icon: icon,
+    var notification = new DeferredNotification(competition.id, {
+        title: title,
+        message: body,
+        iconUrl: icon,
+        audioUrl: this.audio ? kango.io.getResourceUrl('res/competition.ogg') : undefined,
     });
-
-    notification.onclick = function () {
-        var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + competition.id;
-        KlavoTools.tabs.createOrNavigateExisting(competitionUrl);
-        notification.revoke();
-    };
 
     // Check if we are already at the competition page:
     function checkPresence(competition) {
@@ -200,9 +203,9 @@ Competitions.prototype._createNotification = function (competition, remainingTim
             .then(function(notification, data) {
                 // Updating the notification body:
                 if (data.number === 0) {
-                    notification.options.body += '\n(Нет активных участников)';
+                    notification.options.message += '\n(Нет активных участников)';
                 } else {
-                    notification.options.body += '\nУчастники (' + data.number + '): ' +
+                    notification.options.message += '\nУчастники (' + data.number + '): ' +
                         data.logins.join(', ');
                 }
 
