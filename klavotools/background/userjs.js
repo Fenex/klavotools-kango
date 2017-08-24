@@ -174,21 +174,6 @@ UserJS.prototype._init = function () {
             callback(this.getScriptsForURL(message.url))
         }
     }.bind(this));
-    // chrome.webNavigation.onCommitted.addListener(function (details) {
-    //     this.getScriptsForURL(details.url).forEach(function (script) {
-    //         console.log(script[0], script[1]);
-    //         chrome.tabs.executeScript(details.tabId, {
-    //             runAt: script[1],
-    //             matchAboutBlank: true,
-    //             code: script[2] + '\nundefined;',
-    //         }, function () {
-    //             var err = chrome.runtime.lastError;
-    //             if (err) {
-    //                 console.error('Could not execute user script:', err, script[0]);
-    //             }
-    //         });
-    //     });
-    // }.bind(this));
 
     this._timer = setInterval(function () {
         this._syncState().then(this._saveState.bind(this));

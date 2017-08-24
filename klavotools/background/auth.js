@@ -6,6 +6,11 @@ function Auth () {
     this._state = {};
     this.login().fail(this.relogin.bind(this));
     kango.addMessageListener('SocketError', this.relogin.bind(this));
+    chrome.runtime.onMessage.addListener(function (message) {
+        if (message.name === 'authUserId') {
+            this.checkState(message.id);
+        }
+    }.bind(this));
 }
 
 /**
@@ -88,4 +93,14 @@ Auth.prototype.login = function () {
 Auth.prototype.logout = function () {
     this._state = {};
     this._broadcastStateChange();
+};
+
+/**
+ * Handles auth state changes.
+ * @param {number|null} userId The current userId or null
+ */
+Auth.prototype.checkState = function (userId) {
+    if (this._state.id !== userId) {
+        userId ? this.login() : this.logout();
+    }
 };
