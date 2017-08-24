@@ -48,14 +48,18 @@ function Script (data) {
  */
 Script.prototype._setIncludes = function (code) {
     var metadata = code.substring(0, code.indexOf('==/UserScript=='));
-    var rx = /@(?:include|match)\s+(\S*)/g;
+    var includesRE = /@(?:include|match)\s+(\S*)/g;
+    var runAtRE = /@run-at\s+(\S+)/;
     var url;
     this.includes = [];
-    while ((url = rx.exec(metadata)) !== null) {
+    this.runAt = runAtRE.test(metadata) ? metadata.match(runAtRE)[1].replace('-', '_')
+        : 'document_idle';
+    while ((url = includesRE.exec(metadata)) !== null) {
         var re = new RegExp(url[1].replace(/\./g, '\\.').replace(/\*/g, '.*')
                                 .replace(/\?/g, '\\?'));
         this.includes.push(re);
     }
+
     return Q.resolve(this.includes);
 };
 

@@ -51,8 +51,9 @@ UserJS.prototype._fetchConfig = function () {
 UserJS.prototype.getScriptsForURL = function (url) {
     var res = [];
     for (var name in this._scripts) {
-        if (this._scripts[name].shouldBeIncluded(url)) {
-            res[res.length] = [name, this._scripts[name].code];
+        var script = this._scripts[name];
+        if (script.shouldBeIncluded(url)) {
+            res[res.length] = [name, script.runAt, script.code];
         }
     }
     return res;
@@ -168,6 +169,27 @@ UserJS.prototype._saveState = function () {
  * @private
  */
 UserJS.prototype._init = function () {
+    chrome.runtime.onMessage.addListener(function (message, sender, callback) {
+        if (message.name === 'getScriptsForURL') {
+            callback(this.getScriptsForURL(message.url))
+        }
+    }.bind(this));
+    // chrome.webNavigation.onCommitted.addListener(function (details) {
+    //     this.getScriptsForURL(details.url).forEach(function (script) {
+    //         console.log(script[0], script[1]);
+    //         chrome.tabs.executeScript(details.tabId, {
+    //             runAt: script[1],
+    //             matchAboutBlank: true,
+    //             code: script[2] + '\nundefined;',
+    //         }, function () {
+    //             var err = chrome.runtime.lastError;
+    //             if (err) {
+    //                 console.error('Could not execute user script:', err, script[0]);
+    //             }
+    //         });
+    //     });
+    // }.bind(this));
+
     this._timer = setInterval(function () {
         this._syncState().then(this._saveState.bind(this));
     }.bind(this), 15 * 60 * 1000);

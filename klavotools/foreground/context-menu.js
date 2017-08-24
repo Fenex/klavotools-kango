@@ -115,50 +115,50 @@ function setupMenu (id, structure) {
 var userContextMenu;
 var vocContextMenu;
 
-kango.invokeAsync('KlavoTools.ContextMenus.getUserMenuStructure',
-  function (structure) {
-    userContextMenu = setupMenu('klavotools_context_user', structure);
-});
-kango.invokeAsync('KlavoTools.ContextMenus.getVocMenuStructure',
-  function (structure) {
-    vocContextMenu = setupMenu('klavotools_context_vocabulary', structure);
-});
-
-
-// Black magic: copying the parseLinkURL static method from the background
-// script, with a view to the possibility of setting the "contextmenu"
-// attribute at the same time, when the oncontextmenu event occurs.
-var parseLinkURL;
-kango.invokeAsync('ContextMenus.parseLinkURL.toString', function (funcBody) {
-    eval('parseLinkURL = ' + funcBody);
-});
-
-/**
- * "Binds" the given <a> element to corresponding context menu.
- * @param {Object} link
- */
-function bindLink (link) {
-    var params = parseLinkURL(link.href);
-    var menuId;
-    if (params.user_id ) {
-        menuId = userContextMenu.id;
-    } else if (params.voc_id) {
-        menuId = vocContextMenu.id;
-    }
-    if (menuId) {
-        link.setAttribute('contextmenu', menuId);
-    }
-    kango.invokeAsync('KlavoTools.ContextMenus.setParams', params);
-}
-
-document.addEventListener('contextmenu', function (event) {
-    var current = event.target;
-    while (current.parentNode) {
-        if (current.tagName === 'A') {
-            bindLink(current);
-            break;
-        } else {
-            current = current.parentNode;
-        }
-    }
-});
+// kango.invokeAsync('KlavoTools.ContextMenus.getUserMenuStructure',
+//   function (structure) {
+//     userContextMenu = setupMenu('klavotools_context_user', structure);
+// });
+// kango.invokeAsync('KlavoTools.ContextMenus.getVocMenuStructure',
+//   function (structure) {
+//     vocContextMenu = setupMenu('klavotools_context_vocabulary', structure);
+// });
+//
+//
+// // Black magic: copying the parseLinkURL static method from the background
+// // script, with a view to the possibility of setting the "contextmenu"
+// // attribute at the same time, when the oncontextmenu event occurs.
+// var parseLinkURL;
+// kango.invokeAsync('ContextMenus.parseLinkURL.toString', function (funcBody) {
+//     eval('parseLinkURL = ' + funcBody);
+// });
+//
+// /**
+//  * "Binds" the given <a> element to corresponding context menu.
+//  * @param {Object} link
+//  */
+// function bindLink (link) {
+//     var params = parseLinkURL(link.href);
+//     var menuId;
+//     if (params.user_id ) {
+//         menuId = userContextMenu.id;
+//     } else if (params.voc_id) {
+//         menuId = vocContextMenu.id;
+//     }
+//     if (menuId) {
+//         link.setAttribute('contextmenu', menuId);
+//     }
+//     kango.invokeAsync('KlavoTools.ContextMenus.setParams', params);
+// }
+//
+// document.addEventListener('contextmenu', function (event) {
+//     var current = event.target;
+//     while (current.parentNode) {
+//         if (current.tagName === 'A') {
+//             bindLink(current);
+//             break;
+//         } else {
+//             current = current.parentNode;
+//         }
+//     }
+// });
