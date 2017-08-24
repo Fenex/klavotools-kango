@@ -43,7 +43,7 @@ var Competitions = function() {
         if (id in this._hash) {
             var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + id;
             KlavoTools.tabs.createOrNavigateExisting(competitionUrl);
-            browser.notifications.clear(id);
+            chrome.notifications.clear(id);
         }
     }.bind(this));
     this._init();
