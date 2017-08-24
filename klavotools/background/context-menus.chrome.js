@@ -39,7 +39,7 @@ ChromeContextMenu.prototype.addItem = function (options) {
         title: options.label,
         contexts: options.contexts,
         onclick: options.callback,
-        enabled: options.disabled ? false : true,
+        enabled: options.enabled,
         targetUrlPatterns: this.urlPatterns,
     }, function () {
         var error = chrome.runtime.lastError;
@@ -59,31 +59,19 @@ ChromeContextMenu.prototype.addItem = function (options) {
 /**
  * Updates an item by the given id.
  * @param {(number|string)} id An id of the item
- * @param {Object} options Item's parameters (same object as for addItem())
+ * @param {Object} options Item's parameters to update
  */
 ChromeContextMenu.prototype.updateItem = function (id, options) {
-    chrome.contextMenus.update(id, {
-        title: options.label,
-        contexts: options.contexts,
-        onclick: options.callback,
-        enabled: options.disabled ? false : true,
-    });
+    chrome.contextMenus.update(id, options);
 };
 
 /**
  * Adds an item to the menu.
  * @param {Object} options An object with submenu's item's parameters:
- * @param {string} options.label A submenu's labels
- * @param {function} [options.callback] An onclick callback function
- * @param {boolean} [options.disabled] Wheither the submenu's item is disabled
  * @param {Object} menu An instance of the ChromeContextMenu class
  */
 ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
-    this.addItem({
-        label: options.label,
-        disabled: options.disabled ? true : false,
-    })
-    .then(function (parentId) {
+    this.addItem(options).then(function (parentId) {
         menu.items.forEach(function (childId) {
             chrome.contextMenus.update(childId, {
                 parentId: parentId,
@@ -108,11 +96,11 @@ ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
 
             var callback = function () {};
             if (item.url) {
-                callback = function () {
-                    var path = KlavoTools.ContextMenus.makeRedirectURL(this.url);
+                callback = function (event) {
+                    var path = KlavoTools.ContextMenus.makeRedirectURL(this.url, event.linkUrl);
                     kango.browser.tabs.getCurrent(function (tab) {
                         var url = tab.getUrl();
-                        var arr = url.split( '/' );
+                        var arr = url.split('/');
                         var protocol = arr[0];
                         var host = arr[2];
                         tab.navigate(protocol + '//' + host + path);
@@ -130,13 +118,17 @@ ChromeContextMenu.prototype.addSubmenu = function (options, menu) {
             });
         });
 
-        kango.addMessageListener('AuthStateChanged', function (event) {
+        function handleAuthStateChange(event) {
             auth_dependent.forEach(function (item) {
                 menu.updateItem(item, {
-                    disabled: !event.data.id,
+                    enabled: !!event.data.id,
                 });
             });
-        });
+        }
+
+        kango.addMessageListener('AuthStateChanged', handleAuthStateChange);
+        var authState = KlavoTools.Auth.getState();
+        handleAuthStateChange({ data: { id: authState.id } });
 
         return menu;
     }

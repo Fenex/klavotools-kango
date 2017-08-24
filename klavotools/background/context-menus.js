@@ -2,9 +2,7 @@
  * @file ContextMenus module.
  * @author Daniil Filippov <filippovdaniil@gmail.com>
  */
-function ContextMenus () {
-    this._params = {};
-}
+function ContextMenus () {}
 
 // TODO: Move structure's data from the module
 ContextMenus.prototype.getUserMenuStructure = function () {
@@ -114,29 +112,31 @@ ContextMenus.prototype.getVocMenuStructure = function () {
 /**
  * Substitutes variables into the URL's path.
  * @param {String} template The URL's path template
+ * @param {String} linkHref The href of the clicked anchor link
  * @return {String}
  */
-ContextMenus.prototype.makeRedirectURL = function(template) {
+ContextMenus.prototype.makeRedirectURL = function(template, href) {
     var auth_id = KlavoTools.Auth.getState().id;
     if (auth_id) {
         template = template.replace(/{auth_id}/g, auth_id);
     }
-    for (var field in this._params) {
+    var params = this.parseLinkURL(href);
+    for (var field in params) {
         var re = new RegExp('{' + field + '}', 'g');
-        template = template.replace(re, this._params[field]);
+        template = template.replace(re, params[field]);
     }
     return template;
 };
 
 /**
- * (Static method) Checks the given link's "href" attribute value for the id of
+ * Checks the given link's "href" attribute value for the id of
  * user or vocabulary, and in case of success, returns an object with
  * corresponding data, or an empty object otherwise.
  *
  * @param {String} url Link's "href" attribute value
  * @return {Object} An object with results
  */
-ContextMenus.parseLinkURL = function (url) {
+ContextMenus.prototype.parseLinkURL = function (url) {
     var re = /(profile|u\/#|vocs)\/(\d+)/;
     var matches = url.match(re);
     var result = {};
@@ -151,17 +151,3 @@ ContextMenus.parseLinkURL = function (url) {
     }
     return result;
 }
-
-/**
- * Set the parameters for the active context menu.
- *
- * @param {Object} params An object with parameters to save
- */
-ContextMenus.prototype.setParams = function (params) {
-    for (var field in this._params) {
-        delete this._params[field];
-    }
-    for (var field in params) {
-        this._params[field] = params[field];
-    }
-};
