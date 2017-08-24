@@ -10,7 +10,7 @@ angular.module('klavotools.joke', [])
             var COUNT = 3;
             $scope.imgs = [];
             $scope.loaded = false;
-            
+
             function getImgStruct(data) {
                 var e = data;
                 e.author = e.author ? 'Автор: ' + e.author : '';
@@ -20,10 +20,13 @@ angular.module('klavotools.joke', [])
             }
 
             $timeout(function() {
-                $http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).success(function(data) {
-                    if(typeof data != 'object') { return; }
-                    for(var i=0; i<data.length; i++) { 
-                        $scope.imgs.push(getImgStruct(data[i]));
+                $http.get('http://r.zzzae.biz/kts.php?KTS_REQUEST&l='+COUNT).then(function(res) {
+                    if (typeof res != 'object' || !Array.isArray(res.data)) {
+                        return;
+                    }
+
+                    for(var i=0; i<res.data.length; i++) {
+                        $scope.imgs.push(getImgStruct(res.data[i]));
                     }
                     $scope.loaded = true;
                 });
@@ -48,7 +51,7 @@ angular.module('klavotools.joke', [])
                 values: [],
                 rotate: null,
                 first: true,
-                
+
                 push_values: function() {
                     this.values.push({r:null, x:  null, y:  null}); // not used
                     this.values.push({r:0,    x:  1,    y:  0   });
@@ -78,24 +81,24 @@ angular.module('klavotools.joke', [])
 
                 init: function() {
                     this.push_values();
-                    
+
                     //create battle
 
                     this.elem.addEventListener('click', this.onclick);
-                    
+
                     //set rotate
                     this.randomRotate(8);
                     this.setPos();
-                    
+
                     //run
                     this.onclick();
                 },
-                
+
                 setPos: function() {
                     this.elem.style.top = this.y.toString() + 'px';
                     this.elem.style.left = this.x.toString() + 'px';
                 },
-                
+
                 newPosition: function() {
                     this.x += this.rotate.x;
                     this.y += this.rotate.y;
@@ -108,21 +111,21 @@ angular.module('klavotools.joke', [])
                             this.randomRotate(2);
                             this.finish = 40;
                             return;
-                        }                        
-                        
+                        }
+
                         this.randomRotate();
                         return;
                     }
                     this.setPos();
                 }
             };
-            
+
             battle.init();
-            
+
             function run() {
                 battle.newPosition();
             }
-            
+
             function stop() {
                 clearInterval(timer);
                 timer = null;
@@ -131,7 +134,7 @@ angular.module('klavotools.joke', [])
             function active() {
                 rotating = false;
             }
-            
+
         }
     }
 });
