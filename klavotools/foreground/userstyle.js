@@ -5,3 +5,8 @@
  */
 
 document.documentElement.classList.add('skin');
+chrome.runtime.sendMessage({
+    name: 'getActiveSkin',
+}, function (name) {
+    document.documentElement.classList.add(name);
+});

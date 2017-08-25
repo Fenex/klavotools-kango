@@ -1,47 +1,40 @@
-var Skin = function() {
-    //list of all skins
-    this.list = ['beige', 'pink', 'green', 'blue', 'gray', 'nikitakozin'];
-    //object {skin-name: isEnable}
-    this.skins = {};
-    //active skin
-    this.active = null;
-
-    //localstorage key's name for memory
-    this.key = 'skin';
-
-    //load (equal "init" for first exec)
-    this.load();
+/**
+ * @file A module for work with the user styles.
+ * @author Vitaliy Busko
+ * @author Daniil Filippov <filippovdaniil@gmail.com>
+ */
+function Skin() {
+    // A list of all skins:
+    this.list = [
+        'beige',
+        'pink',
+        'green',
+        'blue',
+        'gray',
+        'nikitakozin'
+    ];
+    // Currently active skin:
+    this.active = kango.storage.getItem('skin') || 'beige';
+    this.init();
 };
 
-Skin.prototype.load = function() {
-    this.skins = {};
-    this.active = kango.storage.getItem(this.key) || 'beige';
-    
-    for(var i=0; i<this.list.length; i++) {
-        var name = this.list[i];
-        this.skins[name] = (name == this.active) ? true : false;
-    }
+Skin.prototype.init = function() {
+    chrome.runtime.onMessage.addListener(function (message, sender, callback) {
+        if (message.name === 'getActiveSkin') {
+            callback(this.active);
+        }
+    }.bind(this));
 };
 
-Skin.prototype.save = function(skin) {
+Skin.prototype.setActive = function(skin) {
     this.active = skin || 'beige';
-    kango.storage.setItem(this.key, skin);
-    this.load();
+    kango.storage.setItem('skin', skin);
+};
+
+Skin.prototype.getActive = function(skin) {
+    return this.active;
 };
 
 Skin.prototype.getAll = function() {
-    return this.skins;
-};
-
-Skin.prototype.getActive = function(content) {
-    if(!content)
-        return this.active;
-    return {
-        skin: this.active,
-        io: kango.io.getResourceUrl('res/skins/$1')
-    };
-};
-
-Skin.prototype.toString = function() {
-    return '[object Skin]';
+    return this.list;
 };

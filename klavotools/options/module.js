@@ -89,20 +89,20 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
     }, true);
 })
 .controller('StyleCtrl', function($scope) {
+    $scope.skins = [];
+    $scope.active = null;
+    kango.invokeAsync('KlavoTools.Skin.getActive', function(res) {
+        $scope.active = res;
+    });
+
     kango.invokeAsync('KlavoTools.Skin.getAll', function(res) {
         $scope.skins = res;
-        for(var name in res) {
-            if(res[name])
-                $scope.active = name;
-        }
     });
 
     $scope.$watch('active', function(a, b) {
-        for(var name in $scope.skins) {
-            $scope.skins[name] = (a == name) ? true : false;
+        if (typeof b != 'object') {
+            kango.invokeAsync('KlavoTools.Skin.setActive', a);
         }
-
-        kango.invokeAsync('KlavoTools.Skin.save', a);
     });
 })
 .controller('ScriptCtrl', function($scope) {
