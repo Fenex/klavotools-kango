@@ -21,7 +21,7 @@ $popup-base-indent: 7px;
 /// @type List
 $font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 
-/// font-size property value for extension pages
+/// font-size property value for extension pages.
 /// @type Length
 $font-size: 14px;
 
@@ -29,3 +29,50 @@ $font-size: 14px;
 /// values for GUI elements.
 /// @type List
 $transition-settings: 0.1s linear;
+
+/// A list of competitions organizers accounts ids.
+/// @type List
+$organizers-accounts: (
+  4598,   // Интерстено-клуб
+  171789, // BigRace
+  204704, // Дуэль
+  226863, // Октатлон
+  234982, // CrashRace
+  238636, // Outsiders
+  240582, // Формула-2
+  245345, // English_Xpress
+  246730, // Лига_Маньяков
+  261337, // Гран-При
+  270458, // MortalRace
+  282920, // -Street_Racer-
+  298274, // Профсоюз
+  316840, // КомЦентр
+  326022, // ЭХЪ
+  371224, // Мир_Гонщиков
+  405687, // Slopestyle
+  446950  // Mad_Race
+);
+
+/// A list of verified users accounts ids.
+/// @type List
+$verified-accounts: (
+  2065,   // ixolit
+  4912,   // Юрикор_Мишка
+  24119,  // Gosxo_Ruza
+  30297,  // AlexeiD
+  57333,  // novkostya
+  70019,  // olimo
+  76392,  // Русинов
+  101646, // Аромат
+  111001, // un4given
+  147900, // wiFil
+  148447, // Lexin13
+  166516, // rgall
+  218552, // DIgorevich
+  226580, // agile
+  231371, // Phemmer
+  260895, // GoodLoki
+  323172, // IGovernFun
+  364239, // voidmain
+  395485  // smalloc
+);

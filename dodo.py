@@ -61,9 +61,11 @@ def fixContentScripts(srcDir):
     contentScriptsField = [{
         'matches': [CONTENTSCRIPTS_MATCHES],
         'js': extensionInfo['content_scripts'],
+        'css': extensionInfo['content_styles'],
         'run_at': 'document_start',
     }]
     manifest['content_scripts'] = contentScriptsField
+    manifest['web_accessible_resources'] = extensionInfo['content_styles']
     with open(path.join(srcDir, 'chrome', 'manifest.json'), 'w') as outfile:
         json.dump(manifest, outfile, indent=2)
 

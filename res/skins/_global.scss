@@ -1,0 +1,41 @@
+////
+/// Global userstyle.
+/// @author Vitaliy Busko
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+@import "../settings";
+@import "../colors";
+
+html.skin {
+  .pages .selected {
+    background-color: transparent;
+    font-weight: 700;
+  }
+  #topics-list .item td {
+    height: 40px;
+    padding: 0;
+
+    &.last-post {
+      vertical-align: middle;
+    }
+  }
+  .banner-back, .ownbanner-back, #playads_dummy, #playads {
+    display: none;
+  }
+
+  @each $id in $organizers-accounts {
+    #posts-list .posth a.user[href="/profile/#{$id}"] {
+      color: $kts-organizer-account-link;
+    }
+  }
+
+  @each $id in $verified-accounts {
+    #posts-list .posth a.user[href="/profile/#{$id}"]:before {
+      display: inline-block;
+      margin-right: 0.5ch;
+      vertical-align: middle;
+      content: "\2705"; // ✅
+    }
+  }
+}
