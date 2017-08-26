@@ -11,23 +11,23 @@ $hue-rotate: 0deg !default;
 html.skin.#{$skin-name} {
   .gamelist-create,
   #create .params,
-  #play-right #invite,
-  #typeblock #hiddentext,
-  #params,
   .columns .info {
     background-color: $panels-background;
   }
-  // Userscripts generated content — force reset:
+  // Override hardcoded element styles, styles with !important,
+  // and styles for userscripts generated content:
   .kts-skin-panel,
   #complexity-panel,
   #counter-panel,
-  #statistics {
-    background-color: $panels-background !important;
+  #statistics,
+  #gamelist.gamelist-new > div:first-of-type,
+  #gamelist-active button:hover {
+    background-color: $panels-light-background !important;
   }
   #top,
-  #typeblock,
   #learning .hint,
-  #play-right #invite #friends-list,
+  #play-right #invite,
+  #params,
   #posts-list .posth:not(.admin),
   .discussing .comments-cnt:hover,
   .indexstats-block,
@@ -35,11 +35,8 @@ html.skin.#{$skin-name} {
   .chat .messages {
     background-color: $panels-light-background;
   }
-  // Override hardcoded element styles, and styles with !important:
-  #gamelist.gamelist-new > div:first-of-type,
-  #gamelist-active button:hover {
-    background-color: $panels-light-background !important;
-  }
+  #play-right #invite #friends-list,
+  #topics-list .item.even td,
   #errors_text p,
   .chat .panel-btn {
     background-color: lighten($panels-light-background, 3%);
@@ -49,7 +46,7 @@ html.skin.#{$skin-name} {
   }
   #play-right #invite #friends-list,
   .chat {
-    border-color: darken($panels-light-background, 10%);
+    border-color: darken($panels-light-background, 5%);
   }
   #head,
   #review .ball .top,
@@ -65,7 +62,8 @@ html.skin.#{$skin-name} {
     filter: hue-rotate($hue-rotate);
   }
   #head > div,
-  #review .ball .name {
+  #review .ball .name,
+  #errors_tab a {
     filter: hue-rotate(-$hue-rotate);
   }
 }
