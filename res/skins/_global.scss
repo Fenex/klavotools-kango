@@ -24,17 +24,20 @@ html.skin {
     display: none;
   }
 
+  #posts-list .posth a.user:before {
+    display: inline-block;
+    margin-right: 0.5ch;
+    vertical-align: middle;
+  }
+
   @each $id in $organizers-accounts {
-    #posts-list .posth a.user[href="/profile/#{$id}"] {
-      color: $kts-organizer-account-link;
+    #posts-list .posth a.user[href="/profile/#{$id}"]:before {
+      content: '\1F3C1'; // 🏁
     }
   }
 
   @each $id in $verified-accounts {
     #posts-list .posth a.user[href="/profile/#{$id}"]:before {
-      display: inline-block;
-      margin-right: 0.5ch;
-      vertical-align: middle;
       content: "\2705"; // ✅
     }
   }
