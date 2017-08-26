@@ -7,6 +7,8 @@ $skin-name: beige !default;
 $panels-background: #f8f4e6 !default;
 $panels-light-background: #faf9ed !default;
 $hue-rotate: 0deg !default;
+$image-filter: hue-rotate($hue-rotate) !default;
+$image-filter-reverse: hue-rotate(-$hue-rotate) !default;
 
 html.skin.#{$skin-name} {
   .gamelist-create,
@@ -59,11 +61,11 @@ html.skin.#{$skin-name} {
   ul.left-menu li.active,
   .chat .userlist .smile-groups,
   .chat .panel-btn i {
-    filter: hue-rotate($hue-rotate);
+    filter: $image-filter;
   }
   #head > div,
   #review .ball .name,
   #errors_tab a {
-    filter: hue-rotate(-$hue-rotate);
+    filter: $image-filter-reverse;
   }
 }

@@ -1,0 +1,39 @@
+////
+/// Gray skin for the site.
+/// @author Vitaliy Busko
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+$skin-name: gray;
+$panels-background: #e0e0e0;
+$panels-light-background: #eee;
+$image-filter: grayscale(100%);
+$image-filter-reverse: none;
+
+@import "template";
+
+
+html.skin.#{$skin-name} {
+  #head {
+    position: relative;
+    filter: none;
+    background-size: 0 0;
+    z-index: 1;
+  }
+  #logo {
+    position: relative;
+    z-index: 2;
+  }
+  #head:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: inherit;
+    background-repeat: inherit;
+    filter: $image-filter;
+    content: '';
+    z-index: 0;
+  }
+}
