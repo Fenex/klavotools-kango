@@ -1,0 +1,10 @@
+////
+/// Skin based on the nikitaozin's user style
+/// @author nikitaozin
+////
+
+$skin-name: nikitakozin;
+
+html.skin.#{$skin-name} {
+  @import "nikitakozin-userstyle";
+}

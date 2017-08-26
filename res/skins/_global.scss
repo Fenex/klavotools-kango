@@ -24,6 +24,9 @@ html.skin {
     display: none;
   }
 
+  #posts-list .posth a.user {
+    white-space: nowrap;
+  }
   #posts-list .posth a.user:before {
     display: inline-block;
     margin-right: 0.5ch;
