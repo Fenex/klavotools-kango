@@ -1,0 +1,71 @@
+////
+/// Customizable template for the skin.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+$skin-name: beige !default;
+$panels-background: #f8f4e6 !default;
+$panels-light-background: #faf9ed !default;
+$hue-rotate: 0deg !default;
+
+html.skin.#{$skin-name} {
+  .gamelist-create,
+  #create .params,
+  #play-right #invite,
+  #typeblock #hiddentext,
+  #params,
+  .columns .info {
+    background-color: $panels-background;
+  }
+  // Userscripts generated content — force reset:
+  .kts-skin-panel,
+  #complexity-panel,
+  #counter-panel,
+  #statistics {
+    background-color: $panels-background !important;
+  }
+  #top,
+  #typeblock,
+  #learning .hint,
+  #play-right #invite #friends-list,
+  #posts-list .posth:not(.admin),
+  .discussing .comments-cnt:hover,
+  .indexstats-block,
+  .chat,
+  .chat .messages {
+    background-color: $panels-light-background;
+  }
+  // Override hardcoded element styles, and styles with !important:
+  #gamelist.gamelist-new > div:first-of-type,
+  #gamelist-active button:hover {
+    background-color: $panels-light-background !important;
+  }
+  #errors_text p,
+  .chat .panel-btn {
+    background-color: lighten($panels-light-background, 3%);
+  }
+  .chat .panel-btn:hover {
+    background-color: lighten($panels-light-background, 5%);
+  }
+  #play-right #invite #friends-list,
+  .chat {
+    border-color: darken($panels-light-background, 10%);
+  }
+  #head,
+  #review .ball .top,
+  #review .ball .content,
+  #review .portrait > div,
+  #chat-title,
+  #errors_tab,
+  ul.trimenu li.active,
+  ul.mode li.active,
+  ul.left-menu li.active,
+  .chat .userlist .smile-groups,
+  .chat .panel-btn i {
+    filter: hue-rotate($hue-rotate);
+  }
+  #head > div,
+  #review .ball .name {
+    filter: hue-rotate(-$hue-rotate);
+  }
+}
