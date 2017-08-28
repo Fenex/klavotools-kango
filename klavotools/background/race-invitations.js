@@ -41,24 +41,19 @@ RaceInvitations.prototype.setParams = function (params) {
  * @private
  */
 RaceInvitations.prototype._createNotification = function (game) {
-    var icon = game.invited_by.avatar.replace('.gif', '_big.gif');
+    var icon = game.invited_by.avatar.replace('.png', '_big.png');
     var body = game.invited_by.login + ' приглашает вас в ' +
         (game.type === 'private' ? 'игру с друзьями' : 'игру') +
         ' ' + game.gametype_html.replace(/<(?:.|\n)*?>/gm, '')
                 .replace(/&laquo;/g, '«')
                 .replace(/&raquo;/g, '»');
 
-    var notification = new Notification('Приглашение в игру', {
-        body: body,
-        icon: icon,
-        tag: 'raceInvite' + game.game_id,
+    chrome.notifications.create('raceInvitation' + game.game_id, {
+        type: 'basic',
+        title: 'Приглашение в игру',
+        message: body,
+        iconUrl: icon,
     });
-
-    notification.onclick = function () {
-        var raceUrl = 'http://klavogonki.ru/g/?gmid=' + game.game_id;
-        KlavoTools.tabs.createOrNavigateExisting(raceUrl);
-        notification.close();
-    };
 };
 
 /**
@@ -108,6 +103,15 @@ RaceInvitations.prototype._init = function () {
                     this._processInvite.bind(this);
                 event.target.dispatchMessage('SocketSubscribe', subscriber);
             }.bind(this));
+        }
+    }.bind(this));
+
+    var re = /raceInvitation(\d+)/;
+    chrome.notifications.onClicked.addListener(function (id) {
+        if (re.test(id)) {
+            var raceUrl = 'http://klavogonki.ru/g/?gmid=' + id.match(re)[1];
+            KlavoTools.tabs.createOrNavigateExisting(raceUrl);
+            chrome.notifications.clear(id);
         }
     }.bind(this));
 };
