@@ -66,6 +66,7 @@ def fixContentScripts(srcDir):
     }]
     manifest['content_scripts'] = contentScriptsField
     manifest['web_accessible_resources'] = extensionInfo['content_styles']
+    manifest['permissions'] = extensionInfo['permissionsWebExtension']
     with open(path.join(srcDir, 'chrome', 'manifest.json'), 'w') as outfile:
         json.dump(manifest, outfile, indent=2)
 

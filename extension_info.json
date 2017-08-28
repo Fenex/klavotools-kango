@@ -31,7 +31,7 @@
         "res/skins.css"
     ],
     "homepage_url": "http://klavogonki.ru/",
-    "version": "3.4.5",
+    "version": "3.4.8",
     "browser_button": {
         "caption": "KlavoTools",
         "icon": "icons/button_default.png",
@@ -44,8 +44,13 @@
     },
     "name": "KlavoTools Kango",
     "options_page": "options.html",
-    "permissions": {
-        "notifications": true,
-        "contextMenus": true
-    }
+    "permissionsWebExtension": [
+        "tabs",
+        "*://*.klavogonki.ru/*",
+        "*://*.zzzae.biz/*",
+        "*://*.githubusercontent.com/*",
+        "contextMenus",
+        "webNavigation",
+        "notifications"
+    ]
 }
