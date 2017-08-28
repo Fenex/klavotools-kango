@@ -53,7 +53,7 @@ Script.prototype._setIncludes = function (code) {
     var url;
     this.includes = [];
     this.runAt = runAtRE.test(metadata) ? metadata.match(runAtRE)[1].replace('-', '_')
-        : 'document_idle';
+        : 'document_end';
     while ((url = includesRE.exec(metadata)) !== null) {
         var re = new RegExp(url[1].replace(/\./g, '\\.').replace(/\*/g, '.*')
                                 .replace(/\?/g, '\\?'));
