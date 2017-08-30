@@ -53,7 +53,7 @@ def buildProject(kango, targetDir):
     pipe.communicate(None)
 
 # TODO: somehow to rewrite this crutch
-def fixContentScripts(srcDir):
+def fixManifest(srcDir):
     with open('extension_info.json') as extensionInfoData:
         extensionInfo = json.load(extensionInfoData)
     with open(path.join(srcDir, 'chrome', 'manifest.json')) as data:
@@ -67,6 +67,10 @@ def fixContentScripts(srcDir):
     manifest['content_scripts'] = contentScriptsField
     manifest['web_accessible_resources'] = extensionInfo['content_styles']
     manifest['permissions'] = extensionInfo['permissionsWebExtension']
+    manifest['options_ui'] = {
+        'page': extensionInfo['options_page'],
+        'open_in_tab': True,
+    }
     with open(path.join(srcDir, 'chrome', 'manifest.json'), 'w') as outfile:
         json.dump(manifest, outfile, indent=2)
 
@@ -156,14 +160,14 @@ def task_buildExtension():
         'task_dep': ['buildExtension:prepare'],
     }
     yield {
-        'name': 'fixContentScripts',
-        'actions': [(fixContentScripts, [outputDir])],
+        'name': 'fixManifest',
+        'actions': [(fixManifest, [outputDir])],
         'task_dep': ['buildExtension:build'],
     }
     yield {
         'name': 'buildWebExtension',
         'actions': [(buildWebExtension, [outputDir, certDir])],
-        'task_dep': ['buildExtension:fixContentScripts']
+        'task_dep': ['buildExtension:fixManifest']
     }
     yield {
         'name': 'move',
