@@ -25,7 +25,7 @@ function Script (data) {
     if (!data.updateUrl) {
         throw new Error('Update URL not specified for the ' + data.name + ' userscript');
     }
-    this._keys = [];
+    this._keys = ['code'];
     for (var key in data) {
         this[key] = data[key];
         this._keys[this._keys.length] = key;
