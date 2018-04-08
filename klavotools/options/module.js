@@ -258,6 +258,7 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
             case 'green': return 'Зелёный';
             case 'pink': return 'Розовый';
             case 'blue': return 'Синий';
+            case 'violet': return 'Фиолетовый';
             case 'gray': return 'Серый';
             case 'nikitakozin': return 'Минималистический стиль, убирающий лишний цветовой шум. Автор nikitakozin.';
             default: return input;

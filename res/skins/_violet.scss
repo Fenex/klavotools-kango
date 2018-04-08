@@ -1,0 +1,71 @@
+////
+/// Violet skin for the site.
+/// @author Daniil Filippov <filippovdaniil@gmail.com>
+////
+
+$skin-name: violet;
+$panels-background: #d1c4e9;
+$panels-light-background: #ede7f6;
+$text-color: #7e57c2;
+$hue-rotate: 200deg;
+
+@import "template";
+
+html.skin.#{$skin-name} {
+  #head {
+    filter: hue-rotate(180deg);
+  }
+  #head > div {
+    filter: hue-rotate(-180deg);
+  }
+  #profile-index .stats,
+  .profile-stats-details .top-stats .counter,
+  .profile-header .mini-nav .active,
+  .profile-achieves .options .btn.selected,
+  .userpanel .dropmenu .btn,
+  .date-select .btn,
+  .journal .send,
+  .btn-primary,
+  .daily-task .icon,
+  .dropdown-menu a:hover,
+  .dropdown-menu a:focus,
+  .profile-nav .active a {
+    filter: hue-rotate(35deg);
+  }
+  .userpanel .dropmenu a:not([class]):hover {
+    background-color: $panels-light-background;
+    color: $text-color;
+  }
+  #posts-list .posth:not(.admin),
+  #posts-list .posth a,
+  #head .menu a:not(.active) {
+    color: $text-color;
+  }
+  #head .menu a:not(.active) {
+    transition: color 0.1s linear;
+  }
+  #head .menu a:not(.active):hover {
+    color: lighten($text-color, 15%);
+  }
+  #head .menu .active {
+    filter: sepia(100%) hue-rotate(200deg);
+  }
+  .userpanel.logged,
+  .user-block .drop-btn:hover {
+    background-repeat: no-repeat;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      background-repeat: repeat-x;
+      filter: sepia(45%) hue-rotate(200deg);
+      content: "";
+    }
+  }
+  .user-block .drop-btn .name {
+    position: relative;
+  }
+}

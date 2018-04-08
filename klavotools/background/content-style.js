@@ -10,6 +10,7 @@ function Skin() {
         'pink',
         'green',
         'blue',
+        'violet',
         'gray',
         'nikitakozin'
     ];
