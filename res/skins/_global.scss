@@ -24,6 +24,14 @@ html.skin {
     display: none;
   }
 
+  // Fix the "blurred" avatars issue:
+  .profile-root .journal .comments .icon img,
+  .user-block .drop-btn .name img,
+  .message .my_avatar img {
+    width: 25px !important;
+    height: 25px !important;
+  }
+
   #posts-list .posth a.user {
     white-space: nowrap;
   }
