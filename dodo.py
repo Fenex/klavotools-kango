@@ -13,7 +13,7 @@ import struct
 WEBEXTENSION_ID = 'klavotools-kango@klavogonki.ru'
 WEBEXTENSION_SUFFIX = 'we'
 CONTENTSCRIPTS_MATCHES = '*://*.klavogonki.ru/*'
-KANGO_ARCHIVE_URL = 'http://kangoextensions.com/kango/kango-framework-latest.zip'
+KANGO_ARCHIVE_URL = 'http://web.archive.org/web/20160623024659/kangoextensions.com/kango/kango-framework-latest.zip'
 KANGO_DIR = 'kango'
 KANGO_BIN = path.abspath(path.join(KANGO_DIR, 'kango.py'))
 BUILD_DIR = 'build'
