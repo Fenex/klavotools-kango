@@ -12,7 +12,7 @@ var fixtures = {};
 var pattern = __dirname + '/fixtures/**/*.*';
 glob.sync(pattern).forEach(function (fixturePath) {
   // Get the parent folder name for the fixture:
-  var folder = path.dirname(fixturePath).split(path.sep).pop();
+  var folder = path.dirname(fixturePath).split(/[\\/]/).pop();
   // Get the fixture extension:
   var ext = path.extname(fixturePath);
   // Get the fixture filename:
