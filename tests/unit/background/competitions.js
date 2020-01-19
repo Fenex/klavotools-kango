@@ -47,7 +47,6 @@ describe('competitions module', function () {
     it('should set the correct default settings', function () {
       expect(competitions.rates).to.be.deep.equal([3, 5]);
       expect(competitions.delay).to.be.equal(60);
-      expect(competitions.displayTime).to.be.equal(0);
       expect(competitions.audio).to.be.equal(false);
     });
 
@@ -57,13 +56,11 @@ describe('competitions module', function () {
     it('should return the correct settings with the getParams() method', function () {
       kango.storage.getItem.withArgs('competition_rates').returns([1, 2, 3, 5]);
       kango.storage.getItem.withArgs('competition_delay').returns(15);
-      kango.storage.getItem.withArgs('competition_displayTime').returns(5);
       kango.storage.getItem.withArgs('competition_audio').returns(false);
       competitions = new Competitions;
       expect(competitions.getParams()).to.be.deep.equal({
         rates: [1, 2, 3, 5],
         delay: 15,
-        displayTime: 5,
         audio: false,
         onlyWithPlayers: false,
         minimalPlayersNumber: 2,
@@ -78,7 +75,6 @@ describe('competitions module', function () {
       competitions.setParams({
         delay: null,
         rates: null,
-        displayTime: null,
         audio: null
       });
       // sinon-chai doesn't support neverCalledWithMatch :(
@@ -89,22 +85,12 @@ describe('competitions module', function () {
       competitions.setParams({
         delay: 15,
         rates: [1, 2, 3, 5],
-        displayTime: 5,
         audio: false
       });
       expect(kango.storage.setItem)
         .to.have.been.calledWithExactly('competition_delay', 15)
         .to.have.been.calledWithExactly('competition_rates', [1, 2, 3, 5])
-        .to.have.been.calledWithExactly('competition_displayTime', 5)
         .to.have.been.calledWithExactly('competition_audio', false);
-    });
-
-    it('should call the _updateNotifications() method within ' +
-        'the setParams() method', function () {
-      var competitions = new Competitions;
-      competitions.setParams({ delay: 15 });
-      competitions.setParams({ displayTime: 5 });
-      expect(Competitions.prototype._updateNotifications).to.have.been.calledTwice;
     });
 
     it('should recreate deferred notifications instances with the for ' +
@@ -157,7 +143,6 @@ describe('competitions module', function () {
           body: 'Соревнование x5 начинается',
           // TODO: set the stub for the kango.io.getResourceUrl
           icon: undefined,
-          displayTime: undefined,
           audio: false,
         });
       // Default delay is set to 1 minute:
@@ -175,9 +160,7 @@ describe('competitions module', function () {
         .to.have.been.calledWithExactly('Соревнование', {
           body: 'Соревнование x5 начинается',
           icon: undefined,
-          // displayTime == delay:
-          displayTime: 60,
-          audio: false,
+          audio: false
         });
       // Check the case with a huge delay:
       kango.storage.getItem.withArgs('competition_delay').returns(500);
