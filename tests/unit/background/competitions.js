@@ -95,8 +95,8 @@ describe('competitions module', function () {
 
     it('should recreate deferred notifications instances with the for ' +
         'active competitions', function () {
-      var spy1 = new DeferredNotification('test1');
-      var spy2 = new DeferredNotification('test2');
+      var spy1 = new DeferredNotification('test1', {});
+      var spy2 = new DeferredNotification('test2', {});
       sandbox.stub(Competitions.prototype, 'getRemainingTime').returns(1000);
       competitions._hash = {
         1337: {
@@ -139,47 +139,40 @@ describe('competitions module', function () {
       };
       var notification = competitions._createNotification(competitionData, 400);
       expect(DeferredNotification)
-        .to.have.been.calledWithExactly('Соревнование', {
-          body: 'Соревнование x5 начинается',
+        .to.have.been.calledWithExactly(1337, {
+          title: 'Соревнование',
+          message: 'Соревнование x5 начинается',
           // TODO: set the stub for the kango.io.getResourceUrl
-          icon: undefined,
-          audio: false,
+          iconUrl: undefined,
+          audioUrl: undefined,
         });
       // Default delay is set to 1 minute:
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(340);
-      // Check the notification's click handler:
-      notification.onclick();
-      expect(KlavoTools.tabs.createOrNavigateExisting)
-        .to.have.been.calledWithExactly('http://klavogonki.ru/g/?gmid=1337');
+
+      // TODO (if possible) Check the notification's click handler:
+      // notification.onclick();
+      // expect(KlavoTools.tabs.createOrNavigateExisting)
+      //   .to.have.been.calledWithExactly('http://klavogonki.ru/g/?gmid=1337');
+
       // Check the case with a huge displayTime:
       kango.storage.getItem.withArgs('competition_displayTime').returns(500);
       competitions = new Competitions;
       var notification = competitions._createNotification(competitionData, 400);
       expect(DeferredNotification)
-        .to.have.been.calledWithExactly('Соревнование', {
-          body: 'Соревнование x5 начинается',
-          icon: undefined,
-          audio: false
+        .to.have.been.calledWithExactly(1337, {
+          title: 'Соревнование',
+          message: 'Соревнование x5 начинается',
+          iconUrl: undefined,
+          audioUrl: undefined,
         });
+
       // Check the case with a huge delay:
       kango.storage.getItem.withArgs('competition_delay').returns(500);
       competitions = new Competitions;
       var notification = competitions._createNotification(competitionData, 400);
       expect(DeferredNotification.prototype.show)
         .to.have.been.calledWithExactly(0);
-    });
-
-    it('should revoke the notification with the click on it', function () {
-      var competitionData = {
-        id: 1337,
-        ratingValue: 5,
-        // For this test doesn't matter:
-        beginTime: 0,
-      };
-      var notification = competitions._createNotification(competitionData, 400);
-      notification.onclick();
-      expect(DeferredNotification.prototype.revoke).to.have.been.called;
     });
 
     it('should correctly calculate the remaining time before the ' +
