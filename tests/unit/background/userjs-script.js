@@ -46,7 +46,7 @@ describe('userjs module', function () {
         foo: 1,
         bar: 2,
       });
-      expect(script._keys).to.be.deep.equal(['updateUrl', 'foo', 'bar']);
+      expect(script._keys).to.be.deep.equal(['code', 'updateUrl', 'foo', 'bar']);
     });
 
     it('should set the loaded field to the source code promise', function () {

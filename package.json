@@ -4,7 +4,7 @@
   "description": "Cross-browser extension on kango framework for klavogonki.ru",
   "private": true,
   "scripts": {
-    "test": "mocha \"tests/**/*.js\""
+    "test": "mocha \"tests/**/*.js\" --exit"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,10 @@
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
     "glob": "^6.0.3",
-    "mocha": "^2.3.4",
+    "mocha": "^7.0.0",
     "q": "^1.4.1",
     "sinon": "^1.17.2",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "sinon-chrome": "^3.0.1"
   }
 }

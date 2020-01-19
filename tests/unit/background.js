@@ -6,6 +6,7 @@
 var loadVanillaModule = require('../loader.js');
 var config = require('../../extension_info.json');
 
+global.chrome = require('sinon-chrome/extensions');
 global.kango = require('../kango-mock.js');
 global.WebSocket = require('../websocket-mock.js');
 global.Event = function () {};
