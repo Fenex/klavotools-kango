@@ -89,7 +89,10 @@ describe('userjs module', function () {
       var scripts = userjs.getScriptsForURL('http://klavogonki.ru/gamelist/');
       expect(Script.prototype.shouldBeIncluded).to.have.been.calledThrice
         .to.have.been.calledWithExactly('http://klavogonki.ru/gamelist/');
-      expect(scripts).to.be.deep.equal([['script1', 'source1'], ['script3', 'source3']]);
+      expect(scripts).to.be.deep.equal([
+        ['script1', void 0, 'source1'],
+        ['script3', void 0, 'source3']
+      ]);
     });
 
     it('should correctly update userscript data with the updateScriptData() ' +
