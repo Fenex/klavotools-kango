@@ -19,10 +19,12 @@
         "klavotools/background/socket.js",
         "klavotools/background/auth.js",
         "klavotools/background/button.js",
+        "klavotools/background/protocol.js",
         "klavotools/background/engine.js",
         "klavotools/background/context-menus.chrome.js"
     ],
     "content_scripts": [
+        "klavotools/foreground/protocol.js",
         "klavotools/foreground/userstyle.js",
         "klavotools/foreground/userjs-exec.js",
         "klavotools/foreground/auth-state.js"

@@ -46,28 +46,32 @@ angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
         get: function (backgroundGetter) {
             return KangoQ.invokeAsync(backgroundGetter)
             .then(function(data) {
-                var settings = [];
+                var settings = {};
                 for (var key in data) {
-                    settings.push({
+                    settings[key] = {
                         name: key,
                         type: typeof data[key],
                         value: data[key],
-                    });
+                    };
                 }
                 return settings;
             });
         },
 
         set: function (backgroundSetter, newSettings, oldSettings) {
-            if (!newSettings.length || !oldSettings.length) {
+            if (!Object.keys(newSettings).length
+             || !Object.keys(oldSettings).length) {
                 return false;
             }
-            var settings = {};
-            newSettings.forEach(function (setting) {
-                settings[setting.name] = setting.value;
-            });
-            kango.invokeAsync(backgroundSetter, settings);
-        },
+
+            var changed = {};
+            for (var key in newSettings)
+                if (!angular.equals(newSettings[key].value, oldSettings[key].value))
+                    changed[key] = newSettings[key].value;
+
+            if (Object.keys(changed).length)
+                kango.invokeAsync(backgroundSetter, changed);
+        }
     }
 })
 .controller('GlobalSettings', function($scope, settings) {

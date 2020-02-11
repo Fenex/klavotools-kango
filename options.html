@@ -70,6 +70,18 @@
           <label for="KTS_settings_checkbox_{{setting.name}}">{{setting.name | settingDescription}}</label>
         </div>
       </div>
+      <div style="margin-left: 24px;">
+        <span>Открывать новые страницы Клавогонок через протокол:</span>
+        <select name="KTS_settings_protocol" ng:model="settings['protocol'].value.type">
+          <option value="prev">тот же, что использовался в последний раз (по-умолчанию)</option>
+          <option value="HTTPS">HTTPS</option>
+          <option value="HTTP">HTTP</option>
+        </select>
+        <div ng:if="settings['protocol'].value.type !== 'prev'">
+          <input type="checkbox" ng:model="settings['protocol'].value.redirect" id="KTS_settings_protocol_redirect" />
+          <label for="KTS_settings_protocol_redirect">Принудительно перегружать страницы через выставленный протокол</label>
+        </div>
+      </div>
     </form>
 
     <b>Стили:</b>

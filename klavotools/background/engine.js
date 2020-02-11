@@ -29,6 +29,7 @@ KlavoTools.Skin = new Skin;
 KlavoTools.ContextMenus = new ContextMenus;
 KlavoTools.Button = new Button;
 KlavoTools.RaceInvitations = new RaceInvitations;
+KlavoTools.Protocol = new Protocol;
 
 KlavoTools.tabs = {
     create: function(data) {
@@ -71,6 +72,7 @@ KlavoTools.tabs = {
 
 var defaultGlobalSettings = {
     useWebSockets: true,
+    protocol: KlavoTools.Protocol.config
 };
 var globalSettings = kango.storage.getItem('settings') || defaultGlobalSettings;
 
@@ -83,7 +85,11 @@ KlavoTools.Settings = {
         }
 
         kango.storage.setItem('settings', this._hash);
-        this._apply();
+
+        if (params.protocol)
+            KlavoTools.Protocol.saveCfg(params.protocol);
+        if (params.useWebSockets)
+            this._apply();
     },
 
     get: function () {
