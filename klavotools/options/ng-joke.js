@@ -10,7 +10,7 @@ angular.module('klavotools.joke', [])
             var COUNT = 3;
             $scope.imgs = [];
             $scope.loaded = false;
-            return;
+
             function getImgStruct(data) {
                 var e = data;
                 e.author = e.author ? 'Автор: ' + e.author : '';
