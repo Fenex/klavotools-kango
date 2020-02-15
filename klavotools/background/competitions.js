@@ -2,6 +2,7 @@
  * @file Competitions Module. The module checks for new open competitions and shows
  *  notifications to user.
  * @requires DeferredNotification
+ * @requires Protocol
  * @requires Q
  * @author Vitaliy Busko
  * @author Daniil Filippov <filippovdaniil@gmail.com>
@@ -41,16 +42,8 @@ var Competitions = function() {
     // A global notification click handler:
     chrome.notifications.onClicked.addListener(function (id) {
         if (id in this._hash) {
-            var competitionUrl = '/g/?gmid=' + id;
-            chrome.runtime.sendMessage(
-                {
-                    name: 'protocol/convert',
-                    url: competitionUrl
-                },
-                function (res) {
-                    KlavoTools.tabs.createOrNavigateExisting(res.url);
-                }
-            )
+            var url = KlavoTools.Protocol.convert('/g/?gmid=' + id);
+            KlavoTools.tabs.createOrNavigateExisting(url);
             chrome.notifications.clear(id);
         }
     }.bind(this));
