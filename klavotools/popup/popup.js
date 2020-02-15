@@ -67,7 +67,15 @@ angular.module('popup', [
 
             element.on('click auxclick', function(event) {
                 event.stopPropagation();
-                return event.button === 1 ? Redirect(url, RedirectMode.BACKGROUND) : Redirect(url);
+                var modes = [
+                    RedirectMode.CURRENT,
+                    RedirectMode.BACKGROUND,
+                    RedirectMode.NEWTAB
+                ]
+
+                Redirect(url,
+                    event.button < modes.length ?
+                    modes[event.button] : void 0)
             });
         }
     }
