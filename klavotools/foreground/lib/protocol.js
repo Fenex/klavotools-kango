@@ -14,7 +14,7 @@ angular.module('klavotools.protocol', [])
 
             return defer.promise
         }
-    };
+    }
 })
 
 .directive('kgPath', function (Protocol) {

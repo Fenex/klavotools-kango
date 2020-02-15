@@ -2,7 +2,8 @@ angular.module('popup', [
     'popup.menutree',
     'popup.redirect',
     'popup.fl-editor',
-    'fnx.kango-q'
+    'fnx.kango-q',
+    'klavotools.protocol'
 ])
 .config(function($httpProvider, $compileProvider) {
     // Use x-www-form-urlencoded Content-Type
@@ -50,7 +51,7 @@ angular.module('popup', [
     }];
 })
 
-.directive('ngPath', function (Redirect, RedirectMode, $timeout) {
+.directive('ngPath', function (Redirect, RedirectMode, Protocol) {
     return {
         restrict: 'A',
         scope: {
@@ -58,6 +59,10 @@ angular.module('popup', [
         },
         link: function (scope, element, attrs) {
             var url = scope.ngPath || attrs.ngPathStr;
+            Protocol.convert(url).then(function (u) {
+                url = u
+            })
+
             element.on('click auxclick', function(event) {
                 event.stopPropagation();
                 return event.button === 1 ? Redirect(url, RedirectMode.BACKGROUND) : Redirect(url);

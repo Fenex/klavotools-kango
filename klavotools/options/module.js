@@ -1,4 +1,8 @@
-angular.module('klavotools', ['klavotools.joke', 'fnx.kango-q'])
+angular.module('klavotools', [
+    'klavotools.joke',
+    'klavotools.protocol',
+    'fnx.kango-q'])
+
 .directive('negate', [function () {
     return {
         require: 'ngModel',
