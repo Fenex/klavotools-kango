@@ -14,7 +14,7 @@ class Protocol {
 
     constructor () {
         var config = kango.storage.getItem('settings')
-        if (config && config.protocol !== void 0)
+        if (typeof config === 'object' && config.protocol !== void 0)
             this.config = config.protocol
         else
             this.config = Protocol.defaultCfg
@@ -86,6 +86,9 @@ class Protocol {
 
     convert (url) {
         url = new URL(url, 'http://klavogonki.ru');
+        if (url.hostname !== 'klavogonki.ru')
+            return url
+
         url.protocol = this.get() + ':'
         return url.href
     }
