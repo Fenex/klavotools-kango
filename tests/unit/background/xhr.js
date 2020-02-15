@@ -25,11 +25,11 @@ describe('xhr module', function () {
     });
 
     it('should perform a simple GET-request if only URL string is given', function () {
-      xhr('http://klavogonki.ru');
-      var settingsMatch = { url: 'http://klavogonki.ru', method: 'GET' };
+      xhr('https://klavogonki.ru');
+      var settingsMatch = { url: 'https://klavogonki.ru', method: 'GET' };
       expect(kango.xhr.send)
         .to.have.been.calledWithExactly(settingsMatch, sinon.match.func);
-      xhr({ url: 'http://klavogonki.ru' });
+      xhr({ url: 'https://klavogonki.ru' });
       expect(kango.xhr.send)
         .to.have.been.calledWithExactly(settingsMatch, sinon.match.func);
     });
@@ -37,7 +37,7 @@ describe('xhr module', function () {
     it('should call the kango.xhr.send() method with correct parameters', function () {
       var settings = {
         method: 'POST',
-        url: 'http://klavogonki.ru',
+        url: 'https://klavogonki.ru',
         params: { p1: 1, p2: 2 },
         headers: { 'Cache-Control': 'max-age=0' },
         contentType: 'text',
@@ -58,10 +58,10 @@ describe('xhr module', function () {
     it('should fulfill promise if the HTTP status is ' +
         'in the range [100, 399]', function () {
       kango.xhr.send
-        .onFirstCall().yields({ status: 102, response: 'http://klavogonki.ru' })
-        .onSecondCall().yields({ status: 202, response: 'http://klavogonki.ru' })
-        .onThirdCall().yields({ status: 302, response: 'http://klavogonki.ru' });
-      return expect(xhr('http://klavogonki.ru').then(xhr).then(xhr)).to.be.fulfilled;
+        .onFirstCall().yields({ status: 102, response: 'https://klavogonki.ru' })
+        .onSecondCall().yields({ status: 202, response: 'https://klavogonki.ru' })
+        .onThirdCall().yields({ status: 302, response: 'https://klavogonki.ru' });
+      return expect(xhr('https://klavogonki.ru').then(xhr).then(xhr)).to.be.fulfilled;
     });
 
     it('should reject promise if the HTTP status is not ' +
@@ -71,9 +71,9 @@ describe('xhr module', function () {
         .onSecondCall().yields({ status: 402, response: 'Payment Required' })
         .onThirdCall().yields({ status: 502, response: 'Bad Gateway' });
       return _Q.all([
-        expect(xhr('http://klavogonki.ru')).to.be.rejected,
-        expect(xhr('http://klavogonki.ru')).to.be.rejected,
-        expect(xhr('http://klavogonki.ru')).to.be.rejected,
+        expect(xhr('https://klavogonki.ru')).to.be.rejected,
+        expect(xhr('https://klavogonki.ru')).to.be.rejected,
+        expect(xhr('https://klavogonki.ru')).to.be.rejected,
       ]);
     });
 

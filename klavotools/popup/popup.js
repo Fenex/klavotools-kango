@@ -152,10 +152,10 @@ angular.module('popup', [
     return function (id, hasAvatar, size) {
         var url;
         if (hasAvatar) {
-            url = 'http://i.klavogonki.ru/avatars/' + id;
+            url = 'https://klavogonki.ru/storage/avatars/' + id;
             url += size === 'small' ? '.png' : '_big.png';
         } else {
-            url = 'http://klavogonki.ru/img/';
+            url = 'https://klavogonki.ru/img/';
             url += size === 'small' ? 'avatar_dummy_16.png' : 'avatar_dummy.gif';
         }
         return url;
@@ -180,18 +180,18 @@ angular.module('popup', [
         ctrl.blocked = false;
 
         function getSummary (userId) {
-            return $http.get('http://klavogonki.ru/api/profile/get-summary', {
+            return $http.get('https://klavogonki.ru/api/profile/get-summary', {
                 params: { id: userId },
             });
         }
 
         function getIndexData (userId) {
-            return $http.get('http://klavogonki.ru/api/profile/get-index-data', {
+            return $http.get('https://klavogonki.ru/api/profile/get-index-data', {
                 params: { userId: userId },
             });
         }
 
-        $http.post('http://klavogonki.ru/.fetchuser?KTS_REQUEST', {login: ctrl.login})
+        $http.post('https://klavogonki.ru/.fetchuser?KTS_REQUEST', {login: ctrl.login})
         .then(function (res) {
             ctrl.id = res.data.id;
             return $q.all([getSummary(ctrl.id), getIndexData(ctrl.id)]);
@@ -227,9 +227,9 @@ angular.module('popup', [
         kango.storage.setItem('popup_' + name, $scope[name]);
     };
 
-    $http.get('http://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
+    $http.get('https://klavogonki.ru/api/profile/get-messages-contacts?KTS_REQUEST')
     .then(function (res) {
-        if (res.status == 200) {
+        if (res.status == 200 && !res.data.err) {
             var messages = res.data.messages.map(function (message) {
                 message.respondentLogin = res.data.users[message.respondent_id].login;
                 message.hasAvatar = !!res.data.users[message.respondent_id].avatar;

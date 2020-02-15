@@ -41,8 +41,16 @@ var Competitions = function() {
     // A global notification click handler:
     chrome.notifications.onClicked.addListener(function (id) {
         if (id in this._hash) {
-            var competitionUrl = 'http://klavogonki.ru/g/?gmid=' + id;
-            KlavoTools.tabs.createOrNavigateExisting(competitionUrl);
+            var competitionUrl = '/g/?gmid=' + id;
+            chrome.runtime.sendMessage(
+                {
+                    name: 'protocol/convert',
+                    url: competitionUrl
+                },
+                function (res) {
+                    KlavoTools.tabs.createOrNavigateExisting(res.url);
+                }
+            )
             chrome.notifications.clear(id);
         }
     }.bind(this));

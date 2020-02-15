@@ -153,7 +153,7 @@ describe('competitions module', function () {
       // TODO (if possible) Check the notification's click handler:
       // notification.onclick();
       // expect(KlavoTools.tabs.createOrNavigateExisting)
-      //   .to.have.been.calledWithExactly('http://klavogonki.ru/g/?gmid=1337');
+      //   .to.have.been.calledWithExactly('https://klavogonki.ru/g/?gmid=1337');
 
       // Check the case with a huge displayTime:
       kango.storage.getItem.withArgs('competition_displayTime').returns(500);

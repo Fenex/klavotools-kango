@@ -85,7 +85,7 @@ class Protocol {
     }
 
     convert (url) {
-        url = new URL(url, 'http://klavogonki.ru');
+        url = new URL(url, 'https://klavogonki.ru');
         if (url.hostname !== 'klavogonki.ru')
             return url
 

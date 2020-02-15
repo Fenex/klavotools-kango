@@ -109,8 +109,16 @@ RaceInvitations.prototype._init = function () {
     var re = /raceInvitation(\d+)/;
     chrome.notifications.onClicked.addListener(function (id) {
         if (re.test(id)) {
-            var raceUrl = 'http://klavogonki.ru/g/?gmid=' + id.match(re)[1];
-            KlavoTools.tabs.createOrNavigateExisting(raceUrl);
+            var raceUrl = '/g/?gmid=' + id.match(re)[1];
+            chrome.runtime.sendMessage(
+                {
+                    name: 'protocol/convert',
+                    url: raceUrl
+                },
+                function (res) {
+                    KlavoTools.tabs.createOrNavigateExisting(res.url);
+                }
+            )
             chrome.notifications.clear(id);
         }
     }.bind(this));

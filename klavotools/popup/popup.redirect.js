@@ -43,7 +43,7 @@ angular.module('popup.redirect', [])
         else if(!(/^https?:\/\//.test(url))) {
             if(url[0] != '/')
                 url = '/' + url;
-            url = 'http://klavogonki.ru' + url;
+            url = 'https://klavogonki.ru' + url;
         }
 
         return url;
