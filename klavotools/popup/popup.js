@@ -59,9 +59,11 @@ angular.module('popup', [
         },
         link: function (scope, element, attrs) {
             var url = scope.ngPath || attrs.ngPathStr;
-            Protocol.convert(url).then(function (u) {
-                url = u
-            })
+            if (typeof attrs.ngPathSpecial !== 'string') {
+                Protocol.convert(url).then(function (u) {
+                    url = u
+                })
+            }
 
             element.on('click auxclick', function(event) {
                 event.stopPropagation();
