@@ -14,7 +14,7 @@ class Protocol {
 
     constructor () {
         var config = kango.storage.getItem('settings')
-        if (typeof config === 'object' && config.protocol !== void 0)
+        if (config && config.protocol !== void 0)
             this.config = config.protocol
         else
             this.config = Protocol.defaultCfg
