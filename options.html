@@ -9,6 +9,7 @@
   <script type="text/javascript" src="klavotools/foreground/lib/kango-q.js"></script>
   <script type="text/javascript" src="klavotools/options/module.js"></script>
   <script type="text/javascript" src="klavotools/options/ng-joke.js"></script>
+  <script type="text/javascript" src="klavotools/foreground/lib/protocol.js"></script>
 </head>
 <body>
   <div id="head" class="minwidth green-back">
@@ -29,11 +30,11 @@
           </div>
 
           <div class="menu">
-            <a href="http://klavogonki.ru/forum/">Форум</a>
-            <a href="http://klavogonki.ru/about/">Об игре</a>
-            <a href="http://klavogonki.ru/vocs/top/">Словари</a>
-            <a href="http://klavogonki.ru/top/">Рекорды</a>
-            <a href="http://klavogonki.ru/gamelist/">Игра</a>
+            <a kg:path href="https://klavogonki.ru/forum/">Форум</a>
+            <a kg:path href="https://klavogonki.ru/about/">Об игре</a>
+            <a kg:path href="https://klavogonki.ru/vocs/top/">Словари</a>
+            <a kg:path href="https://klavogonki.ru/top/">Рекорды</a>
+            <a kg:path href="https://klavogonki.ru/gamelist/">Игра</a>
           </div>
         </div>
 
@@ -68,6 +69,18 @@
         <div ng-if="setting.type === 'boolean'">
           <input type="checkbox" ng-model="setting.value" name="{{setting.name}}" id="KTS_settings_checkbox_{{setting.name}}"/>
           <label for="KTS_settings_checkbox_{{setting.name}}">{{setting.name | settingDescription}}</label>
+        </div>
+      </div>
+      <div style="margin-left: 24px;">
+        <span>Открывать новые страницы Клавогонок через протокол:</span>
+        <select name="KTS_settings_protocol" ng:model="settings['protocol'].value.type">
+          <option value="prev">тот же, что использовался в последний раз (по-умолчанию)</option>
+          <option value="HTTPS">HTTPS</option>
+          <option value="HTTP">HTTP</option>
+        </select>
+        <div ng:if="settings['protocol'].value.type !== 'prev'">
+          <input type="checkbox" ng:model="settings['protocol'].value.redirect" id="KTS_settings_protocol_redirect" />
+          <label for="KTS_settings_protocol_redirect">Принудительно перегружать страницы через выставленный протокол</label>
         </div>
       </div>
     </form>

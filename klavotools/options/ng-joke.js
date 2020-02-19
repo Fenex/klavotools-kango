@@ -38,7 +38,7 @@ angular.module('klavotools.joke', [])
     return {
         restrict: 'E',
         replace: true,
-        template: '<img src="http://klavogonki.ru/img/bug.png" />',
+        template: '<img src="https://klavogonki.ru/img/bug.png" />',
         link: function(scope, element, attrs) {
             var timer = null;
             var rotating = false;

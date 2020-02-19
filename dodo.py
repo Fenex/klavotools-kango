@@ -28,6 +28,7 @@ BUILD_IGNORE = (
     'package.json',
     'node_modules',
     'tests',
+    'requirements.txt'
 )
 
 def installKango(url, targetDir):

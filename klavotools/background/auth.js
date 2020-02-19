@@ -34,7 +34,7 @@ Auth.prototype._broadcastStateChange = function () {
  */
 Auth.prototype._fetchState = function () {
     var deferred = Q.defer();
-    xhr('http://klavogonki.ru').then(function(body) {
+    xhr('https://klavogonki.ru').then(function(body) {
         try {
             var Me = JSON.parse(body.match(/constant\(\s*'Me',\s*(.+)\s*\)/)[1]);
             deferred.resolve(Me || {});

@@ -75,20 +75,20 @@ describe('userjs module', function () {
         .onSecondCall().returns(false)
         .onThirdCall().returns(true);
       userjs._scripts.script1 = new Script({
-        updateUrl: 'http://klavogonki.ru',
+        updateUrl: 'https://klavogonki.ru',
         code: 'source1',
       });
       userjs._scripts.script2 = new Script({
-        updateUrl: 'http://klavogonki.ru',
+        updateUrl: 'https://klavogonki.ru',
         code: 'source2',
       });
       userjs._scripts.script3 = new Script({
-        updateUrl: 'http://klavogonki.ru',
+        updateUrl: 'https://klavogonki.ru',
         code: 'source3',
       });
-      var scripts = userjs.getScriptsForURL('http://klavogonki.ru/gamelist/');
+      var scripts = userjs.getScriptsForURL('https://klavogonki.ru/gamelist/');
       expect(Script.prototype.shouldBeIncluded).to.have.been.calledThrice
-        .to.have.been.calledWithExactly('http://klavogonki.ru/gamelist/');
+        .to.have.been.calledWithExactly('https://klavogonki.ru/gamelist/');
       expect(scripts).to.be.deep.equal([
         ['script1', void 0, 'source1'],
         ['script3', void 0, 'source3']
@@ -97,7 +97,7 @@ describe('userjs module', function () {
 
     it('should correctly update userscript data with the updateScriptData() ' +
         'method', function () {
-      userjs._scripts.script1 = new Script({ updateUrl: 'http://klavogonki.ru' });
+      userjs._scripts.script1 = new Script({ updateUrl: 'https://klavogonki.ru' });
       userjs.updateScriptData('script1', { foo: 1, updateUrl: 'https://klavogonki.ru' });
       expect(userjs._scripts.script1).to.have.property('foo');
       expect(userjs._scripts.script1.foo).to.be.equal(1);
@@ -112,7 +112,7 @@ describe('userjs module', function () {
 
     it('should create and save a Script class instance with ' +
         'the _addScript() method', function () {
-      var promise = userjs._addScript('script1', { updateUrl: 'http://klavogonki.ru' });
+      var promise = userjs._addScript('script1', { updateUrl: 'https://klavogonki.ru' });
       expect(userjs._scripts.script1).to.be.instanceof(Script);
       expect(promise).to.be.deep.equal(userjs._scripts.script1.loaded);
     });

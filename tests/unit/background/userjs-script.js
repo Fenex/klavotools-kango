@@ -26,13 +26,13 @@ describe('userjs module', function () {
     it('should throw an error if the updateUrl was not specified', function () {
       var dummy = function () { new Script({ badData: true }); };
       expect(dummy).to.throw(Error);
-      dummy = function () { new Script({ updateUrl: 'http://klavogonki.ru/' }); };
+      dummy = function () { new Script({ updateUrl: 'https://klavogonki.ru/' }); };
       expect(dummy).to.not.throw();
     });
 
     it('should save passed data to the instance properties', function () {
       var script = new Script({
-        updateUrl: 'http://klavogonki.ru',
+        updateUrl: 'https://klavogonki.ru',
         foo: 1,
         bar: 2,
       });
@@ -42,7 +42,7 @@ describe('userjs module', function () {
 
     it('should save the keys of the passed hash object', function () {
       var script = new Script({
-        updateUrl: 'http://klavogonki.ru',
+        updateUrl: 'https://klavogonki.ru',
         foo: 1,
         bar: 2,
       });
@@ -51,17 +51,17 @@ describe('userjs module', function () {
 
     it('should set the loaded field to the source code promise', function () {
       sandbox.stub(kango.xhr, 'send').yields({ response: 'source', status: 200 });
-      var script = new Script({ updateUrl: 'http://klavogonki.ru' });
+      var script = new Script({ updateUrl: 'https://klavogonki.ru' });
       return expect(script.loaded).to.be.eventually.equal('source');
     });
 
     it('should call the _setIncludes() method after obtaining ' +
         'the source code', function () {
       sandbox.spy(Script.prototype, '_setIncludes');
-      var script1 = new Script({ updateUrl: 'http://klavogonki.ru', code: 'source' });
+      var script1 = new Script({ updateUrl: 'https://klavogonki.ru', code: 'source' });
       var promise1 = script1.loaded;
       sandbox.stub(kango.xhr, 'send').yields({ response: 'source', status: 200 });
-      var script2 = new Script({ updateUrl: 'http://klavogonki.ru' });
+      var script2 = new Script({ updateUrl: 'https://klavogonki.ru' });
       var promise2 = script2.loaded;
       return promise1.then(function () {
         expect(Script.prototype._setIncludes).to.have.been.calledWithExactly('source');
@@ -72,7 +72,7 @@ describe('userjs module', function () {
 
     it('should correctly set RegExp objects with the _setIncludes() method', function () {
       var source = fixtures.userscripts.includes;
-      var script = new Script({ updateUrl: 'http://klavogonki.ru', code: source });
+      var script = new Script({ updateUrl: 'https://klavogonki.ru', code: source });
       return script.loaded.then(function () {
         expect(script.includes).to.be.deep.equal([
           new RegExp('http:\/\/example\\.com\/.*'),
@@ -83,7 +83,7 @@ describe('userjs module', function () {
 
     it('should return correct boolean with the shouldBeIncluded() method', function () {
       var source = fixtures.userscripts.includes;
-      var script = new Script({ updateUrl: 'http://klavogonki.ru', code: source });
+      var script = new Script({ updateUrl: 'https://klavogonki.ru', code: source });
       return script.loaded.then(function () {
         script.disabled = true;
         expect(script.shouldBeIncluded('http://example.com/abc')).to.be.equal(false);
@@ -97,7 +97,7 @@ describe('userjs module', function () {
     it('should set the code field within the update() method call', function () {
       sandbox.stub(kango.xhr, 'send').yields({ response: 'source', status: 200 });
       var source = fixtures.userscripts.includes;
-      var script = new Script({ updateUrl: 'http://klavogonki.ru', code: source });
+      var script = new Script({ updateUrl: 'https://klavogonki.ru', code: source });
       return script.update().then(function (code) {
         expect(code).to.be.equal('source');
         expect(script.code).to.be.equal('source');
@@ -106,9 +106,9 @@ describe('userjs module', function () {
 
     it('should have a custom JSON serialization method', function () {
       var source = fixtures.userscripts.includes;
-      var script = new Script({ updateUrl: 'http://klavogonki.ru', code: source, foo: 1 });
+      var script = new Script({ updateUrl: 'https://klavogonki.ru', code: source, foo: 1 });
       expect(script.toJSON()).to.be.deep.equal({
-        updateUrl: 'http://klavogonki.ru',
+        updateUrl: 'https://klavogonki.ru',
         code: source,
         foo: 1,
       });

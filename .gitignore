@@ -3,3 +3,4 @@ kango
 build
 *.pyc
 .doit.db
+.vscode
