@@ -17,6 +17,7 @@ KANGO_ARCHIVE_URL = 'http://web.archive.org/web/20160623024659/kangoextensions.c
 KANGO_DIR = 'kango'
 KANGO_BIN = path.abspath(path.join(KANGO_DIR, 'kango.py'))
 BUILD_DIR = 'build'
+UNPACKED_DIR = 'unpacked'
 BOOTSTRAP_DIR = path.abspath(path.join(BUILD_DIR, 'bootstrap'))
 BUILD_IGNORE = (
     '.*',
@@ -109,9 +110,9 @@ def moveFiles(srcDir, destDir):
         # copy packed extension (now it's only xpi for firefox)
         if path.isfile(pathName) and fileName.find('_' + WEBEXTENSION_SUFFIX + '_') != -1:
             move(pathName, path.join(destDir, fileName))
-        # copy unpacked extension (for chrome dev mode)
+        # copy unpacked extension (for debugging)
         if path.isdir(pathName) and fileName == 'chrome':
-            unpackedDir = path.join(destDir, 'kts_chrome_unpacked')
+            unpackedDir = path.join(destDir, UNPACKED_DIR)
             if path.exists(unpackedDir):
                 rmtree(unpackedDir)
             move(pathName, unpackedDir)
