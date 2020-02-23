@@ -42,7 +42,12 @@ RaceInvitations.prototype.setParams = function (params) {
  * @private
  */
 RaceInvitations.prototype._createNotification = function (game) {
-    var icon = game.invited_by.avatar.replace('.png', '_big.png');
+    var icon;
+    if (game.invited_by.avatar) {
+        icon = 'https://klavogonki.ru' + game.invited_by.avatar.replace('.png', '_big.png');
+    } else {
+        icon = 'https://klavogonki.ru/img/avatar_dummy.gif';
+    }
     var body = game.invited_by.login + ' приглашает вас в ' +
         (game.type === 'private' ? 'игру с друзьями' : 'игру') +
         ' ' + game.gametype_html.replace(/<(?:.|\n)*?>/gm, '')
@@ -68,8 +73,7 @@ RaceInvitations.prototype._processInvite = function (game) {
         return false;
     }
 
-    if (!game || !game.invited_by || !game.gametype_html ||
-        !game.invited_by.avatar || !game.game_id) {
+    if (!game || !game.invited_by || !game.gametype_html || !game.game_id) {
         throw new TypeError('Wrong data for the _processInvite method');
     }
 
@@ -110,7 +114,7 @@ RaceInvitations.prototype._init = function () {
     var re = /raceInvitation(\d+)/;
     chrome.notifications.onClicked.addListener(function (id) {
         if (re.test(id)) {
-            var url = Protocol.convert('/g/?gmid=' + id.match(re)[1]);
+            var url = KlavoTools.Protocol.convert('/g/?gmid=' + id.match(re)[1]);
             KlavoTools.tabs.createOrNavigateExisting(url);
             chrome.notifications.clear(id);
         }
