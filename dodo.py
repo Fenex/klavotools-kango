@@ -75,14 +75,6 @@ def fixManifest(srcDir):
     with open(path.join(srcDir, 'chrome', 'manifest.json'), 'w') as outfile:
         json.dump(manifest, outfile, indent=2)
 
-def generateSignature(zipPath, keyPath):
-    signature = Popen(['openssl', 'sha1', '-sign', keyPath, zipPath],
-        stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()[0]
-    derkey = Popen(['openssl', 'rsa', '-pubout', '-inform', 'PEM',
-        '-outform', 'DER', '-in', keyPath], stdin=PIPE, stdout=PIPE,
-        stderr=PIPE).communicate()[0]
-    return signature, derkey
-
 def buildWebExtension(srcDir, certDir):
     chromeExtensionDir = path.join(srcDir, 'chrome')
     manifestPath = path.join(chromeExtensionDir, 'manifest.json')
@@ -100,19 +92,6 @@ def buildWebExtension(srcDir, certDir):
             archive.write(path.join(root, fileName),
                 path.join(path.relpath(root, chromeExtensionDir), fileName))
     archive.close()
-    signature, derkey = generateSignature(archivePath,
-        path.join(certDir, 'chrome.pem'))
-    with open(path.join(srcDir, name + '.crx'), 'wb') as crx:
-        crx.write('Cr24')
-        header = array('L') if struct.calcsize('L') == 4 else array('I')
-        header.append(2)
-        header.append(len(derkey))
-        header.append(len(signature))
-        header.tofile(crx)
-        crx.write(derkey)
-        crx.write(signature)
-        with open(archivePath, 'rb') as zipFile:
-            crx.write(zipFile.read())
 
 def createDirIfNotExists(targetDir):
     if not path.exists(targetDir):
