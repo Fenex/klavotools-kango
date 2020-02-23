@@ -106,8 +106,15 @@ def moveFiles(srcDir, destDir):
     createDirIfNotExists(destDir)
     for fileName in files:
         pathName = path.join(srcDir, fileName)
+        # copy packed extension (now it's only xpi for firefox)
         if path.isfile(pathName) and fileName.find('_' + WEBEXTENSION_SUFFIX + '_') != -1:
             move(pathName, path.join(destDir, fileName))
+        # copy unpacked extension (for chrome dev mode)
+        if path.isdir(pathName) and fileName == 'chrome':
+            unpackedDir = path.join(destDir, 'kts_chrome_unpacked')
+            if path.exists(unpackedDir):
+                rmtree(unpackedDir)
+            move(pathName, unpackedDir)
 
 def removeDirectory(targetDir):
     rmtree(targetDir)
