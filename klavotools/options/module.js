@@ -116,6 +116,7 @@ angular.module('klavotools', [
 .controller('ScriptCtrl', function($scope) {
     $scope.tags = {};
     $scope.showIntegrated = false;
+    $scope.showBroken = false;
 
     kango.invokeAsync('KlavoTools.UserJS.getAllScripts', function(scripts) {
         $scope.scripts = scripts;
