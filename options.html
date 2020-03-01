@@ -160,6 +160,10 @@
         <input type="checkbox" id="showIntegrated" ng-model="showIntegrated" />
         <label for="showIntegrated">Показывать скрипты из стандартного набора</label>
       </div>
+      <div>
+        <input type="checkbox" id="showBroken" ng-model="showBroken" />
+        <label for="showBroken">Показывать сломанные скрипты</label>
+      </div>
       <br>
       <div>
         Фильтровать список по тегам:
@@ -181,7 +185,7 @@
           </tr>
           <tr
             ng-repeat="(name, data) in scripts | filterByTags:tags"
-            ng-if="data.integrated === false || showIntegrated === true"
+            ng-if="(data.integrated === false || showIntegrated === true) && (data.broken === false || showBroken === true)"
             ng-click="toggle(name, $event)"
             ng-class="{integrated: data.integrated, broken: data.broken}"
             title="{{data.broken ? 'Скрипт в нерабочем состоянии.' : ''}}"
