@@ -33,7 +33,7 @@
         "res/skins.css"
     ],
     "homepage_url": "https://klavogonki.ru/",
-    "version": "3.6.2",
+    "version": "3.6.3",
     "browser_button": {
         "caption": "KlavoTools",
         "icon": "icons/button_default.png",
