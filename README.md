@@ -1,3 +1,5 @@
+## This extension is no longer maintained because Manifest V3 requirements make it impossible to rewrite some of its key features.
+
 klavotools-kango
 ================
 
